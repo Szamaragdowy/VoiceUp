@@ -1,0 +1,15 @@
+{
+  "MySerwers":[
+    {
+      "IP": "192.168.0.1",
+	  "Port":"4578",
+	  "Name":"Nosacze"
+    },
+    {
+	  "IP": "192.168.0.2",
+	  "Port":"4558",
+	  "Name":"Domek nosaczy"
+    ]
+    }
+  ]
+}

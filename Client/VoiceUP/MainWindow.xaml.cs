@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -22,41 +26,29 @@ namespace VoiceUP
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<ServerInfo> collection { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
         {
-            ServerInfo first = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.168.0.1"), 4578), "Super serwer");
-            ServerInfo first2 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.152.0.1"), 4578), "WOW");
-            ServerInfo first3 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.130.0.1"), 4578), "Super serwer2");
-            ServerInfo first4 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.05.0.1"), 4578), "Super serwer3");
-            ServerInfo first5 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.4.0.1"), 4578), "Super serwer4");
-            ServerInfo first6 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.4.0.1"), 4578), "Super serwer4");
-            ServerInfo first7 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.4.0.1"), 4578), "Super serwer4");
-            ServerInfo first8 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.4.0.1"), 4578), "Super serwer4");
-            ServerInfo first9 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.4.0.1"), 4578), "Super serwer4");
-            ServerInfo first10 = new ServerInfo(new IPEndPoint(IPAddress.Parse("192.4.0.1"), 4578), "Super serwer4");
-
-            List<ServerInfo> lista = new List<ServerInfo>();
-
-            lista.Add(first);
-            lista.Add(first2);
-            lista.Add(first3);
-            lista.Add(first4);
-            lista.Add(first5);
-            lista.Add(first6);
-            lista.Add(first7);
-            lista.Add(first8);
-            lista.Add(first9);
-            lista.Add(first10);
-
             var Combo = sender as ComboBox;
-            Combo.ItemsSource = lista;
-
+            Combo.ItemsSource = LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
         }
+
+        public void LoadComboBoxItems()
+        {
+            ComboBoxServerList.ItemsSource = LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
+        }
+
+        public T LoadJson<T>(string path)
+        {
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -66,7 +58,7 @@ namespace VoiceUP
 
             if (name != null)
             {
-                selectedComboItem.Text = name.IPAdres.ToString();
+                selectedComboItem.Text = name.IP +":"+name.Port;
             }
 
         }
@@ -79,19 +71,89 @@ namespace VoiceUP
             nowe.Left = this.Left ;
             nowe.Top = this.Top + 160;
             nowe.ShowDialog();
+
+            int i = 0;
+            foreach (var item in ComboBoxServerList.Items)
+            {
+               
+                if(((ServerInfo)item).IP == ID.IP)
+                {
+                    string json = File.ReadAllText("MySerwers.txt");
+                    dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    jsonObj["MyServers"][i]["IP"] = nowe.IP;
+                    jsonObj["MyServers"][i]["Port"] = nowe.PORT;
+                    jsonObj["MyServers"][i]["Name"] = nowe.NAME;
+                    string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
+                    File.WriteAllText("MySerwers.txt", output);
+
+                    ComboBoxServerList.ItemsSource = LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
+                    break;
+                }
+                i++;
+            } 
+
         }
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            object ID = ((Button)sender).CommandParameter;
+            ServerInfo ID = ((Button)sender).CommandParameter as ServerInfo;
 
+            if (MessageBox.Show("Czy na pewno chcesz usunąć ten serwer z listy?", "", 
+                MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                //do no stuff
+            }
+            else
+            {
+                string json = File.ReadAllText("MySerwers.txt");
+                dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
-            MessageBox.Show("wow");
+                var jObj = (JObject)JsonConvert.DeserializeObject(json);
+                var docsToRemove = new List<JToken>();
+
+                foreach (var doc in jsonObj["MyServers"])
+                {
+                    var id = (string)doc["IP"];
+                    if (ID.IP == id)
+                    {
+                        doc.Remove();
+                        break;   
+                    }
+                }
+
+                string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
+                File.WriteAllText("MySerwers.txt", output);
+
+                ComboBoxServerList.ItemsSource = LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
+            }
         }
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void ComboBoxServerList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var Combo = sender as ComboBox;
+            Combo.Text = "";
+        }
+
+        private void ButtonConnect_Click(object sender, RoutedEventArgs e)
+        {
+            ServerWindow okno = new ServerWindow();
+            bool connected = true;
+            if (connected)
+            {
+                this.Close();
+                okno.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("PUPA, nie połączyłeś się :/", "",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+           
         }
     }
 }

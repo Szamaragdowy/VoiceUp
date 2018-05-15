@@ -10,13 +10,11 @@ namespace VoiceUP.Interfaces
 {
     interface IServerInfo
     {
-        IPEndPoint IPAdres { get; }
+        string IP { get; set; }
+
+        string Port { get; set; }
 
         string Name { get; set; }
-
-        void Edit(object sender, RoutedEventArgs e);
-
-        void Delete(object sender, RoutedEventArgs e);
 
     }
 }

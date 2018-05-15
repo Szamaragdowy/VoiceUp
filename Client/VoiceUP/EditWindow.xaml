@@ -32,7 +32,7 @@
                 <TextBox x:Name="TextBoxIP"   Margin="95,16,34,180" FontSize="20"/>
                 <TextBox x:Name="TextBoxPORT" Margin="95,69,34,132" FontSize="20"/>
                 <TextBox x:Name="TextBoxNAME" Margin="95,120,34,78" FontSize="20"/>
-                <Button  Content="Zapisz"     Margin="145,186,135,0"   VerticalAlignment="Top" Height="36"/>
+                <Button  Content="Zapisz"     Margin="145,186,135,0"   VerticalAlignment="Top" Height="36" Click="ButtonSave_Click"/>
             </Grid>
         </materialDesign:Card>
     </Grid>

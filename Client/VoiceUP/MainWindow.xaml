@@ -49,14 +49,12 @@
                 <Label   Content="Nick"   Margin="10,27,310,147"  FontSize="20" Height="Auto"/>
                 <Label   Content="Serwer" Margin="10,68,310,101" FontSize="20" Height="Auto"/>
                 <TextBox Text="Somsiad"   Margin="116,28,19,150" Width="Auto" FontSize="20"/>
-                <Button  Content="Połącz" Margin="154,159,0,0"   Width="95"  
-                         Height="44"      VerticalAlignment="Top"   
-                         HorizontalAlignment="Left"/>
+                
 
 
-                <ComboBox IsEditable="True" FontSize="20" Margin="116,72,19,101" 
-                          Loaded="ComboBox_Loaded"        Text="Wpisz Adres IP"
-                          SelectionChanged="ComboBox_SelectionChanged" Height="44">
+                <ComboBox x:Name="ComboBoxServerList" IsEditable="True" FontSize="20" Margin="116,72,19,101" 
+                          Loaded="ComboBox_Loaded" Text="Wpisz Adres IP" MouseDoubleClick="ComboBoxServerList_MouseDoubleClick"        
+                          SelectionChanged="ComboBox_SelectionChanged" Height="44"  >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" >
@@ -75,7 +73,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-
+                
+                <Button  Content="Połącz" Margin="154,159,0,0"   Width="95"  
+                         Height="44"      VerticalAlignment="Top"   
+                         HorizontalAlignment="Left" Click="ButtonConnect_Click"/>
             </Grid>
         </materialDesign:Card>
     </Grid>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,31 +14,32 @@ namespace VoiceUP.Structures
 {
     public class ServerInfo : IServerInfo, INotifyPropertyChanged
     {
-        public IPEndPoint IPAdres { get; }
+        public string IP { get; set; }
+
+        public string Port { get; set; }
 
         public string Name { get; set; }
 
+        public ServerInfo(string ip,string port, string name)
+        {
+            this.IP = ip;
+            this.Port = port;
+            this.Name = name;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ServerInfo(IPEndPoint ip, String name)
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            this.IPAdres = ip;
-            this.Name = name;
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public override string ToString()
         {
-            return IPAdres.ToString();
-        }
-
-        public void Edit(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            return IP + ":" + Port;
         }
     }
 }
