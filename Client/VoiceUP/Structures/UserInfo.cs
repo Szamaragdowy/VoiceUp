@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace VoiceUP.Structures
 {
-    class UserInfo
+    public class UserInfo
     {
-        string Name;
+        public string Name { get; set; }
+
+        public UserInfo(string name)
+        {
+            Name = name;
+        }
     }
 }

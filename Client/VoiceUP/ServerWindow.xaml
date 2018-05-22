@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VoiceUP"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-
-        mc:Ignorable="d" Height="600" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Topmost="True">
+        mc:Ignorable="d" Height="525" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Topmost="True">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -17,25 +16,63 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid>
-        <Grid Margin="10,10,10,235">
-            <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100"/>
+    <Window.Resources>
+        <materialDesign:PackIcon x:Key="Mic_On" Kind="Microphone" Foreground="White" Width="50" Height="50"/>
+        <materialDesign:PackIcon x:Key="Mic_Off" Kind="MicrophoneOff" Foreground="White" Width="50" Height="50"/>
+        <materialDesign:PackIcon x:Key="Sound_On" Kind="VolumeHigh" Foreground="White" Width="50" Height="50"/>
+        <materialDesign:PackIcon x:Key="Sound_Off" Kind="VolumeMute" Foreground="White" Width="50" Height="50"/>
+    </Window.Resources>
+
+   
+    <StackPanel>
+        <Grid HorizontalAlignment="Center" Height="50">
+            <Label VerticalContentAlignment="Center" FontSize="30">
+                Nazwa Serwera (IP:PORT)
+            </Label>
         </Grid>
-        <Grid Margin="10,341,10,10">
-            <Button  Content="Rozłącz" FontSize="30" Margin="242,144,10,0"  Height="66" VerticalAlignment="Top"   />
-            <Button  Margin="2,144,347,10" Height="66" VerticalAlignment="Top"  VerticalContentAlignment ="Center" HorizontalContentAlignment ="center">
-                <materialDesign:PackIcon  Kind="Microphone" Foreground="White" Height="50" Width="50"/>
-            </Button>
-            <Button  Margin="82,144,267,10"  Height="66" VerticalAlignment="Top"  VerticalContentAlignment ="Center" HorizontalContentAlignment ="Center">
-                <materialDesign:PackIcon  Kind="VolumeHigh"  Foreground="White" Height="56" Width="46"/>
-            </Button>
-            <Button   Margin="162,144,187,10"  Height="66" VerticalAlignment="Top"  VerticalContentAlignment ="Center" HorizontalContentAlignment ="Center">
-                <materialDesign:PackIcon  Kind="Settings" Foreground="White" Height="48" Width="45"/>
-            </Button>
+        <materialDesign:Card Margin="5,10,5,5" Height="310" >
+            <Grid >
+                <ListBox Loaded="ListBoxLoaded">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="{Binding Name}" Width="150" FontSize="25"/>
+                                <Button Margin="0,0,10,0"  CommandParameter="{Binding }">
+                                    <StackPanel>
+                                        <materialDesign:PackIcon  Kind="pencil" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Margin="0,0,10,0" CommandParameter="{Binding }">
+                                    <StackPanel>
+                                        <materialDesign:PackIcon  Kind="delete" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="5,0,5,0"  HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Height="100" Orientation="Horizontal"  HorizontalAlignment="Center" VerticalAlignment="Center">
 
+                <Button x:Name="ButtonMic"  Margin="5,0,5,0" Height="70" VerticalAlignment="Center"
+                     VerticalContentAlignment ="Center" HorizontalContentAlignment ="center" Click="ButtonMic_Click" Background="#FF2196F3" >
+                    <DynamicResource ResourceKey="Mic_On"/>
+                </Button>
+                <Button x:Name="ButtonSound" Margin="5,0,5,0"  Height="70" VerticalAlignment="Center"
+                     VerticalContentAlignment ="Center" HorizontalContentAlignment ="Center" Click="ButtonSound_Click">
+                    <DynamicResource ResourceKey="Sound_On"/>
+                </Button>
+                <Button x:Name="Buttonsetting" Margin="5,0,5,0"  Height="70" VerticalAlignment="Center" 
+                     VerticalContentAlignment ="Center" HorizontalContentAlignment ="Center" Click="Buttonsetting_Click">
+                    <materialDesign:PackIcon  Kind="Settings" Foreground="White" Height="48" Width="45"/>
+                </Button>
+                <Button x:Name="ButtonDisconnect" Margin="5,0,5,0"  Height="70" VerticalAlignment="Center" FontSize="30" Click="ButtonDisconnect_Click"   >
+                    Rozłącz
+                </Button>
 
-        </Grid>
-
-
-    </Grid>
+            </StackPanel>
+        </materialDesign:Card>
+    </StackPanel>
 </Window>

@@ -26,8 +26,6 @@ namespace VoiceUP
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<ServerInfo> collection { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
@@ -38,11 +36,6 @@ namespace VoiceUP
         {
             var Combo = sender as ComboBox;
             Combo.ItemsSource = LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
-        }
-
-        public void LoadComboBoxItems()
-        {
-            ComboBoxServerList.ItemsSource = LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
         }
 
         public T LoadJson<T>(string path)
@@ -69,8 +62,8 @@ namespace VoiceUP
             ServerInfo ID = ((Button)sender).CommandParameter as ServerInfo;
             EditWindow nowe = new EditWindow(ID);
             nowe.Left = this.Left ;
-            nowe.Top = this.Top + 160;
-            nowe.ShowDialog();
+            nowe.Top = this.Top + 205;
+            nowe.Show();
 
             int i = 0;
             foreach (var item in ComboBoxServerList.Items)
@@ -130,7 +123,7 @@ namespace VoiceUP
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Environment.Exit(0);
         }
 
         private void ComboBoxServerList_MouseDoubleClick(object sender, MouseButtonEventArgs e)

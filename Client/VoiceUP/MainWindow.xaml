@@ -8,7 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="VoiceUp" Height="480" Width="450" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen">
+        Title="VoiceUp" Height="525" Width="450" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -33,7 +33,7 @@
     </Window.Resources>
 
     <Grid>
-        <Grid Margin="10,10,10,270">
+        <Grid Margin="10,10,10,311">
             <Grid.Background>
                 <ImageBrush ImageSource="Images/logo.png"/>
             </Grid.Background>
@@ -44,16 +44,16 @@
 
 
 
-        <materialDesign:Card Margin="10,123,10,0" Height="340" >
+        <materialDesign:Card Margin="10,123,10,0" Height="392" >
             <Grid>
-                <Label   Content="Nick"   Margin="10,27,310,147"  FontSize="20" Height="Auto"/>
-                <Label   Content="Serwer" Margin="10,68,310,101" FontSize="20" Height="Auto"/>
-                <TextBox Text="Somsiad"   Margin="116,28,19,150" Width="Auto" FontSize="20"/>
-                
-
-
-                <ComboBox x:Name="ComboBoxServerList" IsEditable="True" FontSize="20" Margin="116,72,19,101" 
-                          Loaded="ComboBox_Loaded" Text="Wpisz Adres IP" MouseDoubleClick="ComboBoxServerList_MouseDoubleClick"        
+                <Label   Content="Nick"   Margin="10,10,310,221"  FontSize="20" Height="Auto"/>
+                <Label   Content="Serwer" Margin="10,69,310,155" FontSize="20" Height="Auto"/>
+                <Label   Content="Hasło" Margin="10,136,310,90" FontSize="20" Height="Auto"/>
+                <TextBox Text="Somsiad"   Margin="105,-5,30,221" Width="Auto" FontSize="20"/>
+                <ComboBox x:Name="ComboBoxServerList" IsEditable="True" 
+                          FontSize="20" Margin="105,72,30,153" 
+                          Loaded="ComboBox_Loaded" Text="Wpisz Adres IP"
+                          MouseDoubleClick="ComboBoxServerList_MouseDoubleClick"        
                           SelectionChanged="ComboBox_SelectionChanged" Height="44"  >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -73,10 +73,11 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <TextBox Margin="105,126,30,90" Width="Auto" FontSize="20"/>
                 
-                <Button  Content="Połącz" Margin="154,159,0,0"   Width="95"  
+                <Button  Content="Połącz" Margin="105,202,0,0"   Width="184"  
                          Height="44"      VerticalAlignment="Top"   
-                         HorizontalAlignment="Left" Click="ButtonConnect_Click"/>
+                         HorizontalAlignment="Left" Click="ButtonConnect_Click" RenderTransformOrigin="0.526,0.227"/>
             </Grid>
         </materialDesign:Card>
     </Grid>
