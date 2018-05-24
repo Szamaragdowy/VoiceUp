@@ -5,8 +5,67 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VoiceUpServer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="MainWindow" Height="525" Width="800">
+
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="White" Offset="0"/>
+            <GradientStop Color="#FF4A96C1" Offset="0.696"/>
+            <GradientStop Color="White" Offset="0.438"/>
+            <GradientStop Color="#FF1768AC" Offset="0.872"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Window.Resources>
+        <materialDesign:PackIcon x:Key="Headphone_On" x:Shared="False" Kind="Headphones" Foreground="White" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="Headphone_Off" x:Shared="False" Kind="HeadphonesOff" Foreground="White" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="Microphone_On" x:Shared="False" Kind="Microphone" Foreground="White" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="Microphone_Off" x:Shared="False" Kind="MicrophoneOff" Foreground="White" Width="25" Height="25"/>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid Margin="0,0,250,409">
+            <materialDesign:Card Margin="5,5,5,5" Height="70" >
+                <StackPanel Orientation="Horizontal">
+                    <Label Width="375" Content="Super Serwer(192.168.4.2:4785" FontSize="25" 
+                               VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,8">
+
+                    </Label>
+                    <Label Width="100" FontSize="25" Content="2/10" 
+                           VerticalAlignment="Center" HorizontalContentAlignment="Center">
+
+                    </Label>
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
+        <Grid Margin="0,85,250,0">
+            <materialDesign:Card Margin="5,5,5,5"  Height="389" >
+                <Grid >
+                    <ListBox Loaded="ListBox_Loaded">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Height="50">
+                                    <Label Content="{Binding Name}" Width="150" FontSize="25"/>
+                                    <Button Margin="0,0,10,0" x:Name="ButtonHeadphones"  Click="ButtonHeadphones_Click">
+                                        <StaticResource ResourceKey="Headphone_On"/>
+                                    </Button>
+                                    <Button Margin="0,0,10,0" x:Name="ButtonMicrophone"  Click="ButtonMicrophone_Click">
+                                        <StaticResource ResourceKey="Microphone_On"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+        <Grid Margin="542,0,0,0">
+            <materialDesign:Card Margin="5,5,5,5" Height="479">
+                <Button Content="Button" HorizontalAlignment="Left" Margin="72,420,0,0" VerticalAlignment="Top" Width="138"/>
+            </materialDesign:Card>
+            <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="139,335,0,0"/>
+            <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="122" Margin="92,385,0,0"/>
+        </Grid>
     </Grid>
 </Window>
