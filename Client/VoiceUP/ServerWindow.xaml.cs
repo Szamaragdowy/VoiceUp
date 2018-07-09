@@ -21,6 +21,7 @@ namespace VoiceUP
     /// </summary>
     public partial class ServerWindow : Window
     {
+
         private bool _isMuted;
         private bool _isSoundOf;
 
@@ -117,7 +118,18 @@ namespace VoiceUP
 
         private void Buttonsetting_Click(object sender, RoutedEventArgs e)
         {
-
+            SettingsWindow okno = new SettingsWindow();
+            bool connected = true;
+            if (connected)
+            {
+               // this.Close();
+                okno.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("PUPA, nie połączyłeś się :/", "",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ButtonDisconnect_Click(object sender, RoutedEventArgs e)

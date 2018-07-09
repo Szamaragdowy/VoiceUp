@@ -37,16 +37,6 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding Name}" Width="150" FontSize="25"/>
-                                <Button Margin="0,0,10,0"  CommandParameter="{Binding }">
-                                    <StackPanel>
-                                        <materialDesign:PackIcon  Kind="pencil" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </Button>
-                                <Button Margin="0,0,10,0" CommandParameter="{Binding }">
-                                    <StackPanel>
-                                        <materialDesign:PackIcon  Kind="delete" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -138,6 +138,9 @@ namespace VoiceUP
             bool connected = true;
             if (connected)
             {
+                //SoundSender soundSender = new SoundSender();
+                //soundSender.Send(soundSender.Get_privateIP(), 2000);
+
                 this.Close();
                 okno.ShowDialog();
             }

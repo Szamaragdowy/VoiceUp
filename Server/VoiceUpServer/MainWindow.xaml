@@ -8,7 +8,7 @@
         xmlns:converters="clr-namespace:VoiceUpServer.Converters"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="MainWindow" Height="525" Width="762">
+        Title="VoiceUp Serwer" Height="469" Width="511.333">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -26,27 +26,34 @@
         <converters:SoundStatusConverter x:Key="SoundStatusConverter"/>
         <materialDesign:PackIcon x:Key="Headphone_On" x:Shared="False" Kind="Headphones" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="Headphone_Off" x:Shared="False" Kind="HeadphonesOff" Foreground="White" Width="25" Height="25"/>
-  
+        <materialDesign:PackIcon x:Key="Options" x:Shared="False" Kind="Settings" Foreground="White" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="UserIcon" x:Shared="False" Kind="Account" Foreground="Black" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="Microphone_Off" x:Shared="False" Kind="MicrophoneOff" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="User_Kick" x:Shared="False" Kind="AccountRemove" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="User_Edit" x:Shared="False" Kind="Pencil" Foreground="White" Width="25" Height="25"/>
     </Window.Resources>
 
     <Grid>
-        <Grid Margin="0,0,245,409">
-            <materialDesign:Card Margin="5,5,5,5" Height="70" >
+        <Grid Margin="0,0,10,350">
+            <materialDesign:Card Margin="5,5,5,5" Height="65" >
                 <StackPanel Orientation="Horizontal">
-                    <Label Width="375" Content="Super Serwer(192.168.4.2:4785" FontSize="25" 
+                    <Label Width="375" Content="Super Serwer (192.168.4.2:4785)" FontSize="25" 
                                VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,8">
                     </Label>
-                    <Label Width="100" FontSize="25" Content="2/10" 
-                           VerticalAlignment="Center" HorizontalContentAlignment="Center">
-                    </Label>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label Height="32">
+                            <StaticResource ResourceKey="UserIcon"/>
+                        </Label>
+                        <Label FontSize="20" Content="9/10" 
+                           VerticalAlignment="Center" HorizontalContentAlignment="Center" Width="59">
+                        </Label>
+                    </StackPanel>
+
                 </StackPanel>
             </materialDesign:Card>
         </Grid>
-        <Grid Margin="0,85,245,0">
-            <materialDesign:Card Margin="5,5,5,0" Height="389">
+        <Grid Margin="0,62,10,71">
+            <materialDesign:Card Margin="5,10,5,0" Height="285">
                 <Border Margin="10,10,10,10" BorderThickness="2" BorderBrush="LightBlue">
                     <Grid Margin="2,2,2,2">
                         <ListBox Loaded="ListBox_Loaded" DataContext="{Binding Source={StaticResource User}}">
@@ -62,9 +69,6 @@
                                             <Button Margin="0,0,10,0" x:Name="ButtonUserKick"  Click="ButtonKick_Click" >
                                                 <StaticResource ResourceKey="User_Kick"/>
                                             </Button>
-                                            <Button Margin="0,0,10,0" x:Name="ButtonUserEdit"  Click="ButtonUserEdit_Click">
-                                                <StaticResource ResourceKey="User_Edit"/>
-                                            </Button>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
@@ -74,19 +78,17 @@
                 </Border>
             </materialDesign:Card>
         </Grid>
-        <Grid Margin="509,0,0,0">
-            <materialDesign:Card Margin="0,5,5,0">
+        <Grid Margin="10,360,10,0" VerticalAlignment="Center" Height="78">
+            <materialDesign:Card Margin="0,5,5,0" >
                 <StackPanel >
-                    <Grid Height="329">
-
-                    </Grid>
                     <Grid>
-                        <StackPanel>
-                            <Button Margin="10,10,10,10" FontSize="25" Content="Ustawienia" HorizontalAlignment="Center"  Height="50" Width="200"/>
-                            <Button Margin="10,10,10,10" FontSize="25" Content="Wyłącz" HorizontalAlignment="CEnter"  Height="50" Width="200"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Margin="5,10,5,10" FontSize="25"  HorizontalAlignment="Center"  Height="40" >
+                                <StaticResource ResourceKey="Options"/>
+                            </Button>
+                            <Button Margin="5,10,10,10" FontSize="25" Content="Wyłącz" HorizontalAlignment="CEnter"  Height="40" Width="130"/>
                         </StackPanel>
                     </Grid>
-                   
                 </StackPanel>
             </materialDesign:Card>
 

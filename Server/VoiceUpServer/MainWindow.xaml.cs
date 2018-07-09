@@ -12,11 +12,14 @@ namespace VoiceUpServer
     public partial class MainWindow : Window
     {
         Server serwer;
+        SoundSender soundSender;
 
         public MainWindow()
         {
             InitializeComponent();
             serwer = new Server();
+            //soundSender = new SoundSender();
+            //soundSender.Receive(2000);
         }
 
         private void ListBox_Loaded(object sender, RoutedEventArgs e)
@@ -49,11 +52,6 @@ namespace VoiceUpServer
             var user = ButtonMicrophone.DataContext as User;
 
             serwer.KickUser(user);
-        }
-
-        private void ButtonUserEdit_Click(object sender, RoutedEventArgs e) //edycja?? 
-        {
-            throw new NotImplementedException();
         }
 
     }

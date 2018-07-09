@@ -1,0 +1,49 @@
+﻿<Window x:Class="VoiceUP.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VoiceUP"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d" Height="525" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Topmost="True">
+
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="White" Offset="0"/>
+            <GradientStop Color="#FF4A96C1" Offset="0.696"/>
+            <GradientStop Color="White" Offset="0.438"/>
+            <GradientStop Color="#FF1768AC" Offset="0.872"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <StackPanel>
+        <materialDesign:Card Margin="5,10,5,5" Height="300">
+            <StackPanel>
+                <StackPanel Height="60" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label VerticalContentAlignment="Center" FontSize="20">
+                        Mikrofon: 
+                    </Label>
+                    <ComboBox Loaded="ListBoxLoaded" Width="312" Margin="0,10" SelectionChanged="ComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow"  Text="{Binding ProductName}"  FontSize="12"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                    <Label HorizontalAlignment="Center" VerticalContentAlignment="Center" x:Name="LabelInfo"  FontSize="12">
+
+                    </Label>
+                    <Button VerticalAlignment="Top" x:Name="ButtonStartTest" Margin="0,5,5,5" Click="ButtonStartTest_Click">
+                        Start Test
+                    </Button>
+                    <Button VerticalAlignment="Top" x:Name="ButtonStopTest" IsEnabled="False" Margin="5,5,5,5" Click="ButtonStopTest_Click" >
+                        Stop Test
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            
+        </materialDesign:Card>
+    </StackPanel>
+</Window>
