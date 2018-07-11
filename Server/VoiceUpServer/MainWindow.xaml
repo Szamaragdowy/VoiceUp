@@ -86,7 +86,7 @@
                             <Button Margin="5,10,5,10" FontSize="25"  HorizontalAlignment="Center"  Height="40" >
                                 <StaticResource ResourceKey="Options"/>
                             </Button>
-                            <Button Margin="5,10,10,10" FontSize="25" Content="Wyłącz" HorizontalAlignment="CEnter"  Height="40" Width="130"/>
+                            <Button Margin="5,10,10,10" FontSize="25" Content="Wyłącz" HorizontalAlignment="CEnter"  Height="40" Width="130" Click="Button_Click"/>
                         </StackPanel>
                     </Grid>
                 </StackPanel>

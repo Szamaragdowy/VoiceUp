@@ -39,7 +39,7 @@ namespace VoiceUP
 
             sourceStream = new NAudio.Wave.WaveIn();
             sourceStream.DeviceNumber = microphoneIndex;
-            sourceStream.WaveFormat = new NAudio.Wave.WaveFormat(44100, NAudio.Wave.WaveIn.GetCapabilities(microphoneIndex).Channels);
+            sourceStream.WaveFormat = new NAudio.Wave.WaveFormat(22500, NAudio.Wave.WaveIn.GetCapabilities(microphoneIndex).Channels);
             NAudio.Wave.WaveInProvider waveIn = new NAudio.Wave.WaveInProvider(sourceStream);
 
             waveOut = new NAudio.Wave.DirectSoundOut();

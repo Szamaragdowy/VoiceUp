@@ -16,7 +16,7 @@ namespace VoiceUP
     {
 
         private string ip;
-        private string path =  "\\buffer.wav";
+        public string path =  "\\buffer.wav";
         private int port;
         private Thread rec_thread;
         private WaveIn sourceStream = null;
@@ -72,7 +72,7 @@ namespace VoiceUP
                     devicenum = i;
             }
             sourceStream.DeviceNumber = devicenum;
-            sourceStream.WaveFormat = new WaveFormat(44000, WaveIn.GetCapabilities(devicenum).Channels);
+            sourceStream.WaveFormat = new WaveFormat(27000, WaveIn.GetCapabilities(devicenum).Channels);
             sourceStream.DataAvailable += new EventHandler<WaveInEventArgs>(sourceStream_DataAvailable);
 
             waveWriter = new WaveFileWriter(path, sourceStream.WaveFormat);

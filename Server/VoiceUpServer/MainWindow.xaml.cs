@@ -18,8 +18,8 @@ namespace VoiceUpServer
         {
             InitializeComponent();
             serwer = new Server();
-            //soundSender = new SoundSender();
-            //soundSender.Receive(2000);
+            soundSender = new SoundSender();
+            soundSender.Receive(2000);
         }
 
         private void ListBox_Loaded(object sender, RoutedEventArgs e)
@@ -54,5 +54,9 @@ namespace VoiceUpServer
             serwer.KickUser(user);
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }
