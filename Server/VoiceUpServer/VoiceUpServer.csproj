@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Connections.cs" />
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
     <Compile Include="Models\User.cs" />
