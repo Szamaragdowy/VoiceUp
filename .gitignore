@@ -10,3 +10,5 @@ Client/VoiceUP/obj/Debug
 Client/VoiceUP/bin/Debug
 Server/VoiceUpServer/obj/Debug
 Server/VoiceUpServer/bin/Debug
+Client/.vs/VoiceUP/v15
+Server/.vs/VoiceUpServer/v15
