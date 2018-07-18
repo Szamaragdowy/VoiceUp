@@ -72,9 +72,10 @@
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
-    <Compile Include="HandleDataClass.cs" />
+    <Compile Include="UDP\HandleDataClass.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="UDP\ReceivedDataArgs.cs" />
+    <Compile Include="UDP\Server.cs" />
     <Compile Include="SoundSender.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

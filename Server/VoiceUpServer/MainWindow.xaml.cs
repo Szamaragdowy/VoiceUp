@@ -20,28 +20,23 @@ namespace VoiceUpServer
             InitializeComponent();
 
 
-            Server server = new Server();
+           /* Server server = new Server();
             HandleDataClass hdc = new HandleDataClass();
-
-
 
             Thread serverThread = new Thread(() => server.Listen());
             serverThread.Start();
-
-
+        
             Thread datahandlerthread = new Thread(() => hdc.SubscribeToEvent(server));
-            datahandlerthread.Start();
-
+            datahandlerthread.Start();*/
 
             /*serwer = new Server();
             soundSender = new SoundSender();
             soundSender.Receive(2000);*/
-
-
+            /*
             while (true)
             {
                 Thread.Sleep(100);
-            }
+            }*/
         }
 
         private void ListBox_Loaded(object sender, RoutedEventArgs e)

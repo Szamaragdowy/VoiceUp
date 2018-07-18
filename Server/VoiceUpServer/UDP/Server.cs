@@ -1,31 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using VoiceUpServer.Models;
 using System.Net.Sockets;
 using System.Net;
 
-
-namespace VoiceUpServer
+namespace VoiceUpServer.UDP
 {
-    public class ReceivedDataArgs
-    {
-        public IPAddress IPAddress { get; set; }
-        public int Port { get; set; }
-        public byte[] ReceivedBytes;
-
-        public ReceivedDataArgs(IPAddress ip , int port, byte[] data)
-        {
-            this.IPAddress = ip;
-            this.Port = port;
-            this.ReceivedBytes = data;
-        }
-    }
-
-
     class Server
     {
         ObservableCollection<User> collection = new ObservableCollection<User>();

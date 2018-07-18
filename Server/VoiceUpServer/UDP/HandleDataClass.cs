@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VoiceUpServer
+namespace VoiceUpServer.UDP
 {
     class HandleDataClass
     {
@@ -18,6 +18,5 @@ namespace VoiceUpServer
             Console.WriteLine("Received message from [{0}:{1}]:\r\n{2}",
                 args.IPAddress.ToString(), args.Port.ToString(), Encoding.ASCII.GetString(args.ReceivedBytes));
         }
-
     }
 }

@@ -153,6 +153,7 @@ namespace VoiceUP
 
             if (valid)
             {
+                //tu i tak będzie TCP połączanie.
                 ConnectWithServerUDP serverUDP = new ConnectWithServerUDP(ip, port);
 
                 bool connected = serverUDP.Connect();
