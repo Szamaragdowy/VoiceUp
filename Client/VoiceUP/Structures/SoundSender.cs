@@ -10,7 +10,7 @@ using System.Threading;
 using NAudio.Wave;
 using System.Media;
 
-namespace VoiceUP
+namespace VoiceUP.Structures
 {
     class SoundSender
     {
@@ -80,7 +80,6 @@ namespace VoiceUP
             sourceStream.StartRecording();
 
             c_v.Start();
-
         }
 
 
@@ -88,7 +87,6 @@ namespace VoiceUP
         {
             this.Dispose();
             Send_Bytes();
-
         }
 
         private void Send_Bytes()

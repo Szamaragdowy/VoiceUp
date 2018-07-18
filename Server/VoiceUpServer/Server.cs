@@ -5,12 +5,57 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VoiceUpServer.Models;
+using System.Net.Sockets;
+using System.Net;
+
 
 namespace VoiceUpServer
 {
+    public class ReceivedDataArgs
+    {
+        public IPAddress IPAddress { get; set; }
+        public int Port { get; set; }
+        public byte[] ReceivedBytes;
+
+        public ReceivedDataArgs(IPAddress ip , int port, byte[] data)
+        {
+            this.IPAddress = ip;
+            this.Port = port;
+            this.ReceivedBytes = data;
+        }
+    }
+
+
     class Server
     {
         ObservableCollection<User> collection = new ObservableCollection<User>();
+
+        public void Listen()
+        {
+            UdpClient listener = new UdpClient(5000);
+
+            IPEndPoint serverEP = new IPEndPoint(IPAddress.Any, 5000);
+
+            while(true)
+            {
+
+                byte[] data = listener.Receive(ref serverEP);
+                RaiseDataReceived(new ReceivedDataArgs(serverEP.Address,
+                    serverEP.Port, data));
+                //raise event
+            }
+        }
+
+        public delegate void DataReceived(object sender, ReceivedDataArgs args );
+
+        public event DataReceived DataREceivedEvent;
+
+        private void RaiseDataReceived(ReceivedDataArgs args)
+        {
+            if (DataREceivedEvent != null)
+                DataREceivedEvent(this, args);
+        }
+
 
         public Server()
         {

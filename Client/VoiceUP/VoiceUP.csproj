@@ -128,23 +128,25 @@
     <Compile Include="Codec.cs" />
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\IPAdresConverter.cs" />
-    <Compile Include="EditWindow.xaml.cs">
+    <Compile Include="Windows\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Structures\JsonLoader.cs" />
     <Compile Include="Interfaces\IServerInfo.cs" />
-    <Compile Include="SettingsWindow.xaml.cs">
+    <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ServerWindow.xaml.cs">
+    <Compile Include="Windows\ServerWindow.xaml.cs">
       <DependentUpon>ServerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SoundManager.cs" />
-    <Compile Include="SoundSender.cs" />
+    <Compile Include="Structures\SoundManager.cs" />
+    <Compile Include="Structures\SoundSender.cs" />
     <Compile Include="Structures\UserSettings.cs" />
     <Compile Include="Structures\MyServersJSON.cs" />
     <Compile Include="Structures\ServerInfo.cs" />
     <Compile Include="Structures\UserInfo.cs" />
-    <Page Include="EditWindow.xaml">
+    <Compile Include="UDP\ConnectWithServerUDP.cs" />
+    <Page Include="Windows\EditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,11 +162,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="Windows\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ServerWindow.xaml">
+    <Page Include="Windows\ServerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

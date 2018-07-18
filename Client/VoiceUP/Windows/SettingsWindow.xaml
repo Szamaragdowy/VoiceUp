@@ -1,9 +1,9 @@
-﻿<Window x:Class="VoiceUP.SettingsWindow"
+﻿<Window x:Class="VoiceUP.Windows.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VoiceUP"
+        xmlns:local="clr-namespace:VoiceUP.Windows"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" Height="525" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Topmost="True">
 

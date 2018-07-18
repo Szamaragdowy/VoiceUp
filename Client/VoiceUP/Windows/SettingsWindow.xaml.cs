@@ -1,53 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using VoiceUP.Structures;
 
-namespace VoiceUP
+namespace VoiceUP.Windows
 {
-    /// <summary>
-    /// Interaction logic for ServerWindow.xaml
-    /// </summary>
     public partial class SettingsWindow : Window
     {
+        private SoundManager soundManager; //referencja do menadżera dzwięku
 
-        private SoundManager soundManager = new SoundManager();
+        private int selectedDeviceInedx =-1; //zmiena z indexem wybranego mikrofonu
 
-        private int seleccteDeviceInedx =-1;
-
-        public SettingsWindow()
+        //konstruktorek
+        public SettingsWindow(SoundManager sm)
         {
             InitializeComponent();
+            this.soundManager = sm;
         }
 
-
+        //załadowanie listy dostępnych mikrofonów
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
         {
-
             var combo = sender as ComboBox;
             combo.ItemsSource = soundManager.ListOfMicrophones();
         }
 
-
+        //zmiana mikrofonu po wybraniu z listy
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combo = sender as ComboBox;
-            seleccteDeviceInedx = combo.SelectedIndex;
-            soundManager.setMicrophoneIndex(seleccteDeviceInedx);
+            selectedDeviceInedx = combo.SelectedIndex;
+            soundManager.setMicrophoneIndex(selectedDeviceInedx);
         }
 
+        //włączenie testu dzwięku
         private void ButtonStartTest_Click(object sender, RoutedEventArgs e)
         {
             ClearLabelInfo();
@@ -63,6 +49,7 @@ namespace VoiceUP
            
         }
 
+        //zatrzymanie testu dzwięku
         private void ButtonStopTest_Click(object sender, RoutedEventArgs e)
         {
             ClearLabelInfo();
@@ -77,19 +64,18 @@ namespace VoiceUP
             }
         }
 
+        //wyświtlanie komunikatów w ustawieniach
         private void SetLabelInfo(string msg, SolidColorBrush color)
         {
             LabelInfo.Content = msg;
-            LabelInfo.Foreground = color;
-            
+            LabelInfo.Foreground = color;     
         }
 
+        //czyszczenie komunikatu w ustawieniach
         private void ClearLabelInfo()
         {
             LabelInfo.Content = "";
             LabelInfo.Foreground = new SolidColorBrush(Colors.Black);
         }
-
-
     }
 }

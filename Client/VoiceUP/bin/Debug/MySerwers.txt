@@ -1,9 +1,9 @@
 {
   "MyServers": [
     {
-      "IP": "192.845.21.50",
-      "Port": "2413",
-      "Name": "Serwer Testowy"
+      "IP": "127.0.0.1",
+      "Port": "5000",
+      "Name": "Testowy"
     }
   ]
 }

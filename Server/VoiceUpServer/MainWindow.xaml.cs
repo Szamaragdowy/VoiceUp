@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using VoiceUpServer.Models;
@@ -17,9 +18,30 @@ namespace VoiceUpServer
         public MainWindow()
         {
             InitializeComponent();
-            serwer = new Server();
+
+
+            Server server = new Server();
+            HandleDataClass hdc = new HandleDataClass();
+
+
+
+            Thread serverThread = new Thread(() => server.Listen());
+            serverThread.Start();
+
+
+            Thread datahandlerthread = new Thread(() => hdc.SubscribeToEvent(server));
+            datahandlerthread.Start();
+
+
+            /*serwer = new Server();
             soundSender = new SoundSender();
-            soundSender.Receive(2000);
+            soundSender.Receive(2000);*/
+
+
+            while (true)
+            {
+                Thread.Sleep(100);
+            }
         }
 
         private void ListBox_Loaded(object sender, RoutedEventArgs e)

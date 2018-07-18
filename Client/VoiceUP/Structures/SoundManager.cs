@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VoiceUP
+namespace VoiceUP.Structures
 {
-    class SoundManager
+    public class SoundManager
     {
         NAudio.Wave.WaveIn sourceStream = null;
         NAudio.Wave.DirectSoundOut waveOut = null;
@@ -51,7 +51,6 @@ namespace VoiceUP
             return true;
         }
 
-
         public bool StopRecording()
         {
             if (waveOut != null)
@@ -69,16 +68,5 @@ namespace VoiceUP
 
             return true;
         }
-
-        //private void button4_Click(object sender, EventArgs e)
-        //{
-        //    button3_Click(sender, e);
-        //    this.Close();
-        //}
-
-        //private void Form1_Load(object sender, EventArgs e)
-        //{
-
-        //}
     }
 }
