@@ -75,7 +75,7 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBox Name="TextBoxPassword"  Margin="105,126,30,90" Width="Auto" FontSize="20"/>
+                <PasswordBox Name="TextBoxPassword" PasswordChar="*" Margin="105,126,30,90" Width="Auto" FontSize="20"/>
 
                 <Button  Content="Połącz" Margin="105,202,0,0"   Width="184"  
                          Height="44"      VerticalAlignment="Top"   

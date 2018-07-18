@@ -91,7 +91,7 @@ namespace VoiceUP
             bool valid = true;
 
             string login = TextBoxLogin.Text;
-            string password = TextBoxPassword.Text;
+            string password = TextBoxPassword.Password;
             var selected = ComboBoxServerList.SelectedItem;
 
             string ip = "";
