@@ -8,3 +8,5 @@ Client/VoiceUP/obj/Debug/VoiceUP_MarkupCompile.i.lref
 Client/VoiceUP/obj/Debug/Windows/SettingsWindow.g.i.cs
 Client/VoiceUP/obj/Debug
 Client/VoiceUP/bin/Debug
+Server/VoiceUpServer/obj/Debug
+Server/VoiceUpServer/bin/Debug
