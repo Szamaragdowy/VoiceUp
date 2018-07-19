@@ -32,7 +32,7 @@ namespace VoiceUpServer.Models
             set
             {
                 _IsMuted = value;
-                OnPropertyCahnged("Mute");
+                OnPropertyChange("Mute");
             }
         }
 
@@ -42,13 +42,13 @@ namespace VoiceUpServer.Models
             set
             {
                 _IsSoundOff = value;
-                OnPropertyCahnged("SoundOff");
+                OnPropertyChange("SoundOff");
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyCahnged(string propertyName)
+        private void OnPropertyChange(string propertyName)
         {
             if(PropertyChanged != null)
             {

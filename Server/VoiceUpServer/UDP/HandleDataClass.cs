@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VoiceUpServer.UDP
 {
     class HandleDataClass
     {
-        public void  SubscribeToEvent(Server server)
+        public void  SubscribeToEvent(UDPListener server)
         {
             server.DataREceivedEvent += server_DataRecivedEvent;
         }
