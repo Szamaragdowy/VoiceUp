@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using VoiceUpServer.Converters;
 using MaterialDesignThemes.Wpf;
+using System.Windows.Media;
 
 namespace VoiceUpServer.Converters
 {
@@ -21,7 +22,9 @@ namespace VoiceUpServer.Converters
 
             if (SoundStatus)
             {
-                return new PackIcon { Kind = PackIconKind.HeadphonesOff };
+                var x = new PackIcon { Kind = PackIconKind.HeadphonesOff };
+                x.Foreground = new SolidColorBrush(Color.FromRgb(System.Convert.ToByte("250"), System.Convert.ToByte("000"), System.Convert.ToByte("000")));
+                return x;
             }
             else
             {

@@ -5,17 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VoiceUpServer"
         xmlns:model="clr-namespace:VoiceUpServer.Models"
-        xmlns:structure="clr-namespace:VoiceUpServer.Structures"
         xmlns:converters="clr-namespace:VoiceUpServer.Converters"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="VoiceUp Serwer" Height="388" Width="653.333">
+        Title="VoiceUp Serwer" Height="414" Width="645.333" ResizeMode="NoResize">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="White" Offset="0"/>
+            <GradientStop Color="#FF2D8EE0" Offset="0"/>
             <GradientStop Color="#FF4A96C1" Offset="0.696"/>
-            <GradientStop Color="White" Offset="0.438"/>
+            <GradientStop Color="#FFA0B6C9" Offset="0.438"/>
             <GradientStop Color="#FF1768AC" Offset="0.872"/>
         </LinearGradientBrush>
     </Window.Background>
@@ -28,61 +27,92 @@
         <materialDesign:PackIcon x:Key="Headphone_On" x:Shared="False" Kind="Headphones" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="Headphone_Off" x:Shared="False" Kind="HeadphonesOff" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="Options" x:Shared="False" Kind="Settings" Foreground="White" Width="25" Height="25"/>
-        <materialDesign:PackIcon x:Key="UserIcon" x:Shared="False" Kind="Account" Foreground="Blue" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="UserIcon" x:Shared="False" Kind="Account" Foreground="#FF2196F3" Width="40" Height="40"/>
         <materialDesign:PackIcon x:Key="Microphone_Off" x:Shared="False" Kind="MicrophoneOff" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="User_Kick" x:Shared="False" Kind="AccountRemove" Foreground="White" Width="25" Height="25"/>
-        <materialDesign:PackIcon x:Key="User_Edit" x:Shared="False" Kind="Pencil" Foreground="White" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="Help" x:Shared="False" Kind="HelpCircleOutline" Foreground="#FF2196F3" Width="25" Height="25"/>
     </Window.Resources>
 
-    <Grid>
-        <Grid Margin="602,0,10,350">
-            <materialDesign:Card Margin="5,5,5,5" Height="65" >
-                <StackPanel Orientation="Horizontal">
-                    <Label Width="375" Content="Super Serwer (192.168.4.2:4785)" FontSize="25" 
-                               VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,8">
-                    </Label>
-                </StackPanel>
-            </materialDesign:Card>
-        </Grid>
-        <Grid VerticalAlignment="Top" Margin="10,10,10,80" Height="270">
-            <materialDesign:Card >
-                <ListBox Height="270" x:Name="ListActualUsersOnServer" IsSynchronizedWithCurrentItem="True" DataContext="{Binding Source={StaticResource User}}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="2" BorderBrush="LightBlue">
-                                <StackPanel Orientation="Horizontal" Height="50">
-                                    <Label Content="{Binding Name}" Width="150" FontSize="25"/>
-                                    <Button Margin="0,0,10,0" x:Name="ButtonHeadphones"  Click="ButtonHeadphones_Click" Content="{Binding SoundOff,Mode=TwoWay,Converter={StaticResource SoundStatusConverter }}">
-                                    </Button>
-                                    <Button Margin="0,0,10,0" x:Name="ButtonMicrophone"  Click="ButtonMicrophone_Click" Content="{Binding Mute,Mode=TwoWay,Converter={StaticResource MicrophoneStatusConverter}}">
-                                    </Button>
-                                    <Button Margin="0,0,10,0" x:Name="ButtonUserKick"  Click="ButtonKick_Click" >
-                                        <StaticResource ResourceKey="User_Kick"/>
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </materialDesign:Card>
-        </Grid>
-        <Grid VerticalAlignment="Bottom" Margin="5,0,5,10">
-            <materialDesign:Card>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Label Height="32">
-                            <StaticResource ResourceKey="UserIcon"/>
-                        </Label>
-                        <Label FontSize="20" Content="9/10" 
-                           VerticalAlignment="Center" HorizontalContentAlignment="Center" Width="59">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Grid VerticalAlignment="Top" Margin="10"  Height="270" Width="380">
+                <materialDesign:Card >
+                    <ListBox Height="270" x:Name="ListActualUsersOnServer" IsSynchronizedWithCurrentItem="True" DataContext="{Binding Source={StaticResource User}}">
+                        <ListBox.ItemTemplate >
+                            <DataTemplate>
+                                <Border BorderThickness="2" BorderBrush="LightBlue">
+                                    <StackPanel Orientation="Horizontal" Height="50" >
+                                        <Label Content="{Binding Name}" Width="150" FontSize="25"/>
+                                        <Button Margin="0,0,10,0" x:Name="ButtonHeadphones"  Click="ButtonHeadphones_Click" Content="{Binding SoundOff,Mode=TwoWay,Converter={StaticResource SoundStatusConverter }}">
+                                        </Button>
+                                        <Button Margin="0,0,10,0" x:Name="ButtonMicrophone"  Click="ButtonMicrophone_Click" Content="{Binding Mute,Mode=TwoWay,Converter={StaticResource MicrophoneStatusConverter}}">
+                                        </Button>
+                                        <Button Margin="0,0,10,0" x:Name="ButtonUserKick"  Click="ButtonKick_Click" >
+                                            <StaticResource ResourceKey="User_Kick"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </materialDesign:Card>
+            </Grid>
+            <Grid  x:Name="OptionsGrid" VerticalAlignment="Top"  Margin="0,10" Width="220" Height="270">
+                <materialDesign:Card  Width="220" Height="270">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                            <Label FontSize="13" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <Label.Content>
+                                    MAX ilość użytkowników:
+                                </Label.Content>
+                            </Label>
+                            <TextBox x:Name="TextboxMaxUsers" TextChanged="TextboxMaxUsers_TextChanged" FontSize="13"  PreviewTextInput="TextBox_PreviewTextInput" Margin="5" Width="50"  HorizontalContentAlignment="Center">
+                            </TextBox>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Visibility="Hidden" Name="WarningMaxUsers" Foreground="Red" FontSize="12" HorizontalContentAlignment="Center">
+                                <Label.Content>
+                                    Proszę wpisać liczbę od 2 do 30
+                                </Label.Content>
+                            </Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                            <Label FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="IP:"/>
+                            <TextBox x:Name="TextblockIP" FontSize="18" Text="192.168.1.100" TextAlignment="Center" PreviewTextInput="TextBox_PreviewTextInput" 
+                                     Margin="5" Width="150"  />
+                            <Label VerticalContentAlignment="Center" >
+                                <StaticResource ResourceKey="Help"/>
+                            </Label>
+                        </StackPanel>
+                        <Label Visibility="Hidden" Foreground="Red" FontSize="16" Name="WarningIP"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            Błędny adres.
                         </Label>
                     </StackPanel>
-                    <Button Margin="5,10,5,10" FontSize="25"  HorizontalAlignment="Center"  Height="40" >
-                        <StaticResource ResourceKey="Options"/>
-                    </Button>
-                    <Button Margin="5,10,10,10" FontSize="25" Content="Wyłącz" HorizontalAlignment="CEnter"  Height="40" Width="130" Click="Button_Click"/>
+                </materialDesign:Card>
+            </Grid>
+        </StackPanel>
+        <Grid VerticalAlignment="Bottom" Margin="10,0,10,10">
+            <materialDesign:Card>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="80">
+                    <StackPanel Margin="10,0,20,0">
+                        <TextBox Margin="0,15,0,0" TextChanged="TextboxServerName_TextChanged" x:Name="TextboxServerName" Width="300" FontSize="25" VerticalAlignment="Center"
+                           HorizontalContentAlignment="Center" Height="40" >
+                        </TextBox>
+                        <Label Visibility="Hidden" HorizontalContentAlignment="Center" Foreground="Red" x:Name="WarningServerName" Height="26" Content="Nazwa serwera nie może być pusta!">
+
+                        </Label>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                        <Label >
+                            <StaticResource ResourceKey="UserIcon"/>
+                        </Label>
+                        <Label x:Name="LabelAmountOfActualUsers" FontSize="20" VerticalContentAlignment="Center" Content="{Binding ElementName=ListActualUsersOnServer, Path=Items.Count, Mode=OneWay}"/>
+                        <Label FontSize="20" VerticalContentAlignment="Center" Content="/"/>
+                        <Label VerticalContentAlignment="Center" FontSize="20" Content="{Binding Text,ElementName=TextboxMaxUsers,UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <Button x:Name="StartButton" Margin="5,10,10,10" FontSize="25" Content="Start" HorizontalAlignment="CEnter"  Height="40" Width="130" Click="StartServer_Click"/>
                 </StackPanel>
             </materialDesign:Card>
         </Grid>
-    </Grid>
+    </StackPanel>
 </Window>

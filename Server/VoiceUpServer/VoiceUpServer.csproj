@@ -72,7 +72,6 @@
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
-    <Compile Include="Structures\UsersList.cs" />
     <Compile Include="UDP\HandleDataClass.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="UDP\ReceivedDataArgs.cs" />
@@ -119,6 +118,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

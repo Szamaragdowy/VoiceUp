@@ -21,9 +21,8 @@ namespace VoiceUpServer.Models
         }
 
         public User(string name)
-        {
-           
-            Name = name;
+        { 
+            this.Name = name;
         }
 
         public bool Mute
