@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
+using VoiceUpServer.AdditionalsWindows;
 using VoiceUpServer.Models;
-using VoiceUpServer.UDP;
 
 namespace VoiceUpServer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         Server server;
@@ -111,13 +105,34 @@ namespace VoiceUpServer
                     WarningIP.Content = "Pole nie moze być puste.";
                     isValid = false;
                 }
-                else if(!isGoodIpAdress(TextblockIP.Text))
+                else if (!MatchIP(TextblockIP.Text))
+                    {
+                        WarningIP.Visibility = Visibility.Visible;
+                        WarningIP.Content = "Ip ma zły format.";
+                        isValid = false;
+                    }
+                    else if (!isGoodIpAdress(TextblockIP.Text))
+                        {
+                            WarningIP.Visibility = Visibility.Visible;
+                            WarningIP.Content = "Błędny adres.";
+                            isValid = false;
+                        }
+
+
+                if (String.IsNullOrEmpty(TextblockPort.Text))
                 {
-                    WarningIP.Visibility = Visibility.Visible;
-                    WarningIP.Content = "Błędny adres.";
+                    WarningPORT.Visibility = Visibility.Visible;
+                    WarningPORT.Content = "Pole nie moze być puste.";
                     isValid = false;
                 }
-                
+                else if (!checkIsPortFree(Int32.Parse(TextblockPort.Text)))
+                {
+                    WarningPORT.Visibility = Visibility.Visible;
+                    WarningPORT.Content = "Port jest już zajęty.";
+                    isValid = false;
+                }
+
+
 
                 if (isValid)
                 {
@@ -172,6 +187,7 @@ namespace VoiceUpServer
 
         private void HideAllWarnings()
         {
+            WarningPORT.Visibility = Visibility.Hidden;
             WarningMaxUsers.Visibility = Visibility.Hidden;
             WarningServerName.Visibility = Visibility.Hidden;
             WarningIP.Visibility = Visibility.Hidden;
@@ -227,6 +243,61 @@ namespace VoiceUpServer
                 }
             }
             return output;
+        }
+
+        private bool MatchIP(string ip)
+        {
+            var x = Regex.Match(ip, @"^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$");
+            return x.Success;
+        }
+
+        private void Label_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            NetworkAdapters x = new NetworkAdapters();
+            x.Left = this.Left +  this.ActualWidth -5 ;
+            x.Top  = this.Top;
+            x.ShowDialog();
+            if (x.choicedIP != "")
+            {
+                TextblockIP.Text = x.choicedIP;
+            }
+
+        }
+
+        private void TextblockPort_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TextblockPort.Text == "") return;
+            int x = Int32.Parse(TextblockPort.Text);
+
+            if (x>=0 && x <65535)
+            {
+                WarningPORT.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                WarningPORT.Visibility = Visibility.Visible;
+                WarningPORT.Content = "Port może mieć wartości od 0  do 65535";
+                TextblockPort.Text = "";
+            }
+        }
+
+        private bool checkIsPortFree(int port)
+        {
+            bool isAvailable = true;
+
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            IPEndPoint[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpListeners();
+
+            foreach (IPEndPoint endpoint in tcpConnInfoArray)
+            {
+                if (endpoint.Port == port)
+                {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            return isAvailable;
         }
     }
 }

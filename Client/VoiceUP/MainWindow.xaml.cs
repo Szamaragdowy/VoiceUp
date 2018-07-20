@@ -123,7 +123,6 @@ namespace VoiceUP
                     {
                         ComboBoxServerList.BorderBrush = new SolidColorBrush(Colors.Red);
                         WarningSerwer.Visibility = Visibility.Visible;
-                        Console.WriteLine("No match.");
                         valid = false;
                     }
                 }

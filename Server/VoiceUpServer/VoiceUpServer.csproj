@@ -72,12 +72,16 @@
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
+    <Compile Include="Models\NetworkAdapter.cs" />
     <Compile Include="UDP\HandleDataClass.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="UDP\ReceivedDataArgs.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="SoundSender.cs" />
     <Compile Include="UDP\UDPListener.cs" />
+    <Compile Include="AdditionalsWindows\NetworkAdapters.xaml.cs">
+      <DependentUpon>NetworkAdapters.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,6 +94,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="AdditionalsWindows\NetworkAdapters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
