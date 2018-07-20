@@ -8,20 +8,41 @@ namespace VoiceUpServer
     {
 
         private ObservableCollection<User> usersList;
-
         public ObservableCollection<User> ActualListOfUsers => usersList;
+        private string _ServerName;
+        private string _ServerIP;
+        private int _ServerPORT;
+        private int _MaxUsers;
 
-        private string Name;
-
+        #region propertasy
         public string ServerName
         {
-            get { return Name; }
-            set { Name = value; }
+            get { return _ServerName; }
+            set { _ServerName = value; }
         }
-       
+        public string ServerIP
+        {
+            get { return _ServerIP; }
+            set { _ServerIP = value; }
+        }
+        public int ServerPort
+        {
+            get { return _ServerPORT; }
+            set { _ServerPORT = value; }
+        }
+        public int MaxUsers
+        {
+            get { return _MaxUsers; }
+            set { _MaxUsers = value; }
+        }
+        #endregion
+
         public Server(string Name, string ip, int port,int maxusers)
         {
-            this.Name = Name;
+            this._ServerName = Name;
+            this._ServerIP = ip;
+            this._ServerPORT = port;
+            this._MaxUsers = maxusers;
             this.usersList = new ObservableCollection<User>();
         }
 

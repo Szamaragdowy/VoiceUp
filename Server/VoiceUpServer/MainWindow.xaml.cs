@@ -139,8 +139,10 @@ namespace VoiceUpServer
                     blockOptions();
                     string serverName = TextboxServerName.Text;
                     string ip = TextblockIP.Text;
+                    int port = Int32.Parse(TextblockPort.Text);
+                    int maxuser = Int32.Parse(TextboxMaxUsers.Text);
 
-                    this.server = new Server(serverName, ip, 500, 10);
+                    this.server = new Server(serverName, ip, port, maxuser);
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
                     server.start();
                     StartButton.Content = "Stop";
