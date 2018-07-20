@@ -6,15 +6,14 @@ namespace VoiceUpServer
 {
     class Server
     {
-
         private ObservableCollection<User> usersList;
-        public ObservableCollection<User> ActualListOfUsers => usersList;
         private string _ServerName;
         private string _ServerIP;
         private int _ServerPORT;
         private int _MaxUsers;
 
         #region propertasy
+        public ObservableCollection<User> ActualListOfUsers => usersList;
         public string ServerName
         {
             get { return _ServerName; }
@@ -48,7 +47,10 @@ namespace VoiceUpServer
 
         public void start()
         {
-            load();//do usuniecie potem
+            //tutaj trzeba włączyć jakieś nasłuchiwanie na porcie itp
+
+
+            AddNewUser(new User("Willa","192.168.1.150"));
         }
 
         public void stop()
@@ -56,44 +58,10 @@ namespace VoiceUpServer
             clearList();
         }
 
+        //wyrzuca wszystkich uzytkowników z listy
         private void clearList()
         {
             usersList.Clear();
-        }
-
-        //to tylko dla TESTow
-        private void load()
-        {
-            usersList.Add(new User("Willa"));
-            usersList.Add(new User("Isak"));
-            usersList.Add(new User("Victor"));
-            usersList.Add(new User("Jules"));
-        }
-
-        //wyciszenie/odciszenie kogoś mikrofonu
-        public void ChangeUserMicrophoneStatus(User user)
-        {
-            if (!user.Mute)
-            {
-                user.Mute = true;
-            }
-            else
-            {
-                user.Mute = false;
-            }
-        }
-
-        //przesyłanie / nie przesyłanie dzwięku do danego uzytkownika
-        public void ChangeUserSoundStatus(User user)
-        {
-            if (!user.SoundOff)
-            {
-                user.SoundOff = true;
-            }
-            else
-            {
-                user.SoundOff = false;
-            }
         }
 
         //wyrzucenie użytkownika
@@ -107,5 +75,34 @@ namespace VoiceUpServer
         {
             usersList.Add(user);
         }
+
+
+        #region servergui
+        //wyciszenie/odciszenie  - podpiętę do przycisków gui
+        public void ChangeUserMicrophoneStatus(User user)
+        {
+            if (!user.Mute)
+            {
+                user.Mute = true;
+            }
+            else
+            {
+                user.Mute = false;
+            }
+        }
+
+        //przesyłanie /nie przesyłanie dzwięku -  podpiętę do przycisków gui
+        public void ChangeUserSoundStatus(User user)
+        {
+            if (!user.SoundOff)
+            {
+                user.SoundOff = true;
+            }
+            else
+            {
+                user.SoundOff = false;
+            }
+        }
+        #endregion
     }
 }

@@ -10,19 +10,25 @@ namespace VoiceUpServer.Models
     public class User : INotifyPropertyChanged
     {
         private bool _IsMuted;
-
         private bool _IsSoundOff;
+        private string _IP;
 
         public string Name { get; set; }
 
+        public string IP
+        {
+            get { return _IP; }
+        }
+        
         public User()
         {
 
         }
 
-        public User(string name)
+        public User(string name, string ip)
         { 
             this.Name = name;
+            this._IP = ip;
         }
 
         public bool Mute
