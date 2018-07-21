@@ -73,6 +73,7 @@
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
     <Compile Include="Models\NetworkAdapter.cs" />
+    <Compile Include="Protocol.cs" />
     <Compile Include="UDP\HandleDataClass.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="UDP\ReceivedDataArgs.cs" />

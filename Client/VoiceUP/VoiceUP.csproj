@@ -128,6 +128,7 @@
     <Compile Include="Codec.cs" />
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\IPAdresConverter.cs" />
+    <Compile Include="Protocol.cs" />
     <Compile Include="Windows\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
