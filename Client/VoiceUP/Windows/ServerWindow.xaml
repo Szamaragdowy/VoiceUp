@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VoiceUP.Windows"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+
         mc:Ignorable="d" Height="525" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Topmost="True">
 
     <Window.Background>

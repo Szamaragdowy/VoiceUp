@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using VoiceUP.Structures;
+using VoiceUP.TCP;
 using VoiceUP.UDP;
 using VoiceUP.Windows;
 
@@ -151,11 +152,10 @@ namespace VoiceUP
 
 
             if (valid)
-            {
-                //tu i tak będzie TCP połączanie.
-                ConnectWithServerUDP serverUDP = new ConnectWithServerUDP(ip, port);
+            { 
+                ConnectWithServerTCP connectionTCP = new ConnectWithServerTCP(ip,port);
+                bool connected = connectionTCP.Connect();
 
-                bool connected = serverUDP.Connect();
                 if (connected)
                 {
                     ServerWindow okno = new ServerWindow();
@@ -164,8 +164,8 @@ namespace VoiceUP
                 }
                 else
                 {
-                    MessageBox.Show("PUPA, nie połączyłeś się :/", "",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Nie udało się połączyć z serwerem.", "",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }

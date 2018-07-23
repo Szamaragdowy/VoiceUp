@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -24,10 +25,11 @@ namespace VoiceUpServer
             
             TextboxServerName.Text = "testowy";
             TextboxMaxUsers.Text = "4";
-
-
+            TextblockPort.Text = "5000";
 
             TextblockIP.Text = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
+
+            
 
             // LabelAmountOfActualUsers.Content = 
 
@@ -132,8 +134,6 @@ namespace VoiceUpServer
                     isValid = false;
                 }
 
-
-
                 if (isValid)
                 {
                     blockOptions();
@@ -144,7 +144,9 @@ namespace VoiceUpServer
 
                     this.server = new Server(serverName, ip, port, maxuser);
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
-                    server.start();
+
+                    SynchronizationContext uiContext = SynchronizationContext.Current;
+                    server.start(uiContext);
                     StartButton.Content = "Stop";
                 }          
             }
