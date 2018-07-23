@@ -14,7 +14,7 @@ namespace VoiceUpServer
 {
     public partial class MainWindow : Window
     {
-        Server server;
+        VoiceUpServerClass server;
         SoundSender soundSender;
 
         public MainWindow()
@@ -142,11 +142,13 @@ namespace VoiceUpServer
                     int port = Int32.Parse(TextblockPort.Text);
                     int maxuser = Int32.Parse(TextboxMaxUsers.Text);
 
-                    this.server = new Server(serverName, ip, port, maxuser);
+                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser);
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
 
-                    SynchronizationContext uiContext = SynchronizationContext.Current;
-                    server.start(uiContext);
+
+                    Thread thread = new Thread(server.start);
+                    thread.Start();
+
                     StartButton.Content = "Stop";
                 }          
             }

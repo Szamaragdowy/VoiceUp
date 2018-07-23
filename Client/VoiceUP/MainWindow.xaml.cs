@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using VoiceUP.Structures;
-using VoiceUP.TCP;
-using VoiceUP.UDP;
 using VoiceUP.Windows;
+using VoiceUpServer.TCP;
 
 namespace VoiceUP
 {
@@ -153,9 +153,9 @@ namespace VoiceUP
 
             if (valid)
             { 
-                ConnectWithServerTCP connectionTCP = new ConnectWithServerTCP(ip,port);
-                bool connected = connectionTCP.Connect();
+                AsynchronousClient.StartClient(IPAddress.Parse(ip),port);
 
+                bool connected = true;
                 if (connected)
                 {
                     ServerWindow okno = new ServerWindow();

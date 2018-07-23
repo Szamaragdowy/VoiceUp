@@ -129,7 +129,8 @@
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\IPAdresConverter.cs" />
     <Compile Include="Protocol.cs" />
-    <Compile Include="TCP\ConnectWithServerTCP.cs" />
+    <Compile Include="TCP\AsynchronousClient.cs" />
+    <Compile Include="TCP\StateObject.cs" />
     <Compile Include="Windows\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>

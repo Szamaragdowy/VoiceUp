@@ -1,20 +1,110 @@
 ﻿using System;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using VoiceUpServer.Models;
+using VoiceUpServer.TCP;
+using System.Text;
+using System.Windows;
+using System.Collections.Generic;
+using System.Windows.Data;
 
-namespace VoiceUpServer.TCP
+namespace VoiceUpServer
 {
-    public static class AsynchronousSocketListener
+    class VoiceUpServerClass
     {
         public static ManualResetEvent allDone = new ManualResetEvent(false);
+        private ObservableCollection<User> _usersList;
+        private string _ServerName;
+        private string _ServerIP;
+        private IPAddress _ServerIPAddress;
+        private int _ServerPORT;
+        private int _MaxUsers;
+        private object _itemsLock;
 
-        public static void StartListening(IPAddress ip, int port)
+        #region propertasy
+        public ObservableCollection<User> ActualListOfUsers => _usersList;
+        public string ServerName
+        {
+            get { return _ServerName; }
+            set { _ServerName = value; }
+        }
+        public string ServerIP
+        {
+            get { return _ServerIP; }
+            set { _ServerIP = value; }
+        }
+        public int ServerPort
+        {
+            get { return _ServerPORT; }
+            set { _ServerPORT = value; }
+        }
+        public int MaxUsers
+        {
+            get { return _MaxUsers; }
+            set { _MaxUsers = value; }
+        }
+        #endregion
+
+        public VoiceUpServerClass(string Name, string ip, int port,int maxusers)
+        {
+            this._ServerName = Name;
+            this._ServerIP = ip;
+            this._ServerIPAddress = IPAddress.Parse(_ServerIP);
+            this._ServerPORT = port;
+            this._MaxUsers = maxusers;
+            this._usersList = new ObservableCollection<User>();
+            _itemsLock = new object();
+            BindingOperations.EnableCollectionSynchronization(this._usersList, _itemsLock);
+        }
+
+        public void start()
+        {
+            StartListening(_ServerIPAddress, _ServerPORT);
+        }
+
+        public void stop()
+        {
+            try
+            {
+                //TcpServerThread.Abort();
+            }
+            catch(Exception e)
+            {
+               Console.WriteLine(e.Message);
+               Console.WriteLine(" TCP >> " + "Koniec SERWERA ");
+            }   
+            Console.WriteLine(" TCP >> " + "exit");
+            clearList();
+        }
+
+        private void clearList()
+        {
+            _usersList.Clear();
+        }
+
+        public void KickUser(User user)
+        {
+            lock (_itemsLock)
+            {
+                _usersList.Remove(user);
+            }
+        }
+
+        public void AddUser (User user)
+        {
+            lock (_itemsLock)
+            {
+                _usersList.Add(user);
+            }
+        }
+
+        private void StartListening(IPAddress ip, int port)
         {
             byte[] bytes = new Byte[1024];
             IPEndPoint localEndPoint = new IPEndPoint(ip, port);
-            Socket listener = new Socket(AddressFamily.InterNetwork,SocketType.Stream, ProtocolType.Tcp);
+            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try
             {
@@ -28,7 +118,7 @@ namespace VoiceUpServer.TCP
 
                     // Start an asynchronous socket to listen for connections.
                     Console.WriteLine("Waiting for a connection...");
-                    listener.BeginAccept(new AsyncCallback(AcceptCallback),listener);
+                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
 
                     // Wait until a connection is made before continuing.
                     allDone.WaitOne();
@@ -40,7 +130,7 @@ namespace VoiceUpServer.TCP
             }
         }
 
-        public static void AcceptCallback(IAsyncResult ar)
+        private void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
             allDone.Set();
@@ -52,10 +142,10 @@ namespace VoiceUpServer.TCP
             // Create the state object.
             StateObject state = new StateObject();
             state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,new AsyncCallback(ReadCallback), state);
+            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
 
-        public static void ReadCallback(IAsyncResult ar)
+        private void ReadCallback(IAsyncResult ar)
         {
             String content = String.Empty;
 
@@ -64,12 +154,10 @@ namespace VoiceUpServer.TCP
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
 
-            // Read data from the client socket. 
             int bytesRead = handler.EndReceive(ar);
 
             if (bytesRead > 0)
             {
-                // There  might be more data, so store the data received so far.
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
 
                 content = state.sb.ToString();
@@ -78,7 +166,7 @@ namespace VoiceUpServer.TCP
                     Console.WriteLine("Read {0} bytes from socket. \n Data : {1}", content.Length, content);
 
                     string[] data = content.Split('/');
-                    switch(data[0])
+                    switch (data[0])
                     {
                         case "CYA":
                             //użytkownik się rozłącza
@@ -87,7 +175,6 @@ namespace VoiceUpServer.TCP
                             break;
                         case "JOIN":
                             //pierwsze połączenie użytkownika z serwerem
-
                             //SEND_P/klucz_publiczny
                             Send(handler, "SEND_P/Public_key<EOF>");
                             break;
@@ -101,6 +188,7 @@ namespace VoiceUpServer.TCP
                             {
                                 if (isNotFull)
                                 {
+                                    AddUser(new User("name", "9.5.6.7"));
                                     Send(handler, "LOGIN_ACK/<EOF>");
                                     Send(handler, "AKT_USR/<EOF>");//lista użytkowników
                                 }
@@ -118,11 +206,11 @@ namespace VoiceUpServer.TCP
                             //klient potwierdza swoją obecność
                             //reset timere
                             break;
-                       
+
 
 
                             //timer z odpytywaniem 2 minuty
-                    } 
+                    }
                 }
                 else
                 {
@@ -133,7 +221,7 @@ namespace VoiceUpServer.TCP
             }
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
@@ -153,10 +241,41 @@ namespace VoiceUpServer.TCP
             }
         }
 
-        private static void Send(Socket handler, String data)
+        private void Send(Socket handler, String data)
         {
             byte[] byteData = Encoding.ASCII.GetBytes(data);
             handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
+        }
+
+
+
+
+
+
+
+
+        public void ChangeUserMicrophoneStatus(User user)
+        {
+            if (!user.Mute)
+            {
+                user.Mute = true;
+            }
+            else
+            {
+                user.Mute = false;
+            }
+        }
+
+        public void ChangeUserSoundStatus(User user)
+        {
+            if (!user.SoundOff)
+            {
+                user.SoundOff = true;
+            }
+            else
+            {
+                user.SoundOff = false;
+            }
         }
     }
 }

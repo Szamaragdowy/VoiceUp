@@ -101,7 +101,8 @@ namespace VoiceUP.Windows
         //rozłączenie z serwerem
         private void ButtonDisconnect_Click(object sender, RoutedEventArgs e)
         {
-
+            //AsynchronousClient.send("CYA/<EOF>")
+            //   _TCPConnection.SendMessageToServer("CYA/<EOF>");
         }
     }
 }
