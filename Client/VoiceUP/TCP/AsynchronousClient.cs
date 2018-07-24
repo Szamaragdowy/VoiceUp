@@ -27,11 +27,11 @@ namespace VoiceUpServer.TCP
                 client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
                 connectDone.WaitOne();
 
-                // Send test data to the remote device.
-                Send(client, "LOGIN/marek/<EOF>");
+
+                Send(client, "JOIN/<EOF>");
                 sendDone.WaitOne();
 
-                // Receive the response from the remote device.
+
                 Receive(client);
                 receiveDone.WaitOne();
 

@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Collections.Generic;
 using System.Windows.Data;
+using System.Security.Cryptography;
 
 namespace VoiceUpServer
 {
@@ -22,6 +23,9 @@ namespace VoiceUpServer
         private int _ServerPORT;
         private int _MaxUsers;
         private object _itemsLock;
+        private string _publicKey;
+        private string _privateKey;
+        static string CONTAINER_NAME = "MyContainerName";
 
         #region propertasy
         public ObservableCollection<User> ActualListOfUsers => _usersList;
@@ -57,6 +61,56 @@ namespace VoiceUpServer
             this._usersList = new ObservableCollection<User>();
             _itemsLock = new object();
             BindingOperations.EnableCollectionSynchronization(this._usersList, _itemsLock);
+            generateKeys();
+        }
+        private void generateKeys()
+        {
+            CspParameters cspParameters = new CspParameters(1);
+            cspParameters.KeyContainerName = CONTAINER_NAME;
+            cspParameters.Flags = CspProviderFlags.UseMachineKeyStore;
+            cspParameters.ProviderName = "Microsoft Strong Cryptographic Provider";
+            var rsa = new RSACryptoServiceProvider(cspParameters);
+            rsa.PersistKeyInCsp = true;
+
+            this._publicKey = rsa.ToXmlString(false);
+            this._privateKey = rsa.ToXmlString(true);
+        }
+
+        private  byte[] Encrypt(byte[] plain)
+        {
+            byte[] encrypted;
+            int rsa_provider = 1;
+            CspParameters cspParameters = new CspParameters(rsa_provider);
+            cspParameters.KeyContainerName = CONTAINER_NAME;
+
+            using (var rsa = new RSACryptoServiceProvider(1024, cspParameters))
+            {
+                encrypted = rsa.Encrypt(plain, true);
+            }
+            return encrypted;
+        }
+
+        private  byte[] Decrypt(byte[] encrypted)
+        {
+            byte[] decrypted;
+
+            CspParameters cspParameters = new CspParameters();
+            cspParameters.KeyContainerName = CONTAINER_NAME;
+
+            using (var rsa = new RSACryptoServiceProvider(1024, cspParameters))
+            {
+                decrypted = rsa.Decrypt(encrypted, true);
+            }
+            return decrypted;
+        }
+
+        public  void DeleteKeyInCSP()
+        {
+            var cspParams = new CspParameters();
+            cspParams.KeyContainerName = CONTAINER_NAME;
+            var rsa = new RSACryptoServiceProvider(cspParams);
+            rsa.PersistKeyInCsp = false;
+            rsa.Clear();
         }
 
         public void start()
@@ -176,7 +230,7 @@ namespace VoiceUpServer
                         case "JOIN":
                             //pierwsze połączenie użytkownika z serwerem
                             //SEND_P/klucz_publiczny
-                            Send(handler, "SEND_P/Public_key<EOF>");
+                            Send(handler, "SEND_P/"+ _publicKey+"/< EOF>");
                             break;
                         case "LOGIN":
                             //logowanie uzytkownika
@@ -246,13 +300,6 @@ namespace VoiceUpServer
             byte[] byteData = Encoding.ASCII.GetBytes(data);
             handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
         }
-
-
-
-
-
-
-
 
         public void ChangeUserMicrophoneStatus(User user)
         {

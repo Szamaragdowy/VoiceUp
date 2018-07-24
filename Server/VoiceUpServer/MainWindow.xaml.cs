@@ -16,6 +16,7 @@ namespace VoiceUpServer
     {
         VoiceUpServerClass server;
         SoundSender soundSender;
+        Thread ServerTCPthread;
 
         public MainWindow()
         {
@@ -146,14 +147,15 @@ namespace VoiceUpServer
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
 
 
-                    Thread thread = new Thread(server.start);
-                    thread.Start();
+                    ServerTCPthread = new Thread(server.start);
+                    ServerTCPthread.Start();
 
                     StartButton.Content = "Stop";
                 }          
             }
             else
             {
+                var a = ServerTCPthread.ThreadState;
                 server.stop();
                 UnBlockOptions();
                 StartButton.Content = "Start";
@@ -172,7 +174,6 @@ namespace VoiceUpServer
                         {
                             return true;
                         }
-
                     }
                 }
             }
