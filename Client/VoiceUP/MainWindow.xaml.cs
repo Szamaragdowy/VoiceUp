@@ -152,10 +152,11 @@ namespace VoiceUP
 
 
             if (valid)
-            { 
-                AsynchronousClient.StartClient(IPAddress.Parse(ip),port);
+            {
+                AsynchronousClient client = new AsynchronousClient();
+                
+                bool connected = client.TryToConnect(IPAddress.Parse(ip), port, login, password);
 
-                bool connected = true;
                 if (connected)
                 {
                     ServerWindow okno = new ServerWindow();

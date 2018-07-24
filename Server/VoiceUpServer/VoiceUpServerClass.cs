@@ -90,7 +90,7 @@ namespace VoiceUpServer
             return encrypted;
         }
 
-        private  byte[] Decrypt(byte[] encrypted)
+        private  string Decrypt(byte[] encrypted)
         {
             byte[] decrypted;
 
@@ -101,7 +101,7 @@ namespace VoiceUpServer
             {
                 decrypted = rsa.Decrypt(encrypted, true);
             }
-            return decrypted;
+            return decrypted.ToString();
         }
 
         public  void DeleteKeyInCSP()
@@ -219,7 +219,7 @@ namespace VoiceUpServer
                 {
                     Console.WriteLine("Read {0} bytes from socket. \n Data : {1}", content.Length, content);
 
-                    string[] data = content.Split('/');
+                    string[] data = content.Split('~');
                     switch (data[0])
                     {
                         case "CYA":
@@ -230,30 +230,31 @@ namespace VoiceUpServer
                         case "JOIN":
                             //pierwsze połączenie użytkownika z serwerem
                             //SEND_P/klucz_publiczny
-                            Send(handler, "SEND_P/"+ _publicKey+"/< EOF>");
+                            Send(handler, "SEND_P~" + _publicKey+ "~< EOF>");
                             break;
                         case "LOGIN":
-                            //logowanie uzytkownika
-                            //zaszyfrowane haslo serwera kluczem publicznym
-                            //suma kontrolna
+                            string decryptedLogin = Decrypt(Encoding.ASCII.GetBytes(data[1]));
+                            string decryptedPass = Decrypt(Encoding.ASCII.GetBytes(data[2]));
+                            string checksum = Decrypt(Encoding.ASCII.GetBytes(data[3]));
+
                             bool gooodPAss = true;
                             bool isNotFull = true;
                             if (gooodPAss)
                             {
                                 if (isNotFull)
                                 {
-                                    AddUser(new User("name", "9.5.6.7"));
-                                    Send(handler, "LOGIN_ACK/<EOF>");
-                                    Send(handler, "AKT_USR/<EOF>");//lista użytkowników
+                                    AddUser(new User(decryptedLogin, "9.5.6.7"));
+                                    Send(handler, "LOGIN_ACK~<EOF>");
+                                    Send(handler, "AKT_USR~<EOF>");//lista użytkowników
                                 }
                                 else
                                 {
-                                    Send(handler, "FULL/<EOF>");
+                                    Send(handler, "FULL~<EOF>");
                                 }
                             }
                             else
                             {
-                                Send(handler, "LOGIN_NAK/<EOF>");
+                                Send(handler, "LOGIN_NAK~<EOF>");
                             }
                             break;
                         case "CHECK_Y":
@@ -269,8 +270,7 @@ namespace VoiceUpServer
                 else
                 {
                     // Not all data received. Get more.
-                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                         new AsyncCallback(ReadCallback), state);
+                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,new AsyncCallback(ReadCallback), state);
                 }
             }
         }

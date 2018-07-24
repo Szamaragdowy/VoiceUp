@@ -128,7 +128,6 @@
     <Compile Include="Codec.cs" />
     <Compile Include="Connections.cs" />
     <Compile Include="Converters\IPAdresConverter.cs" />
-    <Compile Include="Protocol.cs" />
     <Compile Include="TCP\AsynchronousClient.cs" />
     <Compile Include="TCP\StateObject.cs" />
     <Compile Include="Windows\EditWindow.xaml.cs">

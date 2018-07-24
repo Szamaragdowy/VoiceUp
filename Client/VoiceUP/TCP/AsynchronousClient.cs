@@ -4,20 +4,23 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Text;
 using VoiceUpServer.TCP;
-
+using System.Security.Cryptography;
 
 namespace VoiceUpServer.TCP
 {
-    public static class AsynchronousClient
+    public  class AsynchronousClient
     {
-        private static ManualResetEvent connectDone = new ManualResetEvent(false);
-        private static ManualResetEvent sendDone = new ManualResetEvent(false);
-        private static ManualResetEvent receiveDone = new ManualResetEvent(false);
+        private  ManualResetEvent connectDone = new ManualResetEvent(false);
+        private  ManualResetEvent sendDone = new ManualResetEvent(false);
+        private  ManualResetEvent receiveDone = new ManualResetEvent(false);
+        private  bool connected = false;
+        private string response = String.Empty;
 
-        private static String response = String.Empty;
-
-        public static void StartClient(IPAddress ip, int port)
+        public bool TryToConnect(IPAddress ip, int port,string nick,string xd)
         {
+            byte[] _nick = Encoding.ASCII.GetBytes(nick);
+            byte[] _xd = Encoding.ASCII.GetBytes(xd);
+            byte[] _checksum = Encoding.ASCII.GetBytes("997");
             try
             {
                 IPEndPoint remoteEP = new IPEndPoint(ip, port);
@@ -28,16 +31,44 @@ namespace VoiceUpServer.TCP
                 connectDone.WaitOne();
 
 
-                Send(client, "JOIN/<EOF>");
+                Send(client, "JOIN~<EOF>");
                 sendDone.WaitOne();
-
 
                 Receive(client);
                 receiveDone.WaitOne();
 
-                Console.WriteLine("Response received : {0}", response);
+                Console.WriteLine("Read {0} bytes from socket. \n Data : {1}", response.Length, response);
+                string[] data = response.Split('~');
+                switch (data[0])
+                {
+                    case "SEND_P":
+                        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                        rsa.FromXmlString(data[1]);
+                        byte[] encryptedLogin = rsa.Encrypt(_nick, true);
+                        byte[] encryptedXd = rsa.Encrypt(_xd, true);
+                        byte[] checksum = rsa.Encrypt(_checksum, true);
 
-                // Release the socket.
+
+                        Send(client, "LOGIN~" + encryptedLogin + "~" + encryptedXd +"~"+ checksum+"~< EOF>");
+                        sendDone.WaitOne();
+                        connected = true;
+                        break;
+                    case "FULL":
+
+                        break;
+                    case "LOGIN_ACK":
+
+
+                        //wair for AKT_USE
+                        connected = true;
+                        break;
+                    case "LOGIN_NAK":
+
+                        
+                        break;
+                }
+
+
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
             }
@@ -45,9 +76,10 @@ namespace VoiceUpServer.TCP
             {
                 Console.WriteLine(e.ToString());
             }
+            return connected;
         }
 
-        private static void ConnectCallback(IAsyncResult ar)
+        private  void ConnectCallback(IAsyncResult ar)
         {
             try
             {
@@ -62,7 +94,7 @@ namespace VoiceUpServer.TCP
             }
         }
 
-        private static void Receive(Socket client)
+        private  void Receive(Socket client)
         {
             try
             {
@@ -76,7 +108,7 @@ namespace VoiceUpServer.TCP
             }
         }
 
-        private static void ReceiveCallback(IAsyncResult ar)
+        private  void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
@@ -87,20 +119,15 @@ namespace VoiceUpServer.TCP
 
                 if (bytesRead > 0)
                 {
-                    // There might be more data, so store the data received so far.
                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-
-                    // Get the rest of the data.
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
                 }
                 else
                 {
-                    // All the data has arrived; put it in response.
                     if (state.sb.Length > 1)
                     {
                         response = state.sb.ToString();
                     }
-                    // Signal that all bytes have been received.
                     receiveDone.Set();
                 }
             }
@@ -110,19 +137,19 @@ namespace VoiceUpServer.TCP
             }
         }
 
-        public static void Send(Socket client, String data)
+        #region sending
+
+        public  void Send(Socket client, String data)
         {
             byte[] byteData = Encoding.ASCII.GetBytes(data);
-
             client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private  void SendCallback(IAsyncResult ar)
         {
             try
             {
                 Socket client = (Socket)ar.AsyncState;
-
                 int bytesSent = client.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to server.", bytesSent);
                 sendDone.Set();
@@ -132,5 +159,7 @@ namespace VoiceUpServer.TCP
                 Console.WriteLine(e.ToString());
             }
         }
+
+         #endregion
     }
 }
