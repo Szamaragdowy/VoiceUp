@@ -125,11 +125,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UDP\OpusCodec.cs" />
     <Compile Include="UDP\Connections.cs" />
     <Compile Include="Converters\IPAdresConverter.cs" />
     <Compile Include="TCP\myTCPClient.cs" />
     <Compile Include="TCP\StateObject.cs" />
+    <Compile Include="UDP\G722ChatCodec.cs" />
     <Compile Include="UDP\IAudioReceiver.cs" />
     <Compile Include="UDP\IAudioSender.cs" />
     <Compile Include="UDP\INetworkChatCodec.cs" />

@@ -15,24 +15,8 @@ namespace VoiceUP.UDP
 
         public ConnectWithServerUDP(string ip,int port,int indexDevice)
         {
-            //this.client = new UdpClient();
-            //this.serversIp = new IPEndPoint(IPAddress.Parse(ip), port);
             Connect(new IPEndPoint(IPAddress.Parse(ip), port), indexDevice);
         }
-
-       /* public void SendBytes(byte[] data)
-        {
-            try
-            {
-                client.Connect(this.serversIp);
-                client.Send(data, data.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.WriteLine("Błąd wysyłania danych" + data);
-            }
-        }*/
 
         public void Close()
         {

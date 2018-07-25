@@ -26,7 +26,6 @@ namespace VoiceUpServer
         private RSACryptoServiceProvider _rsa;
         private byte[] _buffer = new byte[1024];
         private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        private Socket _UDPServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         ASCIIEncoding ByteConverter = new ASCIIEncoding();
         private String _password;
         private bool ServerClosed;
@@ -89,18 +88,8 @@ namespace VoiceUpServer
 
         public void startUDP()
         {
-            try { 
-                Console.WriteLine("UDP   ->    Setting up server . . .");
-                _UDPServerSocket.Bind(new IPEndPoint(_ServerIPAddress, _UDPPort));
-
-                IPEndPoint ipeSender = new IPEndPoint(IPAddress.Any, 0);
-                EndPoint epSender = (EndPoint)ipeSender;
-                _UDPServerSocket.BeginReceive(_UDPBuffer, 0, _UDPBuffer.Length, SocketFlags.None, new AsyncCallback(UDPReceiveCallBack), _UDPServerSocket);
-            }
-            catch (Exception ex) 
-            {
-                Console.WriteLine("EROR UDP" + ex.Message);
-            }
+            Console.WriteLine("UDP   ->    Setting up server . . .");
+            Class1 udp = new Class1(_UDPPort);
         }
 
         private void UDPReceiveCallBack(IAsyncResult ar)
