@@ -9,7 +9,7 @@
              Height="320"
              WindowStyle="None"
              SizeToContent="Manual"
-             Width="450" ResizeMode="NoResize" ShowInTaskbar="False" Title="Edycja" Topmost="True" WindowStartupLocation="Manual">
+             Width="435" ResizeMode="NoResize" ShowInTaskbar="False" Title="Edycja" Topmost="True" WindowStartupLocation="Manual">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

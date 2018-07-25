@@ -7,7 +7,16 @@ namespace VoiceUP.Structures
     {
         public static  T LoadJson<T>(string path)
         {
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+            if (File.Exists(path))
+            {
+                return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+            }
+            else
+            {
+                File.Create(path).Close();
+                return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+            }
+            
         }
     }
 }

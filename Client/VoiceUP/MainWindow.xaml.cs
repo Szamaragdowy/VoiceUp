@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +12,6 @@ using System.Windows.Media;
 using VoiceUP.Structures;
 using VoiceUP.TCP;
 using VoiceUP.Windows;
-using VoiceUpServer.TCP;
 
 namespace VoiceUP
 {
@@ -30,8 +28,8 @@ namespace VoiceUP
         {
             ServerInfo ID = ((Button)sender).CommandParameter as ServerInfo;
             EditWindow nowe = new EditWindow(ID);
-            nowe.Left = this.Left ;
-            nowe.Top = this.Top + 205;
+            nowe.Left = this.Left+8 ;
+            nowe.Top = this.Top + 250;
             nowe.ShowDialog();
 
             int i = 0;
@@ -157,14 +155,22 @@ namespace VoiceUP
                 
                 string connected = client.Connect(login, password);
 
-                switch (connected)
+                string[] data = connected.Split('/');
+                switch (data[0])
                 {
+                    case "BAD_CHECKSUM":
+                        Console.WriteLine("EROR-------WRONG CHECKSUM");
+                        MessageBox.Show("Nie udało się zalogować do serwera.", "",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
                     case "FULL":
                         MessageBox.Show("Serwer jest pełen.", "",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                         break;
                     case "LOGIN_ACK":
-                        ServerWindow okno = new ServerWindow(client);
+                        ServerWindow okno = new ServerWindow(client,data[1]);
+                        okno.Left = this.Left;
+                        okno.Top = this.Top;
                         this.Close();
                         okno.ShowDialog();
 
@@ -181,12 +187,6 @@ namespace VoiceUP
             }
         }
 
-        //wyjście z aplikacji
-        private void ButtonClose_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
         #region LoadingData
 
         //ładowanie wczytanych serwerów do comboboxa
@@ -199,7 +199,13 @@ namespace VoiceUP
         //wczytuje liste serwerów z plików json
         public ObservableCollection<ServerInfo> LoadMyServersFromJson()
         {
-            return JsonLoader.LoadJson<MyServersJSON>("MySerwers.txt").MyServers;
+            var collection = JsonLoader.LoadJson<MyServersJSON>("MySerwers.txt");
+
+            if (collection!=null){
+                return collection.MyServers;
+            }
+
+            return new ObservableCollection<ServerInfo>();   
         }
 
         //wyświetlenie odpowiedniego ip po zmianie wyboru w comboboxie

@@ -7,9 +7,8 @@
         xmlns:Converters="clr-namespace:VoiceUP.Converters"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        WindowStyle="None"
         MouseDown="Window_MouseDown"
-        Title="VoiceUp" Height="525" Width="450" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen">
+        Title="VoiceUp" Height="570" Width="450" ResizeMode="NoResize" WindowStartupLocation="Manual">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -34,17 +33,11 @@
     </Window.Resources>
 
     <Grid>
-        <Grid Margin="10,10,10,311">
+        <Grid Margin="10,10,10,317">
             <Grid.Background>
                 <ImageBrush ImageSource="Images/logo.png"/>
             </Grid.Background>
-            <Button Click="ButtonClose_Click"  Height="Auto" Margin="383,0,0,167" VerticalContentAlignment ="Stretch" HorizontalContentAlignment ="Stretch">
-                <materialDesign:PackIcon  Kind="Close" Height="35" Width="46" Margin="-16,-4,-15,-3" RenderTransformOrigin="0.515,0.48" Foreground="White"/>
-            </Button>
         </Grid>
-
-
-
         <materialDesign:Card Margin="10,123,10,0" Height="392" >
             <Grid>
                 <Label   Content="Nick"   Margin="10,10,310,221"  FontSize="20" Height="Auto"/>

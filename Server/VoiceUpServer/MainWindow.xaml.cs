@@ -142,8 +142,9 @@ namespace VoiceUpServer
                     string ip = TextblockIP.Text;
                     int port = Int32.Parse(TextblockPort.Text);
                     int maxuser = Int32.Parse(TextboxMaxUsers.Text);
+                    string pass = PasswordPasswordBox.Password;
 
-                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser);
+                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser, pass);
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
 
 
@@ -155,7 +156,6 @@ namespace VoiceUpServer
             }
             else
             {
-                var a = ServerTCPthread.ThreadState;
                 server.stop();
                 UnBlockOptions();
                 StartButton.Content = "Start";
@@ -305,6 +305,19 @@ namespace VoiceUpServer
             }
 
             return isAvailable;
+        }
+
+        private void Label_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            PasswordTextbox.Visibility = Visibility.Visible;
+            PasswordPasswordBox.Visibility = Visibility.Hidden;
+            PasswordTextbox.Text = PasswordPasswordBox.Password;
+        }
+
+        private void Label_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            PasswordTextbox.Visibility = Visibility.Hidden;
+            PasswordPasswordBox.Visibility = Visibility.Visible;
         }
     }
 }

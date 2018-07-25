@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Windows.Data;
 using VoiceUP.Structures;
 
 namespace VoiceUP.TCP
@@ -13,9 +15,39 @@ namespace VoiceUP.TCP
         NetworkStream _stream;
         TcpClient _tcpClient;
         bool connected = false;
+        bool disconected = false;
+        string _serverName;
+        private object _itemsLock;
+        string ip;
+        string port;
+        private ObservableCollection<UserInfo> _collection;
+        Func<bool> delegatekick;
+        Func<bool> delegatesya;
+
+
+        public void setDeleagats(Func<bool> kick, Func<bool> sya)
+        {
+            this.delegatekick = kick;
+            this.delegatesya = sya;
+        }
+
+        public ObservableCollection<UserInfo> getList()
+        {
+            return _collection;
+        }
+
+        public string GetIPAndPort()
+        {
+            return ip + ":" + port;
+        }
 
         public myTCPClient(string _ServerIPAddress, int _ServerPORT)
         {
+            this.ip = _ServerIPAddress;
+            this.port = _ServerPORT.ToString();
+            this._collection = new ObservableCollection<UserInfo>();
+            _itemsLock = new object();
+            BindingOperations.EnableCollectionSynchronization(this._collection, _itemsLock);
             try
             {
                 _tcpClient = new TcpClient(_ServerIPAddress, _ServerPORT);
@@ -55,7 +87,8 @@ namespace VoiceUP.TCP
                 if(data[0]== "SEND_P")
                 {
                     RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                    rsa.FromXmlString(data[1]);
+                    _serverName = data[1];
+                    rsa.FromXmlString(data[2]);
                     
                     byte[] encryptedLogin = rsa.Encrypt(_nick, false);
                     byte[] encryptedXd = rsa.Encrypt(_xd, false);
@@ -77,11 +110,16 @@ namespace VoiceUP.TCP
 
                 switch (loginResponse[0])
                 {
+                    case "BAD_CHECKSUM":
+                        resultOfConnecting = "BAD_CHECKSUM";
+                        break;
                     case "FULL":
                         resultOfConnecting = "FULL";
                         break;
                     case "LOGIN_ACK":
-                        resultOfConnecting = "LOGIN_ACK";
+                        resultOfConnecting = "LOGIN_ACK/" + _serverName;
+                        StateObject state = new StateObject();
+                        _stream.BeginRead(state.buffer, 0, StateObject.BufferSize, new AsyncCallback(ReadCallback), state);
                         break;
                     case "LOGIN_NAK":
                         resultOfConnecting = "LOGIN_NAK";
@@ -99,34 +137,76 @@ namespace VoiceUP.TCP
             return resultOfConnecting;
         }
 
-        public ObservableCollection<UserInfo> GetCurrentUserList()
+        private void ReadCallback(IAsyncResult ar)
         {
-            ObservableCollection<UserInfo> resultList= new ObservableCollection<UserInfo>();
-
-            if (!connected)
+            if (disconected)
             {
-                Console.WriteLine("Nie udało się połączyć z serwerem.");
+                return;
             }
 
-            sendMsg("LIST<VUP><EOF>");
+            String content = String.Empty;
 
-            string responseKEY = receiveMsg();
+            StateObject state = (StateObject)ar.AsyncState;
 
-            string[] data = responseKEY.Split(new[] { "<VUP>" }, StringSplitOptions.None);
+            int bytesRead = _stream.EndRead(ar);
 
-            if (data[0] == "AKT_USR")
+            if (bytesRead > 0)
             {
-                for(int i = 1; i < data.Length - 1; i++)
+                state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+
+                content = state.sb.ToString();
+                if (content.IndexOf("<EOF>") > -1)
                 {
-                    resultList.Add(new UserInfo(data[i]));
+                    string[] data = content.Split(new[] { "<VUP>" }, StringSplitOptions.None);
+                    switch (data[0])
+                    {
+                        case "KICKED":
+                            disconected = true;
+                            delegatekick();
+                            break;
+                        case "CHECK":
+                            sendMsg("CHECK_Y<VUP><EOF>");
+                            break;
+                        case "AKT_USR":
+                            lock (_itemsLock) { 
+                                _collection.Clear();
+                                for (int i = 1; i < data.Length - 1; i++)
+                                {
+                                    _collection.Add(new UserInfo(data[i]));
+                                }
+                            }
+                            break;
+                        case "CYA":
+                            disconected = true;
+                            delegatesya();
+                            break;
+                    }
+                }
+                else
+                {
+                    _stream.BeginRead(state.buffer, 0, StateObject.BufferSize, new AsyncCallback(ReadCallback), state);
                 }
             }
-            else
+            state.sb.Clear();
+            if (!disconected)
             {
-                throw new Exception("Somethink goes wrong! Not Receive  AKT_USR");
+                _stream.BeginRead(state.buffer, 0, StateObject.BufferSize, new AsyncCallback(ReadCallback), state);
             }
+        }
 
-            return resultList;
+        public void Discconect()
+        {
+            disconected = true;
+            sendMsg("CYA<VUP><EOF>");
+            _stream.Close();
+            _tcpClient.Close();
+        }
+
+        public void closeAfterDisconect()
+        {
+            disconected = true;
+            _stream.Close();
+            _tcpClient.Close();
         }
 
         private void sendMsg(string msg)
@@ -147,10 +227,15 @@ namespace VoiceUP.TCP
             return responseData;
         }
 
-        public void Close()
+        private string receiveMsg2()
         {
-            _stream.Close();
-            _tcpClient.Close();
+            Byte[] data = new Byte[1024];
+            String responseData = String.Empty;
+
+            Int32 bytes = _stream.Read(data, 0, data.Length);
+            responseData = ByteConverter.GetString(data, 0, bytes);
+            Console.WriteLine("WATEK WATEK WATEK WATEK received Received: {0}", responseData);
+            return responseData;
         }
     }
 }

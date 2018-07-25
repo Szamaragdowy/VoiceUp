@@ -8,7 +8,7 @@
         xmlns:converters="clr-namespace:VoiceUpServer.Converters"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="VoiceUp Serwer" Height="414" Width="645.333" ResizeMode="NoResize">
+        Title="VoiceUp Serwer" Height="450" Width="645.333" ResizeMode="NoResize">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -31,12 +31,13 @@
         <materialDesign:PackIcon x:Key="Microphone_Off" x:Shared="False" Kind="MicrophoneOff" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="User_Kick" x:Shared="False" Kind="AccountRemove" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="Help" x:Shared="False" Kind="HelpCircleOutline" Foreground="#FF2196F3" Width="25" Height="25"/>
+        <materialDesign:PackIcon x:Key="ShowPassword" x:Shared="False" Kind="Eye" Foreground="#FF2196F3" Width="25" Height="25"/>
     </Window.Resources>
 
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Grid VerticalAlignment="Top" Margin="10"  Height="270" Width="380">
-                <materialDesign:Card >
+        <StackPanel Orientation="Horizontal" Height="326">
+            <Grid VerticalAlignment="Top" Margin="10,10,10,0"  Height="306" Width="380">
+                <materialDesign:Card Height="306" >
                     <ListBox Height="270" x:Name="ListActualUsersOnServer" IsSynchronizedWithCurrentItem="True" DataContext="{Binding Source={StaticResource User}}">
                         <ListBox.ItemTemplate >
                             <DataTemplate>
@@ -57,13 +58,13 @@
                     </ListBox>
                 </materialDesign:Card>
             </Grid>
-            <Grid  x:Name="OptionsGrid" VerticalAlignment="Top"  Margin="0,10" Width="220" Height="270">
-                <materialDesign:Card  Width="220" Height="270">
+            <Grid  x:Name="OptionsGrid" VerticalAlignment="Top"  Margin="0,10,0,0" Width="220" Height="306">
+                <materialDesign:Card  Width="220" Height="306">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
                             <Label FontSize="13" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                 <Label.Content>
-                                    MAX ilość użytkowników:
+                                    Ilość użytkowników (max):
                                 </Label.Content>
                             </Label>
                             <TextBox x:Name="TextboxMaxUsers" TextChanged="TextboxMaxUsers_TextChanged" FontSize="13"  PreviewTextInput="TextBox_PreviewTextInput" Margin="5" Width="50"  HorizontalContentAlignment="Center">
@@ -77,9 +78,27 @@
                             </Label>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
-                            <Label FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="IP:"/>
-                            <TextBox x:Name="TextblockIP" FontSize="18" Text="192.168.1.100" TextAlignment="Center" 
+                            <Label FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Hasło:"/>
+                            <Grid>
+                                <PasswordBox x:Name="PasswordPasswordBox" FontSize="18" Width="126"/>
+                                <TextBox  x:Name="PasswordTextbox" FontSize="18" Width="126" Visibility="Hidden"/>
+                            </Grid>
+                            <Label VerticalContentAlignment="Center" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave">
+                                <StaticResource ResourceKey="ShowPassword"/>
+                            </Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                            <Label FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="PORT:"/>
+                            <TextBox x:Name="TextblockPort" FontSize="18" TextChanged="TextblockPort_TextChanged" TextAlignment="Center" PreviewTextInput="TextBox_PreviewTextInput" 
                                      Margin="5" Width="150"  />
+                        </StackPanel>
+                        <Label  Visibility="Hidden" Foreground="Red" FontSize="16" Name="WarningPORT"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            Port jest już używany.
+                        </Label>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                            <Label    FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="IP:"/>
+                            <TextBox x:Name="TextblockIP" FontSize="18" Text="192.168.1.100" TextAlignment="Center" 
+                                     Margin="5" Width="142"  />
                             <Label VerticalContentAlignment="Center" MouseLeftButtonUp="Label_MouseLeftButtonUp" >
                                 <StaticResource ResourceKey="Help"/>
                             </Label>
@@ -87,15 +106,7 @@
                         <Label Visibility="Hidden" Foreground="Red" FontSize="16" Name="WarningIP"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                             Błędny adres.
                         </Label>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
-                        <Label FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="PORT:"/>
-                            <TextBox x:Name="TextblockPort" FontSize="18" TextChanged="TextblockPort_TextChanged" TextAlignment="Center" PreviewTextInput="TextBox_PreviewTextInput" 
-                                     Margin="5" Width="150"  />
-                        </StackPanel>
-                        <Label  Visibility="Hidden" Foreground="Red" FontSize="16" Name="WarningPORT"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                            Port jest już używany.
-                        </Label>
-        </StackPanel>
+                    </StackPanel>
                 </materialDesign:Card>
             </Grid>
         </StackPanel>

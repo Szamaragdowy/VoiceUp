@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using VoiceUP.Structures;
@@ -6,15 +7,14 @@ using VoiceUP.TCP;
 
 namespace VoiceUP.Windows
 {
-    /// <summary>
-    /// Interaction logic for ServerWindow.xaml
-    /// </summary>
     public partial class ServerWindow : Window
     {
+        public ObservableCollection<UserInfo> _collection { get; set; }
         private SoundManager _soundManager;
         private bool _isMuted;
         private bool _isSoundOf;
         private myTCPClient _Tcpclient;
+        private string _serverName;
 
         #region helpers
         #region microphone
@@ -41,25 +41,67 @@ namespace VoiceUP.Windows
         #endregion
         #endregion
 
-        public ObservableCollection<UserInfo> _collection { get; set; }
+        public bool kicked()
+        {
+            try
+            { 
+                _Tcpclient.closeAfterDisconect();
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Zostałeś wyrzucony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MainWindow okno = new MainWindow();
+                    okno.Left = this.Left;
+                    okno.Top = this.Top;
+                    this.Close();
+                    okno.ShowDialog();
+                });
+                return true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
 
-        public ServerWindow(myTCPClient client)
+        public bool ServerBye()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Serwer został wyłączony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MainWindow okno = new MainWindow();
+                    okno.Left = this.Left;
+                    okno.Top = this.Top;
+                    this.Close();
+                    okno.ShowDialog();
+                });
+                return true;
+             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+
+        public ServerWindow(myTCPClient client,string ServerName)
         {
             InitializeComponent();
             this._isMuted = false;
             this._isSoundOf = false;
             this._soundManager = new SoundManager();
             this._Tcpclient = client;
-            this._collection = _Tcpclient.GetCurrentUserList();
+            this._Tcpclient.setDeleagats(kicked, ServerBye);
+            labelServerName.Content = ServerName;
+            labelIpPort.Content = this._Tcpclient.GetIPAndPort();
 
-
-            //_collection.Add(new UserInfo("krokodyl"));
         }
 
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
         {
             var listbox = sender as ListBox;
-            listbox.ItemsSource = _collection;
+            listbox.ItemsSource = this._Tcpclient.getList();
         }
 
         //wyciszanie mikrofonu
@@ -77,7 +119,6 @@ namespace VoiceUP.Windows
             }
         }
 
-
         //wyciszanie dźwięku
         private void ButtonSound_Click(object sender, RoutedEventArgs e)
         {
@@ -93,21 +134,24 @@ namespace VoiceUP.Windows
             }
         }
 
-
         //przejscie do ustawień
         private void Buttonsetting_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow okno = new SettingsWindow(_soundManager);
+            okno.Left = this.Left;
+            okno.Top = this.Top;
             okno.ShowDialog();
-
         }
-
 
         //rozłączenie z serwerem
         private void ButtonDisconnect_Click(object sender, RoutedEventArgs e)
         {
-            //AsynchronousClient.send("CYA/<EOF>")
-            //   _TCPConnection.SendMessageToServer("CYA/<EOF>");
+            _Tcpclient.Discconect();
+            MainWindow okno = new MainWindow();
+            okno.Left = this.Left;
+            okno.Top = this.Top;
+            this.Close();
+            okno.ShowDialog();
         }
     }
 }
