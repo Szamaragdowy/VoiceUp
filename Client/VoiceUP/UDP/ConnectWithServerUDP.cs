@@ -41,7 +41,7 @@ namespace VoiceUP.UDP
 
         private void Connect(IPEndPoint endPoint, int inputDeviceNumber)
         {
-            OpusCodec codec = new OpusCodec();
+            G722ChatCodec codec = new G722ChatCodec();
             var receiver = new UdpAudioReceiver(endPoint.Port);
             var sender = new UdpAudioSender(endPoint);
 
