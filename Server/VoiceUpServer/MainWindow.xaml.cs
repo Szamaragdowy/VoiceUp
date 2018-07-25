@@ -9,48 +9,23 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using VoiceUpServer.AdditionalsWindows;
 using VoiceUpServer.Models;
+using VoiceUpServer.UDP;
 
 namespace VoiceUpServer
 {
     public partial class MainWindow : Window
     {
         VoiceUpServerClass server;
-        SoundSender soundSender;
         Thread ServerTCPthread;
 
         public MainWindow()
-        {
-            soundSender = new SoundSender();
-           
-            InitializeComponent();
-            
+        {   
+            InitializeComponent(); 
             TextboxServerName.Text = "testowy";
             TextboxMaxUsers.Text = "4";
             TextblockPort.Text = "5000";
 
             TextblockIP.Text = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
-
-            
-
-            // LabelAmountOfActualUsers.Content = 
-
-
-            /* HandleDataClass hdc = new HandleDataClass();
-
-             Thread serverThread = new Thread(() => server.Listen());
-             serverThread.Start();
-
-             Thread datahandlerthread = new Thread(() => hdc.SubscribeToEvent(server));
-             datahandlerthread.Start();*/
-
-            /*serwer = new Server();
-            soundSender = new SoundSender();
-            soundSender.Receive(2000);*/
-            /*
-            while (true)
-            {
-                Thread.Sleep(100);
-            }*/
         }
 
         //wyłączanie komuś dzwięku (przycisk) 
@@ -144,7 +119,17 @@ namespace VoiceUpServer
                     int maxuser = Int32.Parse(TextboxMaxUsers.Text);
                     string pass = PasswordPasswordBox.Password;
 
-                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser, pass);
+                    int udpport = 0;
+                    for (int i = 5001; i < 6000; i++)
+                    {
+                        if (checkIsPortFree(i))
+                        {
+                            udpport = i;
+                            break;
+                        }
+                    }
+
+                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser, pass,udpport);
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
 
 
@@ -303,7 +288,6 @@ namespace VoiceUpServer
                     break;
                 }
             }
-
             return isAvailable;
         }
 

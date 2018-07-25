@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Net;
 
-namespace VoiceUP
+namespace VoiceUP.UDP
 {
     class Connections
     {

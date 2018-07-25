@@ -41,50 +41,6 @@ namespace VoiceUP.Windows
         #endregion
         #endregion
 
-        public bool kicked()
-        {
-            try
-            { 
-                _Tcpclient.closeAfterDisconect();
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    MessageBox.Show("Zostałeś wyrzucony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                    MainWindow okno = new MainWindow();
-                    okno.Left = this.Left;
-                    okno.Top = this.Top;
-                    this.Close();
-                    okno.ShowDialog();
-                });
-                return true;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
-        }
-
-        public bool ServerBye()
-        {
-            try
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    MessageBox.Show("Serwer został wyłączony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                    MainWindow okno = new MainWindow();
-                    okno.Left = this.Left;
-                    okno.Top = this.Top;
-                    this.Close();
-                    okno.ShowDialog();
-                });
-                return true;
-             }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
-        }
-
-
         public ServerWindow(myTCPClient client,string ServerName)
         {
             InitializeComponent();
@@ -93,9 +49,9 @@ namespace VoiceUP.Windows
             this._soundManager = new SoundManager();
             this._Tcpclient = client;
             this._Tcpclient.setDeleagats(kicked, ServerBye);
+            this._Tcpclient.startUDP(_soundManager.microphoneIndex);
             labelServerName.Content = ServerName;
             labelIpPort.Content = this._Tcpclient.GetIPAndPort();
-
         }
 
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
@@ -152,6 +108,49 @@ namespace VoiceUP.Windows
             okno.Top = this.Top;
             this.Close();
             okno.ShowDialog();
+        }
+
+        public bool kicked()
+        {
+            try
+            {
+                _Tcpclient.closeAfterDisconect();
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Zostałeś wyrzucony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MainWindow okno = new MainWindow();
+                    okno.Left = this.Left;
+                    okno.Top = this.Top;
+                    this.Close();
+                    okno.ShowDialog();
+                });
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+        public bool ServerBye()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Serwer został wyłączony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MainWindow okno = new MainWindow();
+                    okno.Left = this.Left;
+                    okno.Top = this.Top;
+                    this.Close();
+                    okno.ShowDialog();
+                });
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

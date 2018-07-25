@@ -125,11 +125,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Codec.cs" />
-    <Compile Include="Connections.cs" />
+    <Compile Include="UDP\OpusCodec.cs" />
+    <Compile Include="UDP\Connections.cs" />
     <Compile Include="Converters\IPAdresConverter.cs" />
     <Compile Include="TCP\myTCPClient.cs" />
     <Compile Include="TCP\StateObject.cs" />
+    <Compile Include="UDP\IAudioReceiver.cs" />
+    <Compile Include="UDP\IAudioSender.cs" />
+    <Compile Include="UDP\INetworkChatCodec.cs" />
+    <Compile Include="UDP\NetworkAudioPlayer.cs" />
+    <Compile Include="UDP\NetworkAudioSender.cs" />
+    <Compile Include="UDP\UdpAudioReceiver.cs" />
+    <Compile Include="UDP\UdpAudioSender.cs" />
     <Compile Include="Windows\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>

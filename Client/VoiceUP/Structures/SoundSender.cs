@@ -14,10 +14,9 @@ namespace VoiceUP.Structures
 {
     class SoundSender
     {
-
-        private string ip;
+        private string _ip;
         public string path =  "\\buffer.wav";
-        private int port;
+        private int _port;
         private Thread rec_thread;
         private WaveIn sourceStream = null;
         private Byte[] Data_ary;
@@ -28,33 +27,15 @@ namespace VoiceUP.Structures
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 
-        public string Ip
+        public SoundSender(string ip, int port)
         {
-            get { return ip; }
-            set { ip = value; }
+            this._ip = ip;
+            this._port = port;
         }
 
-        public int VPort
+        public void Send()
         {
-            get { return port; }
-            private set { port = value; }
-        }
-
-        public string Get_privateIP()
-        {
-            string hostname = Dns.GetHostName();
-            IPHostEntry hostentery = Dns.GetHostEntry(hostname);
-            IPAddress[] ip = hostentery.AddressList;
-            return ip[ip.Length - 1].ToString();
-        }
-
-        public void Send(string ip, int port)
-        {
-            this.Ip = ip;
-            this.VPort = port;
-
             c_v = new System.Windows.Threading.DispatcherTimer();
-
 
             c_v.Interval = new TimeSpan(0, 0, 0, 0, 00);
             c_v.Tick += c_v_Tick;
@@ -82,7 +63,6 @@ namespace VoiceUP.Structures
             c_v.Start();
         }
 
-
         void c_v_Tick(object sender, EventArgs e)
         {
             this.Dispose();
@@ -93,8 +73,8 @@ namespace VoiceUP.Structures
         {
             Data_ary = File.ReadAllBytes(path);
 
-            connector = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ie = new IPEndPoint(IPAddress.Parse(this.Ip), this.VPort);
+            connector = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            IPEndPoint ie = new IPEndPoint(IPAddress.Parse(this._ip), this._port);
             ie.Address = IPAddress.Loopback;
             connector.Connect(ie);
             connector.Send(Data_ary, 0, Data_ary.Length, 0);
@@ -115,15 +95,15 @@ namespace VoiceUP.Structures
 
         public void Receive(int port)
         {
-            this.VPort = port;
+            this._port = port;
             rec_thread = new Thread(new ThreadStart(VoiceReceive));
             rec_thread.Start();
         }
 
         private void VoiceReceive()
         {
-            sc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ie = new IPEndPoint(0, this.VPort);
+            sc = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            IPEndPoint ie = new IPEndPoint(0, this._port);
 
             sc.Bind(ie);
 
@@ -141,15 +121,6 @@ namespace VoiceUP.Structures
             }
         }
 
-        //not used here but its useful to get the length of wav file
-        public static TimeSpan GetSoundLength(string fileName)
-        {
-
-            WaveFileReader wf = new WaveFileReader(fileName);
-            return wf.TotalTime;
-
-        }
-
         private void WriteBytes()
         {
             if (ns != null)
@@ -158,7 +129,6 @@ namespace VoiceUP.Structures
                 sp.Play();
             }
         }
-
 
         private void Dispose()
         {
@@ -175,9 +145,5 @@ namespace VoiceUP.Structures
             }
             GC.SuppressFinalize(this);
         }
-
-
     }
 }
-
-

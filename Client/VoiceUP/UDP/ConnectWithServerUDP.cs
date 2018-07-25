@@ -7,30 +7,20 @@ namespace VoiceUP.UDP
 {
     class ConnectWithServerUDP
     {
-        UdpClient client;
-        IPEndPoint serversIp;
+        //UdpClient client;
+       // IPEndPoint serversIp;
+        private volatile bool connected;
+        private NetworkAudioPlayer player;
+        private NetworkAudioSender audioSender;
 
-        public ConnectWithServerUDP(string ip,int port)
+        public ConnectWithServerUDP(string ip,int port,int indexDevice)
         {
-            this.client = new UdpClient();
-            this.serversIp = new IPEndPoint(IPAddress.Parse(ip), port);
+            //this.client = new UdpClient();
+            //this.serversIp = new IPEndPoint(IPAddress.Parse(ip), port);
+            Connect(new IPEndPoint(IPAddress.Parse(ip), port), indexDevice);
         }
 
-        public bool Connect()
-        {
-            try
-            {
-                client.Connect(this.serversIp);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return false;
-            }
-            return true;
-        }
-
-        public void SendBytes(byte[] data)
+       /* public void SendBytes(byte[] data)
         {
             try
             {
@@ -42,6 +32,22 @@ namespace VoiceUP.UDP
                 Console.WriteLine(e.ToString());
                 Console.WriteLine("Błąd wysyłania danych" + data);
             }
+        }*/
+
+        public void Close()
+        {
+            //client.Close();
+        }
+
+        private void Connect(IPEndPoint endPoint, int inputDeviceNumber)
+        {
+            OpusCodec codec = new OpusCodec();
+            var receiver = new UdpAudioReceiver(endPoint.Port);
+            var sender = new UdpAudioSender(endPoint);
+
+            player = new NetworkAudioPlayer(codec, receiver);
+            audioSender = new NetworkAudioSender(codec, inputDeviceNumber, sender);
+            connected = true;
         }
     }
 }

@@ -7,6 +7,7 @@ using VoiceUpServer.Models;
 using System.Text;
 using System.Windows.Data;
 using System.Security.Cryptography;
+using VoiceUpServer.UDP;
 
 namespace VoiceUpServer
 {
@@ -25,9 +26,12 @@ namespace VoiceUpServer
         private RSACryptoServiceProvider _rsa;
         private byte[] _buffer = new byte[1024];
         private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private Socket _UDPServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         ASCIIEncoding ByteConverter = new ASCIIEncoding();
         private String _password;
         private bool ServerClosed;
+        private int _UDPPort;
+        byte[] _UDPBuffer = new byte[1024];
 
         #region propertasy
         public ObservableCollection<User> ActualListOfUsers => _usersList;
@@ -53,8 +57,9 @@ namespace VoiceUpServer
         }
         #endregion
 
-        public VoiceUpServerClass(string Name, string ip, int port,int maxusers,string password)
+        public VoiceUpServerClass(string Name, string ip, int port,int maxusers,string password,int udpPort)
         {
+            this._UDPPort = udpPort;
             this._ServerName = Name;
             this._ServerIP = ip;
             this._ServerIPAddress = IPAddress.Parse(_ServerIP);
@@ -74,12 +79,74 @@ namespace VoiceUpServer
             this._publicKey = _rsa.ToXmlString(false);
         }
 
-
         #endregion
 
         public void start()
         {
-            SetupServer();
+            startTCP();
+            startUDP();
+        }
+
+        public void startUDP()
+        {
+            try { 
+                Console.WriteLine("UDP   ->    Setting up server . . .");
+                _UDPServerSocket.Bind(new IPEndPoint(_ServerIPAddress, _UDPPort));
+
+                IPEndPoint ipeSender = new IPEndPoint(IPAddress.Any, 0);
+                EndPoint epSender = (EndPoint)ipeSender;
+                _UDPServerSocket.BeginReceive(_UDPBuffer, 0, _UDPBuffer.Length, SocketFlags.None, new AsyncCallback(UDPReceiveCallBack), _UDPServerSocket);
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("EROR UDP" + ex.Message);
+            }
+        }
+
+        private void UDPReceiveCallBack(IAsyncResult ar)
+        {
+            Socket socket = (Socket)ar.AsyncState;
+            if (socket.Connected)
+            {
+                int received;
+                try
+                {
+                    received = socket.EndReceive(ar);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR UDP CALLBACK" + e.Message);
+                    return;
+                }
+
+                if (received != 0)
+                {
+                    byte[] dataBuf = new byte[received];
+                    Array.Copy(_UDPBuffer, dataBuf, received);
+                    string text = ByteConverter.GetString(dataBuf);
+
+                }
+                try
+                {
+                    if (socket.Connected)
+                    {
+                        socket.BeginReceive(_UDPBuffer, 0, _UDPBuffer.Length, SocketFlags.None, new AsyncCallback(UDPReceiveCallBack), socket);
+                    }
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine("SOCKET UDP" + e.Message);
+                }
+            }
+        }
+
+        public void startTCP()
+        {
+            Console.WriteLine("TCP   ->     Setting up server . . .");
+            _serverSocket.Bind(new IPEndPoint(_ServerIPAddress, _ServerPORT));
+            _serverSocket.Listen(100);
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptConnectionCallBack), null);
+            Console.WriteLine("Server ready.");
         }
 
         public void stop()
@@ -131,13 +198,7 @@ namespace VoiceUpServer
             }
             _usersList.Remove(user);
         }
-
-
-        public void AddUser (User user)
-        {
-            _usersList.Add(user);
-        }
-        
+   
         public void ChangeUserMicrophoneStatus(User user)
         {
             if (!user.Mute)
@@ -160,15 +221,6 @@ namespace VoiceUpServer
             {
                 user.SoundOff = false;
             }
-        }
-
-        private void SetupServer()
-        {
-            Console.WriteLine("Setting up server . . .");
-            _serverSocket.Bind(new IPEndPoint(_ServerIPAddress, _ServerPORT));
-            _serverSocket.Listen(100);
-            _serverSocket.BeginAccept(new AsyncCallback(AcceptConnectionCallBack), null);
-            Console.WriteLine("Server ready.");
         }
 
         private void AcceptConnectionCallBack(IAsyncResult ar)
@@ -200,7 +252,6 @@ namespace VoiceUpServer
                 }
                 catch (Exception)
                 {
-
                     for (int i = 0; i < _usersList.Count; i++)
                     {
                         if (_usersList[i].workSocket.RemoteEndPoint.ToString().Equals(socket.RemoteEndPoint.ToString()))
@@ -276,7 +327,7 @@ namespace VoiceUpServer
                                             User user = new User(socket);
                                             user.Name = login;
                                             _usersList.Add(user);
-                                            Sendata(socket, "LOGIN_ACK<VUP><EOF>");
+                                            Sendata(socket, "LOGIN_ACK<VUP>"+ _UDPPort.ToString()+"<VUP><EOF>");
                                             sendToAll(actuallist());
                                         }
                                         else
@@ -290,24 +341,8 @@ namespace VoiceUpServer
                                     }
                                 }
                                 break;
-                            case "LIST":
-                                /* for (int i = 0; i < _usersList.Count; i++)
-                                {
-                                    if (socket.RemoteEndPoint.ToString().Equals(_usersList[i].workSocket.RemoteEndPoint.ToString()))
-                                    {
-                                        //rich_Text.AppendText("\n" + __ClientSockets[i]._Name + ": " + text);
-                                    }
-                                }*/
-
-
-                                Sendata(socket, actuallist());
-                                //klient potwierdza swoją obecność
-                                //reset timere
-                                break; 
                             case "CHECK_Y":
-                                Sendata(socket, "AKT_USR<VUP><EOF>");
-                                //klient potwierdza swoją obecność
-                                //reset timere
+                                Sendata(socket, actuallist());
                                 break;
                         }
                     }
@@ -334,6 +369,7 @@ namespace VoiceUpServer
                 }
             }
         }
+
         private string actuallist()
         {
             StringBuilder builder = new StringBuilder();

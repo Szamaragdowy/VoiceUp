@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Data;
 using VoiceUP.Structures;
+using VoiceUP.UDP;
 
 namespace VoiceUP.TCP
 {
@@ -23,23 +24,9 @@ namespace VoiceUP.TCP
         private ObservableCollection<UserInfo> _collection;
         Func<bool> delegatekick;
         Func<bool> delegatesya;
+        ConnectWithServerUDP _ConnectWithServerUDP;
+        int _PortToUDP;
 
-
-        public void setDeleagats(Func<bool> kick, Func<bool> sya)
-        {
-            this.delegatekick = kick;
-            this.delegatesya = sya;
-        }
-
-        public ObservableCollection<UserInfo> getList()
-        {
-            return _collection;
-        }
-
-        public string GetIPAndPort()
-        {
-            return ip + ":" + port;
-        }
 
         public myTCPClient(string _ServerIPAddress, int _ServerPORT)
         {
@@ -62,6 +49,27 @@ namespace VoiceUP.TCP
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
+        }
+
+        public void startUDP(int index)
+        {
+            this._ConnectWithServerUDP = new ConnectWithServerUDP(ip, _PortToUDP, index);
+        }
+
+        public void setDeleagats(Func<bool> kick, Func<bool> sya)
+        {
+            this.delegatekick = kick;
+            this.delegatesya = sya;
+        }
+
+        public ObservableCollection<UserInfo> getList()
+        {
+            return _collection;
+        }
+
+        public string GetIPAndPort()
+        {
+            return ip + ":" + port;
         }
 
         public string Connect(string nick, string xd)
@@ -118,6 +126,7 @@ namespace VoiceUP.TCP
                         break;
                     case "LOGIN_ACK":
                         resultOfConnecting = "LOGIN_ACK/" + _serverName;
+                        this._PortToUDP = Int32.Parse(loginResponse[1]);
                         StateObject state = new StateObject();
                         _stream.BeginRead(state.buffer, 0, StateObject.BufferSize, new AsyncCallback(ReadCallback), state);
                         break;
@@ -147,8 +156,16 @@ namespace VoiceUP.TCP
             String content = String.Empty;
 
             StateObject state = (StateObject)ar.AsyncState;
-
-            int bytesRead = _stream.EndRead(ar);
+            int bytesRead=0;
+            try
+            {
+                bytesRead = _stream.EndRead(ar);
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                delegatesya();
+                return;
+            }
 
             if (bytesRead > 0)
             {
@@ -200,6 +217,7 @@ namespace VoiceUP.TCP
             sendMsg("CYA<VUP><EOF>");
             _stream.Close();
             _tcpClient.Close();
+            _ConnectWithServerUDP.Close();
         }
 
         public void closeAfterDisconect()
@@ -207,6 +225,7 @@ namespace VoiceUP.TCP
             disconected = true;
             _stream.Close();
             _tcpClient.Close();
+            _ConnectWithServerUDP.Close();
         }
 
         private void sendMsg(string msg)
@@ -224,17 +243,6 @@ namespace VoiceUP.TCP
             Int32 bytes = _stream.Read(data, 0, data.Length);
             responseData = ByteConverter.GetString(data, 0, bytes);
             Console.WriteLine("Received: {0}", responseData);
-            return responseData;
-        }
-
-        private string receiveMsg2()
-        {
-            Byte[] data = new Byte[1024];
-            String responseData = String.Empty;
-
-            Int32 bytes = _stream.Read(data, 0, data.Length);
-            responseData = ByteConverter.GetString(data, 0, bytes);
-            Console.WriteLine("WATEK WATEK WATEK WATEK received Received: {0}", responseData);
             return responseData;
         }
     }

@@ -69,16 +69,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Connections.cs" />
+    <Compile Include="UDP\UDPServer.cs" />
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
     <Compile Include="Models\NetworkAdapter.cs" />
-    <Compile Include="UDP\HandleDataClass.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="UDP\ReceivedDataArgs.cs" />
     <Compile Include="VoiceUpServerClass.cs" />
-    <Compile Include="SoundSender.cs" />
-    <Compile Include="UDP\UDPListener.cs" />
     <Compile Include="AdditionalsWindows\NetworkAdapters.xaml.cs">
       <DependentUpon>NetworkAdapters.xaml</DependentUpon>
     </Compile>
