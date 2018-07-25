@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,26 +10,24 @@ namespace VoiceUpServer.Models
 {
     public class User : INotifyPropertyChanged
     {
+        public Socket workSocket { get; set; }
+        public const int BufferSize = 1024;
+        public byte[] buffer = new byte[BufferSize];
+        public StringBuilder sb = new StringBuilder();
         private bool _IsMuted;
         private bool _IsSoundOff;
-        private string _IP;
 
         public string Name { get; set; }
 
-        public string IP
-        {
-            get { return _IP; }
-        }
-        
+       
         public User()
         {
 
         }
 
-        public User(string name, string ip)
+        public User(Socket socket)
         { 
-            this.Name = name;
-            this._IP = ip;
+            this.workSocket = socket;
         }
 
         public bool Mute

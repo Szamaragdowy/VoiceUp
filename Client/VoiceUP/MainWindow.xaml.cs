@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using VoiceUP.Structures;
+using VoiceUP.TCP;
 using VoiceUP.Windows;
 using VoiceUpServer.TCP;
 
@@ -150,23 +151,32 @@ namespace VoiceUP
                 }
             }
 
-
             if (valid)
             {
-                AsynchronousClient client = new AsynchronousClient();
+                myTCPClient client = new myTCPClient(ip, port);
                 
-                bool connected = client.TryToConnect(IPAddress.Parse(ip), port, login, password);
+                string connected = client.Connect(login, password);
 
-                if (connected)
+                switch (connected)
                 {
-                    ServerWindow okno = new ServerWindow();
-                    this.Close();
-                    okno.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("Nie udało się połączyć z serwerem.", "",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    case "FULL":
+                        MessageBox.Show("Serwer jest pełen.", "",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
+                    case "LOGIN_ACK":
+                        ServerWindow okno = new ServerWindow(client);
+                        this.Close();
+                        okno.ShowDialog();
+
+                        break;
+                    case "LOGIN_NAK":
+                        MessageBox.Show("Niepoprawne hasło.", "",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
+                    default:
+                        MessageBox.Show(connected, "Not Connected",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
                 }
             }
         }

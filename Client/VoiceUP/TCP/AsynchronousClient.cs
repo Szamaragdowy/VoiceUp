@@ -51,7 +51,6 @@ namespace VoiceUpServer.TCP
 
                         Send(client, "LOGIN~" + encryptedLogin + "~" + encryptedXd +"~"+ checksum+"~< EOF>");
                         sendDone.WaitOne();
-                        connected = true;
                         break;
                     case "FULL":
 

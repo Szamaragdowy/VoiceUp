@@ -73,7 +73,6 @@
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
     <Compile Include="Models\NetworkAdapter.cs" />
-    <Compile Include="TCP\StateObject.cs" />
     <Compile Include="UDP\HandleDataClass.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="UDP\ReceivedDataArgs.cs" />
@@ -126,6 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TCP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

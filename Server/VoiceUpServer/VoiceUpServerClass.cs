@@ -4,10 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using VoiceUpServer.Models;
-using VoiceUpServer.TCP;
 using System.Text;
-using System.Windows;
-using System.Collections.Generic;
 using System.Windows.Data;
 using System.Security.Cryptography;
 
@@ -24,8 +21,10 @@ namespace VoiceUpServer
         private int _MaxUsers;
         private object _itemsLock;
         private string _publicKey;
-        private string _privateKey;
-        static string CONTAINER_NAME = "MyContainerName";
+        private RSACryptoServiceProvider _rsa;
+        private byte[] _buffer = new byte[1024];
+        private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        ASCIIEncoding ByteConverter = new ASCIIEncoding();
 
         #region propertasy
         public ObservableCollection<User> ActualListOfUsers => _usersList;
@@ -63,59 +62,21 @@ namespace VoiceUpServer
             BindingOperations.EnableCollectionSynchronization(this._usersList, _itemsLock);
             generateKeys();
         }
+
+        #region RSA
         private void generateKeys()
         {
-            CspParameters cspParameters = new CspParameters(1);
-            cspParameters.KeyContainerName = CONTAINER_NAME;
-            cspParameters.Flags = CspProviderFlags.UseMachineKeyStore;
-            cspParameters.ProviderName = "Microsoft Strong Cryptographic Provider";
-            var rsa = new RSACryptoServiceProvider(cspParameters);
-            rsa.PersistKeyInCsp = true;
-
-            this._publicKey = rsa.ToXmlString(false);
-            this._privateKey = rsa.ToXmlString(true);
+            _rsa = new RSACryptoServiceProvider();
+            this._publicKey = _rsa.ToXmlString(false);
         }
 
-        private  byte[] Encrypt(byte[] plain)
-        {
-            byte[] encrypted;
-            int rsa_provider = 1;
-            CspParameters cspParameters = new CspParameters(rsa_provider);
-            cspParameters.KeyContainerName = CONTAINER_NAME;
 
-            using (var rsa = new RSACryptoServiceProvider(1024, cspParameters))
-            {
-                encrypted = rsa.Encrypt(plain, true);
-            }
-            return encrypted;
-        }
-
-        private  string Decrypt(byte[] encrypted)
-        {
-            byte[] decrypted;
-
-            CspParameters cspParameters = new CspParameters();
-            cspParameters.KeyContainerName = CONTAINER_NAME;
-
-            using (var rsa = new RSACryptoServiceProvider(1024, cspParameters))
-            {
-                decrypted = rsa.Decrypt(encrypted, true);
-            }
-            return decrypted.ToString();
-        }
-
-        public  void DeleteKeyInCSP()
-        {
-            var cspParams = new CspParameters();
-            cspParams.KeyContainerName = CONTAINER_NAME;
-            var rsa = new RSACryptoServiceProvider(cspParams);
-            rsa.PersistKeyInCsp = false;
-            rsa.Clear();
-        }
+        #endregion
 
         public void start()
         {
-            StartListening(_ServerIPAddress, _ServerPORT);
+            SetupServer();
+            //StartListening(_ServerIPAddress, _ServerPORT);
         }
 
         public void stop()
@@ -140,65 +101,252 @@ namespace VoiceUpServer
 
         public void KickUser(User user)
         {
-            lock (_itemsLock)
+            if (user.workSocket.Connected)
             {
-                _usersList.Remove(user);
+                Sendata(user.workSocket, "KICKED<VUP>");
+                user.workSocket.Close();
             }
+            _usersList.Remove(user);
         }
 
         public void AddUser (User user)
         {
-            lock (_itemsLock)
+            _usersList.Add(user);
+        }
+        
+        public void ChangeUserMicrophoneStatus(User user)
+        {
+            if (!user.Mute)
             {
-                _usersList.Add(user);
+                user.Mute = true;
+            }
+            else
+            {
+                user.Mute = false;
             }
         }
 
-        private void StartListening(IPAddress ip, int port)
+        public void ChangeUserSoundStatus(User user)
         {
-            byte[] bytes = new Byte[1024];
-            IPEndPoint localEndPoint = new IPEndPoint(ip, port);
-            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            try
+            if (!user.SoundOff)
             {
-                listener.Bind(localEndPoint);
-                listener.Listen(100);
+                user.SoundOff = true;
+            }
+            else
+            {
+                user.SoundOff = false;
+            }
+        }
 
-                while (true)
+        private void SetupServer()
+        {
+            Console.WriteLine("Setting up server . . .");
+            _serverSocket.Bind(new IPEndPoint(_ServerIPAddress, _ServerPORT));
+            _serverSocket.Listen(100);
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptConnectionCallBack), null);
+            Console.WriteLine("Server ready.");
+        }
+
+        private void AcceptConnectionCallBack(IAsyncResult ar)
+        {
+            Socket socket = _serverSocket.EndAccept(ar);
+            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptConnectionCallBack), null);
+        }
+
+        private void ReceiveCallback(IAsyncResult ar)
+        {
+            Socket socket = (Socket)ar.AsyncState;
+            if (socket.Connected)
+            {
+                int received;
+                try
                 {
-                    // Set the event to nonsignaled state.
-                    allDone.Reset();
+                    received = socket.EndReceive(ar);
+                }
+                catch (Exception)
+                {
 
-                    // Start an asynchronous socket to listen for connections.
-                    Console.WriteLine("Waiting for a connection...");
-                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+                    for (int i = 0; i < _usersList.Count; i++)
+                    {
+                        if (_usersList[i].workSocket.RemoteEndPoint.ToString().Equals(socket.RemoteEndPoint.ToString()))
+                        {
+                            _usersList.RemoveAt(i);
+                        }
+                    }
+                    return;
+                }
+                if (received != 0)
+                {
+                    byte[] dataBuf = new byte[received];
+                    Array.Copy(_buffer, dataBuf, received);
+                    string text = ByteConverter.GetString(dataBuf);
 
-                    // Wait until a connection is made before continuing.
-                    allDone.WaitOne();
+                    if (text.IndexOf("<EOF>") > -1)
+                    {
+                        Console.WriteLine("Read {0} bytes from socket. \n Data : {1}", text.Length, text);
+
+                        string[] data = text.Split(new[] { "<VUP>" }, StringSplitOptions.None);
+                        switch (data[0])
+                        {
+                            case "CYA":
+                                //użytkownik się rozłącza
+                                //usunąć z listy
+                                //przerwać wątki
+                                break;
+                            case "JOIN":
+                                Sendata(socket, "SEND_P<VUP>" + _publicKey + "<VUP><EOF>");
+                                break;
+                            case "LOGIN":
+
+                                byte[] bytesCypherText = Convert.FromBase64String(data[1]);
+                                byte[] decryptedLogin = _rsa.Decrypt(bytesCypherText, false);
+                                string decryptedLoginString = ByteConverter.GetString(decryptedLogin);
+
+                                bytesCypherText = Convert.FromBase64String(data[2]);
+                                byte[] decryptedPass = _rsa.Decrypt(bytesCypherText, false);
+                                string decryptedPassnString = ByteConverter.GetString(decryptedPass);
+
+                                bytesCypherText = Convert.FromBase64String(data[2]);
+                                byte[] checksum = _rsa.Decrypt(bytesCypherText, false);
+                                string checksumString = ByteConverter.GetString(checksum);                              
+
+                                bool gooodPAss = true;
+                                bool isNotFull = true;
+                                if (gooodPAss)
+                                {
+                                    if (isNotFull)
+                                    {
+                                        User user = new User(socket);
+                                        user.Name = decryptedLoginString;
+                                        _usersList.Add(user);
+                                        Sendata(socket, "LOGIN_ACK<VUP><EOF>");
+                                    }
+                                    else
+                                    {
+                                        Sendata(socket, "FULL<VUP><EOF>");
+                                    }
+                                }
+                                else
+                                {
+                                    Sendata(socket, "LOGIN_NAK<VUP><EOF>");
+                                }
+                                break;
+                            case "LIST":
+                                /* for (int i = 0; i < _usersList.Count; i++)
+                                {
+                                    if (socket.RemoteEndPoint.ToString().Equals(_usersList[i].workSocket.RemoteEndPoint.ToString()))
+                                    {
+                                        //rich_Text.AppendText("\n" + __ClientSockets[i]._Name + ": " + text);
+                                    }
+                                }*/
+                                StringBuilder builder = new StringBuilder();
+                                builder.Append("AKT_USR<VUP>");
+                                for (int i = 0; i < _usersList.Count; i++)
+                                {
+                                    builder.Append(_usersList[i].Name);
+                                    builder.Append("<VUP>");
+                                }
+                                builder.Append("<EOF>");
+
+                                Sendata(socket,builder.ToString());
+                                //klient potwierdza swoją obecność
+                                //reset timere
+                                break;
+
+                            case "CHECK_Y":
+                                Sendata(socket, "AKT_USR<VUP><EOF>");
+                                //klient potwierdza swoją obecność
+                                //reset timere
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < _usersList.Count; i++)
+                        {
+                            if (_usersList[i].workSocket.RemoteEndPoint.ToString().Equals(socket.RemoteEndPoint.ToString()))
+                            {
+                                _usersList.RemoveAt(i);
+                                Console.WriteLine("Số client đang kết nối: " + _usersList.Count.ToString());
+                            }
+                        }
+                    }
+                }
+                try
+                {
+                    socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
+                }catch(SocketException e)
+                {
+                   
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
         }
 
-        private void AcceptCallback(IAsyncResult ar)
+        void Sendata(Socket socket, string noidung)
         {
-            // Signal the main thread to continue.
-            allDone.Set();
-
-            // Get the socket that handles the client request.
-            Socket listener = (Socket)ar.AsyncState;
-            Socket handler = listener.EndAccept(ar);
-
-            // Create the state object.
-            StateObject state = new StateObject();
-            state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            byte[] data = ByteConverter.GetBytes(noidung);
+            Console.WriteLine("Send: " + ByteConverter.GetString(data));
+            socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptConnectionCallBack), null);
         }
 
+        private void SendCallback(IAsyncResult AR)
+        {
+            Socket socket = (Socket)AR.AsyncState;
+            socket.EndSend(AR);
+        }
+
+
+        /*
+       private void StartListening(IPAddress ip, int port)
+       {
+           byte[] bytes = new Byte[1024];
+           IPEndPoint localEndPoint = new IPEndPoint(ip, port);
+           Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+           try
+           {
+               listener.Bind(localEndPoint);
+               listener.Listen(100);
+
+               while (true)
+               {
+                   // Set the event to nonsignaled state.
+                   allDone.Reset();
+
+                   // Start an asynchronous socket to listen for connections.
+                   Console.WriteLine("Waiting for a connection...");
+                   listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+
+                   // Wait until a connection is made before continuing.
+                   allDone.WaitOne();
+               }
+           }
+           catch (Exception e)
+           {
+               Console.WriteLine(e.ToString());
+           }
+       }
+       */
+        /*  private void AcceptCallback(IAsyncResult ar)
+          {
+              // Signal the main thread to continue.
+              allDone.Set();
+
+              // Get the socket that handles the client request.
+              Socket listener = (Socket)ar.AsyncState;
+              Socket handler = listener.EndAccept(ar);
+
+
+              // Create the state object.
+              StateObject state = new StateObject();
+                  state.workSocket = handler;
+
+              handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+
+          }*/
+        /*
         private void ReadCallback(IAsyncResult ar)
         {
             String content = String.Empty;
@@ -228,8 +376,6 @@ namespace VoiceUpServer
                             //przerwać wątki
                             break;
                         case "JOIN":
-                            //pierwsze połączenie użytkownika z serwerem
-                            //SEND_P/klucz_publiczny
                             Send(handler, "SEND_P~" + _publicKey+ "~< EOF>");
                             break;
                         case "LOGIN":
@@ -269,12 +415,12 @@ namespace VoiceUpServer
                 }
                 else
                 {
-                    // Not all data received. Get more.
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,new AsyncCallback(ReadCallback), state);
                 }
             }
         }
-
+        */
+        /*
         private void SendCallback(IAsyncResult ar)
         {
             try
@@ -301,28 +447,6 @@ namespace VoiceUpServer
             handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
         }
 
-        public void ChangeUserMicrophoneStatus(User user)
-        {
-            if (!user.Mute)
-            {
-                user.Mute = true;
-            }
-            else
-            {
-                user.Mute = false;
-            }
-        }
-
-        public void ChangeUserSoundStatus(User user)
-        {
-            if (!user.SoundOff)
-            {
-                user.SoundOff = true;
-            }
-            else
-            {
-                user.SoundOff = false;
-            }
-        }
+        */
     }
 }

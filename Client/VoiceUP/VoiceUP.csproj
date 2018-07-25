@@ -130,6 +130,7 @@
     <Compile Include="Converters\IPAdresConverter.cs" />
     <Compile Include="TCP\AsynchronousClient.cs" />
     <Compile Include="TCP\StateObject.cs" />
+    <Compile Include="TCP\myTCPClient.cs" />
     <Compile Include="Windows\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>

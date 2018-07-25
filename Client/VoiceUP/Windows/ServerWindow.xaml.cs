@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using VoiceUP.Structures;
+using VoiceUP.TCP;
 
 namespace VoiceUP.Windows
 {
@@ -13,6 +14,7 @@ namespace VoiceUP.Windows
         private SoundManager _soundManager;
         private bool _isMuted;
         private bool _isSoundOf;
+        private myTCPClient _Tcpclient;
 
         #region helpers
         #region microphone
@@ -39,23 +41,26 @@ namespace VoiceUP.Windows
         #endregion
         #endregion
 
-        public ObservableCollection<UserInfo> collection { get; set; }
+        public ObservableCollection<UserInfo> _collection { get; set; }
 
-        public ServerWindow()
+        public ServerWindow(myTCPClient client)
         {
             InitializeComponent();
-            collection = new ObservableCollection<UserInfo>();
-            _isMuted = false;
-            _isSoundOf = false;
-            _soundManager = new SoundManager();
+            this._isMuted = false;
+            this._isSoundOf = false;
+            this._soundManager = new SoundManager();
+            this._Tcpclient = client;
+            this._collection = _Tcpclient.GetCurrentUserList();
+
+
+            //_collection.Add(new UserInfo("krokodyl"));
         }
 
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
         {
             var listbox = sender as ListBox;
-            listbox.ItemsSource = collection;
+            listbox.ItemsSource = _collection;
         }
-
 
         //wyciszanie mikrofonu
         private void ButtonMic_Click(object sender, RoutedEventArgs e)
