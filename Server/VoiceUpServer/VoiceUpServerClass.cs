@@ -128,10 +128,9 @@ namespace VoiceUpServer
                 }
                 try
                 {
-                    if (socket.Connected)
-                    {
-                        socket.BeginReceive(_UDPBuffer, 0, _UDPBuffer.Length, SocketFlags.None, new AsyncCallback(UDPReceiveCallBack), socket);
-                    }
+
+                    socket.BeginReceive(_UDPBuffer, 0, _UDPBuffer.Length, SocketFlags.None, new AsyncCallback(UDPReceiveCallBack), socket);
+
                 }
                 catch (SocketException e)
                 {
