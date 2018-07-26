@@ -13,7 +13,8 @@ namespace VoiceUpServer.UDP
 {
     class UDPServer
     {
-        private Socket serverSocket = null;
+        private Socket _ServerReceiveSocket = null;
+        private Socket _ServerSendSocket = null;
         private ObservableCollection<User> clientList;
         private byte[] byteData = new byte[1024];
         private object _itemsLock;
@@ -31,11 +32,15 @@ namespace VoiceUpServer.UDP
 
         public void Start()
         {
-            this.serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            this.serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            this.serverSocket.Bind(new IPEndPoint(IPAddress.Any, this._port));
+            this._ServerReceiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            this._ServerReceiveSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            this._ServerReceiveSocket.Bind(new IPEndPoint(IPAddress.Any, this._port));
+            this._ServerSendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            this._ServerSendSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
+
+
             EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);
-            this.serverSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
+            this._ServerReceiveSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
             BindingOperations.EnableCollectionSynchronization(this.clientList, _itemsLock);
 
         }
@@ -49,7 +54,7 @@ namespace VoiceUpServer.UDP
                 byte[] data = null;
                 try
                 {
-                    dataLen = this.serverSocket.EndReceiveFrom(iar, ref clientEP);
+                    dataLen = this._ServerReceiveSocket.EndReceiveFrom(iar, ref clientEP);
                     data = new byte[dataLen];
                     Array.Copy(this.byteData, data, dataLen);
                 }
@@ -59,7 +64,7 @@ namespace VoiceUpServer.UDP
                 finally
                 {
                     EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);
-                    this.serverSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
+                    this._ServerReceiveSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
                 }
 
                 if (true)//clientList.Count > 1)
@@ -76,7 +81,7 @@ namespace VoiceUpServer.UDP
         {
             try
             {
-                this.serverSocket.SendTo(data, clientEP);
+                this._ServerSendSocket.SendTo(data, clientEP);
             }
             catch (System.Net.Sockets.SocketException)
             {
@@ -103,8 +108,8 @@ namespace VoiceUpServer.UDP
 
         public void Stop()
         {
-            this.serverSocket.Close();
-            this.serverSocket = null;
+            this._ServerReceiveSocket.Close();
+            this._ServerReceiveSocket = null;
 
             this.clientList.Clear();
         }
