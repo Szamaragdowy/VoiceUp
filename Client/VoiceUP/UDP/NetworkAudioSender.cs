@@ -21,6 +21,16 @@ namespace VoiceUP.UDP
             waveIn.StartRecording();
         }
 
+        public void changeMicrophone(int index)
+        {
+            waveIn.StopRecording();
+            waveIn.BufferMilliseconds = 50;
+            waveIn.DeviceNumber = index;
+            waveIn.WaveFormat = codec.RecordFormat;
+            waveIn.DataAvailable += OnAudioCaptured;
+            waveIn.StartRecording();
+        }
+
         void OnAudioCaptured(object sender, WaveInEventArgs e)
         {
             byte[] encoded = codec.Encode(e.Buffer, 0, e.BytesRecorded);

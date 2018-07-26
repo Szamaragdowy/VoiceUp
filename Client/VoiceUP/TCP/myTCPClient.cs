@@ -26,6 +26,7 @@ namespace VoiceUP.TCP
         Func<bool> delegatesya;
         ConnectWithServerUDP _ConnectWithServerUDP;
         int _PortToUDP;
+        private int oldMicIndex;
 
 
         public myTCPClient(string _ServerIPAddress, int _ServerPORT)
@@ -51,10 +52,21 @@ namespace VoiceUP.TCP
             }
         }
 
+        public void maybeMicrophoneChanged(SoundManager sm)
+        {
+            if (oldMicIndex != sm.microphoneIndex)
+            {
+                this._ConnectWithServerUDP.setNewMicrophone(sm.microphoneIndex);
+            }
+        }
+
         public void startUDP(int index)
         {
+            this.oldMicIndex = index;
             this._ConnectWithServerUDP = new ConnectWithServerUDP(ip, _PortToUDP, index);
         }
+
+
 
         public void setDeleagats(Func<bool> kick, Func<bool> sya)
         {

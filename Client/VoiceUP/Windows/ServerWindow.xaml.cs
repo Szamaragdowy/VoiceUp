@@ -97,6 +97,7 @@ namespace VoiceUP.Windows
             okno.Left = this.Left;
             okno.Top = this.Top;
             okno.ShowDialog();
+            _Tcpclient.maybeMicrophoneChanged(_soundManager);
         }
 
         //rozłączenie z serwerem

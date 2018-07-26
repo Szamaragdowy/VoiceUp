@@ -18,6 +18,11 @@ namespace VoiceUP.UDP
             Connect(new IPEndPoint(IPAddress.Parse(ip), port), indexDevice);
         }
 
+        public void setNewMicrophone(int index)
+        {
+            audioSender.changeMicrophone(index);
+        }
+
         private void Connect(IPEndPoint endPoint, int inputDeviceNumber)
         {
             G722ChatCodec codec = new G722ChatCodec();
