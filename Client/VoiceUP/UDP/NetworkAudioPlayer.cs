@@ -14,12 +14,11 @@ namespace VoiceUP.UDP
         {
             this.codec = codec;
             this.receiver = receiver;
-            receiver.OnReceived(OnDataReceived);
-
             waveOut = new WaveOut();
             waveProvider = new BufferedWaveProvider(codec.RecordFormat);
             waveOut.Init(waveProvider);
             waveOut.Play();
+            receiver.OnReceived(OnDataReceived);
         }
 
         void OnDataReceived(byte[] compressed)

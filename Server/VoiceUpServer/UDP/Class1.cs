@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace VoiceUpServer.UDP
 {
@@ -12,19 +13,15 @@ namespace VoiceUpServer.UDP
     {
         private Socket serverSocket = null;
         private List<EndPoint> clientList = new List<EndPoint>();
-        private List<EndPoint> dataList = new List<EndPoint>();
         private byte[] byteData = new byte[1024];
-        private int port = 4242;
+        private object _itemsLock;
+        private int _port = 4242;
 
-        public List<EndPoint> DataList
-        {
-            private set { this.dataList = value; }
-            get { return (this.dataList); }
-        }
 
         public Class1(int port)
         {
-            this.port = port;
+            this._port = port;
+
             Start();
         }
 
@@ -32,9 +29,12 @@ namespace VoiceUpServer.UDP
         {
             this.serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            this.serverSocket.Bind(new IPEndPoint(IPAddress.Any, this.port));
+            this.serverSocket.Bind(new IPEndPoint(IPAddress.Any, this._port));
             EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);
             this.serverSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
+            _itemsLock = new object();
+            BindingOperations.EnableCollectionSynchronization(this.clientList, _itemsLock);
+
         }
 
         private void DoReceiveFrom(IAsyncResult iar)
@@ -58,11 +58,19 @@ namespace VoiceUpServer.UDP
                     EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);
                     this.serverSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
                 }
-
-                if (!this.clientList.Any(client => client.Equals(clientEP)))
-                    this.clientList.Add(clientEP);
-                SendToAll(data);
-
+                IPEndPoint w;
+                lock (_itemsLock) {
+                    IPAddress x = ((System.Net.IPEndPoint)clientEP).Address;
+                    w = new IPEndPoint(x, _port);
+                    if (!this.clientList.Any(client => client.Equals(w)))
+                    {
+                        this.clientList.Add(w);
+                    }
+                }
+                if (clientList.Count > 1)
+                {
+                    sendToRest(w, data);
+                }
             }
             catch (ObjectDisposedException)
             {
@@ -83,9 +91,26 @@ namespace VoiceUpServer.UDP
 
         public void SendToAll(byte[] data)
         {
-            foreach (var client in this.clientList)
+            lock (_itemsLock)
             {
-                this.SendTo(data, client);
+                foreach (var client in this.clientList)
+                {
+                    this.SendTo(data, client);
+                }
+            }
+        }
+
+        public void sendToRest(IPEndPoint x, byte[] data)
+        {
+            lock (_itemsLock)
+            {
+                foreach (var client in this.clientList)
+                {
+                    if (!client.Equals(x))
+                    {
+                        this.SendTo(data, client);
+                    }
+                }
             }
         }
 
@@ -94,7 +119,6 @@ namespace VoiceUpServer.UDP
             this.serverSocket.Close();
             this.serverSocket = null;
 
-            this.dataList.Clear();
             this.clientList.Clear();
         }
     }

@@ -13,7 +13,7 @@ namespace VoiceUP.UDP
 
         public UdpAudioReceiver(int portNumber)
         {
-            var endPoint = new IPEndPoint(IPAddress.Any, 0);
+            var endPoint = new IPEndPoint(IPAddress.Any, portNumber);
 
             udpListener = new UdpClient();
             udpListener.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
