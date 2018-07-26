@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace VoiceUpServer.Models
         private bool _IsMuted;
         private bool _IsSoundOff;
 
+        public IPEndPoint _ipendpoint;
+
         public string Name { get; set; }
 
        
@@ -25,9 +28,10 @@ namespace VoiceUpServer.Models
 
         }
 
-        public User(Socket socket)
+        public User(Socket socket,int udp_port)
         { 
             this.workSocket = socket;
+            _ipendpoint = new IPEndPoint((((IPEndPoint)socket.RemoteEndPoint).Address), udp_port);
         }
 
         public bool Mute

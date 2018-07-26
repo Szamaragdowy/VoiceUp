@@ -17,14 +17,12 @@ namespace VoiceUpServer
         public static ManualResetEvent kickMsgSended = new ManualResetEvent(false);
         public static ManualResetEvent cyaMsgSended = new ManualResetEvent(false);      
         private ObservableCollection<User> _usersList;
-        private List<EndPoint> _usersUDPList;
         private string _ServerName;
         private string _ServerIP;
         private IPAddress _ServerIPAddress;
         private int _ServerPORT;
         private int _MaxUsers;
         private object _itemsLock;
-        private object _UDPitemsLock;
         private string _publicKey;
         private RSACryptoServiceProvider _rsa;
         private byte[] _buffer = new byte[1024];
@@ -68,10 +66,8 @@ namespace VoiceUpServer
             this._ServerPORT = port;
             this._MaxUsers = maxusers;
             this._usersList = new ObservableCollection<User>();
-            this._usersUDPList = new List<EndPoint>();
             this._password = password;
             _itemsLock = new object();
-            _UDPitemsLock = new object();
             BindingOperations.EnableCollectionSynchronization(this._usersList, _itemsLock);
             generateKeys();
         }
@@ -94,7 +90,7 @@ namespace VoiceUpServer
         public void startUDP()
         {
             Console.WriteLine("UDP   ->    Setting up server . . .");
-            UDPServer udp = new UDPServer(_UDPPort,_usersUDPList, _UDPitemsLock);
+            UDPServer udp = new UDPServer(_UDPPort, _usersList, _itemsLock);
         }
 
         private void UDPReceiveCallBack(IAsyncResult ar)
@@ -174,18 +170,6 @@ namespace VoiceUpServer
         {
             if (user.workSocket.Connected)
             {
-                IPAddress x = ((IPEndPoint)user.workSocket.RemoteEndPoint).Address;
-
-                lock (_UDPitemsLock) { 
-                    for (int i = 0; i < _usersUDPList.Count; i++)
-                    {
-                        if (((IPEndPoint)_usersUDPList[i]).Address.ToString() == x.ToString())
-                        {
-                            _usersUDPList.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
                 Sendata(user.workSocket, "KICKED<VUP><EOF>");
                 kickMsgSended.WaitOne();
                 kickMsgSended.Reset();
@@ -199,19 +183,6 @@ namespace VoiceUpServer
         {
             if (user.workSocket.Connected)
             {
-                IPAddress x = ((IPEndPoint)user.workSocket.RemoteEndPoint).Address;
-
-                lock (_UDPitemsLock)
-                {
-                    for (int i = 0; i < _usersUDPList.Count; i++)
-                    {
-                        if (((IPEndPoint)_usersUDPList[i]).Address.ToString() == x.ToString())
-                        {
-                            _usersUDPList.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
                 user.workSocket.Close();
             }
             _usersList.Remove(user);
@@ -301,17 +272,6 @@ namespace VoiceUpServer
                                         _usersList.RemoveAt(i);
                                     }
                                 }
-                                lock (_UDPitemsLock) { 
-                                    for (int i = 0; i < _usersUDPList.Count; i++)
-                                    {
-                                        
-                                        if (!socket.Connected || ((IPEndPoint)_usersUDPList[i]).Address == ((IPEndPoint)socket.RemoteEndPoint).Address)
-                                        {
-                                            _usersUDPList.RemoveAt(i);
-                                        }
-                                    }
-                                }
-
                                 sendToAll(actuallist());
                                 break;
                             case "JOIN":
@@ -352,7 +312,7 @@ namespace VoiceUpServer
                                                 }
                                             }
 
-                                            User user = new User(socket);
+                                            User user = new User(socket,_UDPPort);
                                             user.Name = login;
                                             _usersList.Add(user);
                                             Sendata(socket, "LOGIN_ACK<VUP>"+ _UDPPort.ToString()+"<VUP><EOF>");

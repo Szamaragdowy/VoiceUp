@@ -136,6 +136,7 @@ namespace VoiceUP.Windows
         {
             try
             {
+                _Tcpclient.closeAfterDisconect();
                 Application.Current.Dispatcher.Invoke((Action)delegate {
                     MessageBox.Show("Serwer został wyłączony.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     MainWindow okno = new MainWindow();

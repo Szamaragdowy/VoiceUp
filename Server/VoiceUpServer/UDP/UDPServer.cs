@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using VoiceUpServer.Models;
 
 namespace VoiceUpServer.UDP
 {
     class UDPServer
     {
         private Socket serverSocket = null;
-        private List<EndPoint> clientList;
+        private ObservableCollection<User> clientList;
         private byte[] byteData = new byte[1024];
         private object _itemsLock;
         private int _port = 4242;
 
 
-        public UDPServer(int port, List<EndPoint> list,object x)
+        public UDPServer(int port, ObservableCollection<User> list,object x)
         {
             this._port = port;
             this.clientList = list;
@@ -59,18 +61,10 @@ namespace VoiceUpServer.UDP
                     EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);
                     this.serverSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
                 }
-                IPEndPoint w;
-                lock (_itemsLock) {
-                    IPAddress x = ((System.Net.IPEndPoint)clientEP).Address;
-                    w = new IPEndPoint(x, _port);
-                    if (!this.clientList.Any(client => client.Equals(w)))
-                    {
-                        this.clientList.Add(w);
-                    }
-                }
-                if (clientList.Count > 1)
+
+                if (true)//clientList.Count > 1)
                 {
-                    sendToRest(w, data);
+                    sendToRest(((IPEndPoint)clientEP).Address, data);
                 }
             }
             catch (ObjectDisposedException)
@@ -86,30 +80,22 @@ namespace VoiceUpServer.UDP
             }
             catch (System.Net.Sockets.SocketException)
             {
-                this.clientList.Remove(clientEP);
+                
             }
         }
 
-        public void SendToAll(byte[] data)
+
+        public void sendToRest(IPAddress from,byte[] data)
         {
             lock (_itemsLock)
             {
                 foreach (var client in this.clientList)
                 {
-                    this.SendTo(data, client);
-                }
-            }
-        }
-
-        public void sendToRest(IPEndPoint x, byte[] data)
-        {
-            lock (_itemsLock)
-            {
-                foreach (var client in this.clientList)
-                {
-                    if (!client.Equals(x))
-                    {
-                        this.SendTo(data, client);
+                    if (from.ToString() != client._ipendpoint.Address.ToString()) { 
+                        if (!client.SoundOff)
+                        {
+                            this.SendTo(data, client._ipendpoint);
+                        }
                     }
                 }
             }
