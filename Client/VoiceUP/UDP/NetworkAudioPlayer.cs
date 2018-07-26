@@ -1,5 +1,7 @@
 ﻿using System;
 using NAudio.Wave;
+using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VoiceUP.UDP
 {
@@ -30,7 +32,9 @@ namespace VoiceUP.UDP
         public void Dispose()
         {
             receiver?.Dispose();
-            waveOut?.Dispose();
+            waveOut?.Stop();
+           
         }
+
     }
 }

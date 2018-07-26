@@ -31,8 +31,6 @@ namespace VoiceUP.UDP
         {
             waveIn.DataAvailable -= OnAudioCaptured;
             waveIn.StopRecording();
-            waveIn.Dispose();
-            waveIn?.Dispose();
             audioSender?.Dispose();
         }
     }

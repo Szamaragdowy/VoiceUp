@@ -217,7 +217,7 @@ namespace VoiceUP.TCP
             sendMsg("CYA<VUP><EOF>");
             _stream.Close();
             _tcpClient.Close();
-            _ConnectWithServerUDP.Close();
+            this._ConnectWithServerUDP.Dispose();
         }
 
         public void closeAfterDisconect()
@@ -225,14 +225,17 @@ namespace VoiceUP.TCP
             disconected = true;
             _stream.Close();
             _tcpClient.Close();
-            _ConnectWithServerUDP.Close();
+            this._ConnectWithServerUDP.Dispose();
         }
 
         private void sendMsg(string msg)
         {
-            Byte[] data = ByteConverter.GetBytes(msg);
-            _stream.Write(data, 0, data.Length);
-            Console.WriteLine("Sent: {0}", msg);
+            if (!disconected)
+            {
+                Byte[] data = ByteConverter.GetBytes(msg);
+                _stream.Write(data, 0, data.Length);
+                Console.WriteLine("Sent: {0}", msg);
+            }
         }
 
         private string receiveMsg()

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Security.Cryptography;
 using VoiceUpServer.UDP;
+using System.Collections.Generic;
 
 namespace VoiceUpServer
 {
@@ -16,12 +17,14 @@ namespace VoiceUpServer
         public static ManualResetEvent kickMsgSended = new ManualResetEvent(false);
         public static ManualResetEvent cyaMsgSended = new ManualResetEvent(false);      
         private ObservableCollection<User> _usersList;
+        private List<EndPoint> _usersUDPList;
         private string _ServerName;
         private string _ServerIP;
         private IPAddress _ServerIPAddress;
         private int _ServerPORT;
         private int _MaxUsers;
         private object _itemsLock;
+        private object _UDPitemsLock;
         private string _publicKey;
         private RSACryptoServiceProvider _rsa;
         private byte[] _buffer = new byte[1024];
@@ -65,8 +68,10 @@ namespace VoiceUpServer
             this._ServerPORT = port;
             this._MaxUsers = maxusers;
             this._usersList = new ObservableCollection<User>();
+            this._usersUDPList = new List<EndPoint>();
             this._password = password;
             _itemsLock = new object();
+            _UDPitemsLock = new object();
             BindingOperations.EnableCollectionSynchronization(this._usersList, _itemsLock);
             generateKeys();
         }
@@ -89,7 +94,7 @@ namespace VoiceUpServer
         public void startUDP()
         {
             Console.WriteLine("UDP   ->    Setting up server . . .");
-            Class1 udp = new Class1(_UDPPort);
+            UDPServer udp = new UDPServer(_UDPPort,_usersUDPList, _UDPitemsLock);
         }
 
         private void UDPReceiveCallBack(IAsyncResult ar)
@@ -268,8 +273,18 @@ namespace VoiceUpServer
                                     if (_usersList[i].workSocket.RemoteEndPoint.ToString().Equals(socket.RemoteEndPoint.ToString()))
                                     {
                                         _usersList[i].workSocket.Close();
-                                        _usersList.RemoveAt(i);     
-                                     }
+                                        _usersList.RemoveAt(i);
+                                    }
+                                }
+                                lock (_UDPitemsLock) { 
+                                    for (int i = 0; i < _usersUDPList.Count; i++)
+                                    {
+                                        
+                                        if (!socket.Connected || ((IPEndPoint)_usersUDPList[i]).Address == ((IPEndPoint)socket.RemoteEndPoint).Address)
+                                        {
+                                            _usersUDPList.RemoveAt(i);
+                                        }
+                                    }
                                 }
 
                                 sendToAll(actuallist());

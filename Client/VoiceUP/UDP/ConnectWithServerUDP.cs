@@ -18,11 +18,6 @@ namespace VoiceUP.UDP
             Connect(new IPEndPoint(IPAddress.Parse(ip), port), indexDevice);
         }
 
-        public void Close()
-        {
-            //client.Close();
-        }
-
         private void Connect(IPEndPoint endPoint, int inputDeviceNumber)
         {
             G722ChatCodec codec = new G722ChatCodec();
@@ -32,6 +27,12 @@ namespace VoiceUP.UDP
             player = new NetworkAudioPlayer(codec, receiver);
             audioSender = new NetworkAudioSender(codec, inputDeviceNumber, sender);
             connected = true;
+        }
+
+        public void Dispose()
+        {
+            player.Dispose();
+            audioSender?.Dispose();
         }
     }
 }
