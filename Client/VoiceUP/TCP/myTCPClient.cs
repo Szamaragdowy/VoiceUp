@@ -213,9 +213,9 @@ namespace VoiceUP.TCP
 
         public void Discconect()
         {
+            sendMsg("CYA<VUP><EOF>");
             disconected = true;
             closeAfterDisconect();
-            sendMsg("CYA<VUP><EOF>");
             _stream.Close();
             _tcpClient.Close();
             this._ConnectWithServerUDP.Dispose();
