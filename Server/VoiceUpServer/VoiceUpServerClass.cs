@@ -174,6 +174,18 @@ namespace VoiceUpServer
         {
             if (user.workSocket.Connected)
             {
+                IPAddress x = ((IPEndPoint)user.workSocket.RemoteEndPoint).Address;
+
+                lock (_UDPitemsLock) { 
+                    for (int i = 0; i < _usersUDPList.Count; i++)
+                    {
+                        if (((IPEndPoint)_usersUDPList[i]).Address.ToString() == x.ToString())
+                        {
+                            _usersUDPList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
                 Sendata(user.workSocket, "KICKED<VUP><EOF>");
                 kickMsgSended.WaitOne();
                 kickMsgSended.Reset();
@@ -187,6 +199,19 @@ namespace VoiceUpServer
         {
             if (user.workSocket.Connected)
             {
+                IPAddress x = ((IPEndPoint)user.workSocket.RemoteEndPoint).Address;
+
+                lock (_UDPitemsLock)
+                {
+                    for (int i = 0; i < _usersUDPList.Count; i++)
+                    {
+                        if (((IPEndPoint)_usersUDPList[i]).Address.ToString() == x.ToString())
+                        {
+                            _usersUDPList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
                 user.workSocket.Close();
             }
             _usersList.Remove(user);
