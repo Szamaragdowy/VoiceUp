@@ -1,15 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using VoiceUpServer.AdditionalsWindows;
 using VoiceUpServer.Models;
-using VoiceUpServer.UDP;
 
 namespace VoiceUpServer
 {
@@ -17,6 +15,7 @@ namespace VoiceUpServer
     {
         VoiceUpServerClass server;
         Thread ServerTCPthread;
+        List<NetworkAdapter> InterfaceList;
 
         public MainWindow()
         {   
@@ -24,8 +23,10 @@ namespace VoiceUpServer
             TextboxServerName.Text = "testowy";
             TextboxMaxUsers.Text = "4";
             TextblockPort.Text = "5000";
-
-            TextblockIP.Text = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
+            InterfaceList = new List<NetworkAdapter>();
+            LoadAdapters();
+            NetworkAdaptersList.ItemsSource = InterfaceList;
+            NetworkAdaptersList.SelectedIndex = 0;
         }
 
         //wyłączanie komuś dzwięku (przycisk) 
@@ -77,24 +78,7 @@ namespace VoiceUpServer
                     TextboxServerName.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("250"), Convert.ToByte("000"), Convert.ToByte("000")));
                     isValid = false;
                 }
-                if (String.IsNullOrEmpty(TextblockIP.Text))
-                {
-                    WarningIP.Visibility = Visibility.Visible;
-                    WarningIP.Content = "Pole nie moze być puste.";
-                    isValid = false;
-                }
-                else if (!MatchIP(TextblockIP.Text))
-                    {
-                        WarningIP.Visibility = Visibility.Visible;
-                        WarningIP.Content = "Ip ma zły format.";
-                        isValid = false;
-                    }
-                    else if (!isGoodIpAdress(TextblockIP.Text))
-                        {
-                            WarningIP.Visibility = Visibility.Visible;
-                            WarningIP.Content = "Błędny adres.";
-                            isValid = false;
-                        }
+
 
 
                 if (String.IsNullOrEmpty(TextblockPort.Text))
@@ -114,7 +98,7 @@ namespace VoiceUpServer
                 {
                     blockOptions();
                     string serverName = TextboxServerName.Text;
-                    string ip = TextblockIP.Text;
+                    string ip = (NetworkAdaptersList.SelectedValue as NetworkAdapter).IPAdress;
                     int port = Int32.Parse(TextblockPort.Text);
                     int maxuser = Int32.Parse(TextboxMaxUsers.Text);
                     string pass = PasswordPasswordBox.Password;
@@ -145,24 +129,6 @@ namespace VoiceUpServer
                 UnBlockOptions();
                 StartButton.Content = "Start";
             }
-        }
-
-        private bool isGoodIpAdress(string stringIP)
-        {
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (item.OperationalStatus == OperationalStatus.Up)
-                {
-                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                    {
-                        if(ip.Address.ToString() == stringIP)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false; ;
         }
 
         private void UnBlockOptions()
@@ -218,42 +184,21 @@ namespace VoiceUpServer
             }
         }
 
-        public string GetLocalIPv4(NetworkInterfaceType _type)
+        private void LoadAdapters()
         {
-            string output = "";
             foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
+                if (item.OperationalStatus == OperationalStatus.Up)
                 {
                     foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
                     {
-                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        if (ip.PrefixLength <= 32)
                         {
-                            output = ip.Address.ToString();
+                            InterfaceList.Add(new NetworkAdapter(item.Description, ip.Address.ToString()));
                         }
                     }
                 }
             }
-            return output;
-        }
-
-        private bool MatchIP(string ip)
-        {
-            var x = Regex.Match(ip, @"^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$");
-            return x.Success;
-        }
-
-        private void Label_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            NetworkAdapters x = new NetworkAdapters();
-            x.Left = this.Left +  this.ActualWidth -5 ;
-            x.Top  = this.Top;
-            x.ShowDialog();
-            if (x.choicedIP != "")
-            {
-                TextblockIP.Text = x.choicedIP;
-            }
-
         }
 
         private void TextblockPort_TextChanged(object sender, TextChangedEventArgs e)
@@ -303,5 +248,6 @@ namespace VoiceUpServer
             PasswordTextbox.Visibility = Visibility.Hidden;
             PasswordPasswordBox.Visibility = Visibility.Visible;
         }
+
     }
 }

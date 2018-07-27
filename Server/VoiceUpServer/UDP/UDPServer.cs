@@ -60,6 +60,7 @@ namespace VoiceUpServer.UDP
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                 }
                 finally
                 {

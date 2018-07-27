@@ -75,9 +75,6 @@
     <Compile Include="Models\NetworkAdapter.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="VoiceUpServerClass.cs" />
-    <Compile Include="AdditionalsWindows\NetworkAdapters.xaml.cs">
-      <DependentUpon>NetworkAdapters.xaml</DependentUpon>
-    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,10 +87,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="AdditionalsWindows\NetworkAdapters.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

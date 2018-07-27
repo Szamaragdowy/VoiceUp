@@ -225,7 +225,7 @@ namespace VoiceUpServer
             }
             catch (SocketException e)
             {
-
+                Console.WriteLine(e.Message);
             }   
         }
 
@@ -353,7 +353,7 @@ namespace VoiceUpServer
                      }
                 }catch(SocketException e)
                 {
-                   
+                    Console.WriteLine(e.Message);
                 }
             }
         }

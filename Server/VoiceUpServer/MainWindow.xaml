@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VoiceUpServer"
         xmlns:model="clr-namespace:VoiceUpServer.Models"
         xmlns:converters="clr-namespace:VoiceUpServer.Converters"
         mc:Ignorable="d"
@@ -30,7 +29,6 @@
         <materialDesign:PackIcon x:Key="UserIcon" x:Shared="False" Kind="Account" Foreground="#FF2196F3" Width="40" Height="40"/>
         <materialDesign:PackIcon x:Key="Microphone_Off" x:Shared="False" Kind="MicrophoneOff" Foreground="White" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="User_Kick" x:Shared="False" Kind="AccountRemove" Foreground="White" Width="25" Height="25"/>
-        <materialDesign:PackIcon x:Key="Help" x:Shared="False" Kind="HelpCircleOutline" Foreground="#FF2196F3" Width="25" Height="25"/>
         <materialDesign:PackIcon x:Key="ShowPassword" x:Shared="False" Kind="Eye" Foreground="#FF2196F3" Width="25" Height="25"/>
     </Window.Resources>
 
@@ -97,11 +95,13 @@
                         </Label>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
                             <Label    FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="IP:"/>
-                            <TextBox x:Name="TextblockIP" FontSize="18" Text="192.168.1.100" TextAlignment="Center" 
-                                     Margin="5" Width="142"  />
-                            <Label VerticalContentAlignment="Center" MouseLeftButtonUp="Label_MouseLeftButtonUp" >
-                                <StaticResource ResourceKey="Help"/>
-                            </Label>
+                            <ComboBox  x:Name="NetworkAdaptersList" FontSize="18" Width="178">
+                                <ComboBox.ItemTemplate >
+                                    <DataTemplate>
+                                        <Label  Content="{Binding IPAdress}" FontSize="18"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </StackPanel>
                         <Label Visibility="Hidden" Foreground="Red" FontSize="16" Name="WarningIP"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                             Błędny adres.
