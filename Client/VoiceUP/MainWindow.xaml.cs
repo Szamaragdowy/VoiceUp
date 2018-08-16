@@ -244,6 +244,7 @@ namespace VoiceUP
         //po zmianie textu w loginie, zmiana na domyślny kolor
         private void TextBoxLogin_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (WarningLogin == null) return;
             WarningLogin.Visibility = Visibility.Hidden;
             TextBoxLogin.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("89"), Convert.ToByte("000"), Convert.ToByte("000")));
         }
@@ -251,6 +252,7 @@ namespace VoiceUP
         //po zmianie textu w wyborze serwera, zmiana na domyślny kolor
         private void ComboBoxServerList_TextInput(object sender, TextCompositionEventArgs e)
         {
+            if (WarningSerwer == null) return;
             WarningSerwer.Visibility = Visibility.Hidden;
             ComboBoxServerList.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("89"), Convert.ToByte("000"), Convert.ToByte("000")));
         }

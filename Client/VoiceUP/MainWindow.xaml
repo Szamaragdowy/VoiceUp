@@ -20,14 +20,13 @@
     </Window.Background>
 
 
-    <!--Style-->
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="HorizontalContentAlignment" Value="right" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Height" Value="35"/>
-            <Setter Property="Width" Value="90"/>
+            <Setter Property="Width" Value="100"/>
         </Style>
         <Converters:IPAdresConverter x:Key="IPAdresConverter" />
     </Window.Resources>
@@ -39,41 +38,52 @@
             </Grid.Background>
         </Grid>
         <materialDesign:Card Margin="10,123,10,0" Height="392" >
-            <Grid>
-                <Label   Content="Nick"   Margin="10,10,310,221"  FontSize="20" Height="Auto"/>
-                <Label   Visibility="Hidden" Name="WarningLogin"  Content="Proszę wpisać login."  Foreground="Red" Margin="105,40,180,197"  FontSize="13" Height="Auto" Width="Auto"/>
-                <Label   Content="Serwer" Margin="10,69,310,155" FontSize="20" Height="Auto"/>
-                <Label   Visibility="Hidden" Name="WarningSerwer"  Content="Niepoprawny format adresu IP (IP:PORT)"  Foreground="Red" Margin="100,116,68,124"  FontSize="13" Height="Auto" Width="Auto"/>
-                <Label   Content="Hasło" Margin="10,136,310,90" FontSize="20" Height="Auto"/>
-                <TextBox Name="TextBoxLogin" Text="Somsiad"   Margin="105,-5,30,221" Width="Auto" FontSize="20" TextChanged="TextBoxLogin_TextChanged" />
-                <ComboBox x:Name="ComboBoxServerList" IsEditable="True" 
-                          FontSize="20" Margin="105,72,30,153" 
+            <StackPanel>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Nick"/>
+                        <TextBox Name="TextBoxLogin" Margin="20,10,0,5" Text="Somsiad"   FontSize="20" TextChanged="TextBoxLogin_TextChanged" Width="250"/>
+                    </StackPanel>
+                    <Label HorizontalAlignment="center" Visibility="Hidden" Name="WarningLogin"  Content="Proszę wpisać login."  Foreground="Red" FontSize="13" Width="auto" />
+                </StackPanel>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Serwer"/>
+                        <ComboBox x:Name="ComboBoxServerList" IsEditable="True"  Margin="20,0,0,0"
+                          FontSize="20"  Width="250"
                           Loaded="ComboBox_Loaded" Text="Wpisz Adres ip:port"        
                           SelectionChanged="ComboBox_SelectionChanged" Height="44" TextInput="ComboBoxServerList_TextInput" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" >
-                                <Label Content="{Binding Name}" Width="150"/>
-                                <Button Margin="0,0,10,0" Click="ButtonEdit_Click" CommandParameter="{Binding }">
-                                    <StackPanel>
-                                        <materialDesign:PackIcon  Kind="pencil" VerticalAlignment="Center" />
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <Label Content="{Binding Name}" Width="150"/>
+                                        <Button Margin="0,0,10,0" Click="ButtonEdit_Click" CommandParameter="{Binding }">
+                                            <StackPanel>
+                                                <materialDesign:PackIcon  Kind="pencil" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Margin="0,0,10,0" Click="ButtonDelete_Click" CommandParameter="{Binding }">
+                                            <StackPanel>
+                                                <materialDesign:PackIcon  Kind="delete" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
                                     </StackPanel>
-                                </Button>
-                                <Button Margin="0,0,10,0" Click="ButtonDelete_Click" CommandParameter="{Binding }">
-                                    <StackPanel>
-                                        <materialDesign:PackIcon  Kind="delete" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <PasswordBox Name="TextBoxPassword" PasswordChar="*" Margin="105,126,30,90" Width="Auto" FontSize="20"/>
-
-                <Button  Content="Połącz" Margin="105,202,0,0"   Width="184"  
-                         Height="44"      VerticalAlignment="Top"   
-                         HorizontalAlignment="Left" Click="ButtonConnect_Click" RenderTransformOrigin="0.526,0.227"/>
-            </Grid>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <Label  HorizontalAlignment="center"  Visibility="Hidden" Name="WarningSerwer" Width="auto"   Content="Niepoprawny format adresu IP (IP:PORT)"  Foreground="Red" FontSize="13" />
+                </StackPanel>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label   Content="Hasło"/>
+                        <PasswordBox Margin="20,0,0,0" Name="TextBoxPassword" PasswordChar="*" Width="250" FontSize="20"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+                    <Button  Content="Połącz"   Width="184" Height="44" Click="ButtonConnect_Click"/>
+                </StackPanel>
+            </StackPanel>
         </materialDesign:Card>
     </Grid>
 </Window>

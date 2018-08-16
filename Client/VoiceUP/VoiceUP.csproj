@@ -148,8 +148,6 @@
       <DependentUpon>ServerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Structures\SoundManager.cs" />
-    <Compile Include="Structures\SoundSender.cs" />
-    <Compile Include="Structures\UserSettings.cs" />
     <Compile Include="Structures\MyServersJSON.cs" />
     <Compile Include="Structures\ServerInfo.cs" />
     <Compile Include="Structures\UserInfo.cs" />
@@ -215,8 +213,6 @@
   <ItemGroup>
     <Resource Include="MySerwers.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="server\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

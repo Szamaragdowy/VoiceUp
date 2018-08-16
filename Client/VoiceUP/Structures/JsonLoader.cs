@@ -15,8 +15,7 @@ namespace VoiceUP.Structures
             {
                 File.Create(path).Close();
                 return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
-            }
-            
+            }  
         }
     }
 }
