@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using VoiceUP.Structures;
-using VoiceUP.TCP;
+using VoiceUP.Network.TCP;
 using VoiceUP.Models;
 
 namespace VoiceUP.Windows
@@ -14,7 +14,7 @@ namespace VoiceUP.Windows
         private SoundManager _soundManager;
         private bool _isMuted;
         private bool _isSoundOf;
-        private myTCPClient _Tcpclient;
+        private TCPManager _Tcpclient;
         private string _serverName;
 
         #region helpers
@@ -42,7 +42,7 @@ namespace VoiceUP.Windows
         #endregion
         #endregion
 
-        public ServerWindow(myTCPClient client,string ServerName)
+        public ServerWindow(TCPManager client,string ServerName)
         {
             InitializeComponent();
             this._isMuted = false;

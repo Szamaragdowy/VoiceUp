@@ -2,7 +2,7 @@
 using NAudio.Wave;
 using VoiceUP.Interfaces;
 
-namespace VoiceUP.UDP
+namespace VoiceUP.Network.UDP
 {
     class NetworkAudioPlayer : IDisposable
     {

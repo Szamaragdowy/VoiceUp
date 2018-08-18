@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
+﻿using System.Net;
 
-namespace VoiceUP.UDP
+namespace VoiceUP.Network.UDP
 {
     class ConnectWithServerUDP
     {

@@ -125,16 +125,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TCP\myTCPClient.cs" />
-    <Compile Include="TCP\StateObject.cs" />
-    <Compile Include="UDP\G722ChatCodec.cs" />
+    <Compile Include="Network\TCP\TCPManager.cs" />
+    <Compile Include="Models\StateObject.cs" />
+    <Compile Include="Network\UDP\G722ChatCodec.cs" />
     <Compile Include="Interfaces\IAudioReceiver.cs" />
     <Compile Include="Interfaces\IAudioSender.cs" />
     <Compile Include="Interfaces\INetworkChatCodec.cs" />
-    <Compile Include="UDP\NetworkAudioPlayer.cs" />
-    <Compile Include="UDP\NetworkAudioSender.cs" />
-    <Compile Include="UDP\UdpAudioReceiver.cs" />
-    <Compile Include="UDP\UdpAudioSender.cs" />
+    <Compile Include="Network\UDP\NetworkAudioPlayer.cs" />
+    <Compile Include="Network\UDP\NetworkAudioSender.cs" />
+    <Compile Include="Network\UDP\UdpAudioReceiver.cs" />
+    <Compile Include="Network\UDP\UdpAudioSender.cs" />
     <Compile Include="Windows\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
@@ -149,7 +149,7 @@
     <Compile Include="Models\MyServersJSON.cs" />
     <Compile Include="Models\ServerInfo.cs" />
     <Compile Include="Models\UserInfo.cs" />
-    <Compile Include="UDP\ConnectWithServerUDP.cs" />
+    <Compile Include="Network\UDP\ConnectWithServerUDP.cs" />
     <Page Include="Windows\EditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

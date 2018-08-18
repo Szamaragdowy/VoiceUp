@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Threading;
 using VoiceUP.Interfaces;
 
-namespace VoiceUP.UDP
+namespace VoiceUP.Network.UDP
 {
     class UdpAudioReceiver : IAudioReceiver
     {

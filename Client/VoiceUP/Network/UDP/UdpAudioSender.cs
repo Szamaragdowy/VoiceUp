@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using VoiceUP.Interfaces;
 
-namespace VoiceUP.UDP
+namespace VoiceUP.Network.UDP
 {
     class UdpAudioSender : IAudioSender
     {

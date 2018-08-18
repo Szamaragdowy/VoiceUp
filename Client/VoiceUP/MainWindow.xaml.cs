@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using VoiceUP.Structures;
-using VoiceUP.TCP;
+using VoiceUP.Network.TCP;
 using VoiceUP.Windows;
 using VoiceUP.Models;
 
@@ -152,7 +152,7 @@ namespace VoiceUP
 
             if (valid)
             {
-                myTCPClient client = new myTCPClient(ip, port);
+                TCPManager client = new TCPManager(ip, port);
                 
                 string connected = client.Connect(login, password);
 

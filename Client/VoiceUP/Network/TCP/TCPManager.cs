@@ -5,12 +5,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Data;
 using VoiceUP.Structures;
-using VoiceUP.UDP;
+using VoiceUP.Network.UDP;
 using VoiceUP.Models;
 
-namespace VoiceUP.TCP
+namespace VoiceUP.Network.TCP
 {
-    public class myTCPClient
+    public class TCPManager
     {
         ASCIIEncoding ByteConverter = new ASCIIEncoding();
         NetworkStream _stream;
@@ -29,7 +29,7 @@ namespace VoiceUP.TCP
         private int oldMicIndex;
 
 
-        public myTCPClient(string _ServerIPAddress, int _ServerPORT)
+        public TCPManager(string _ServerIPAddress, int _ServerPORT)
         {
             this.ip = _ServerIPAddress;
             this.port = _ServerPORT.ToString();
