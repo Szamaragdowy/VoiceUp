@@ -29,8 +29,8 @@
                 <Label   Content="IP"         Margin="0,16,323,180" HorizontalContentAlignment="Right" FontSize="20"/>
                 <Label   Content="Port"       Margin="0,69,323,124" HorizontalContentAlignment="Right" FontSize="20"/>
                 <Label   Content="Nazwa"      Margin="0,120,323,78" HorizontalContentAlignment="Right" FontSize="20"/>
-                <TextBox x:Name="TextBoxIP"   Margin="95,16,34,180" FontSize="20"/>
-                <TextBox x:Name="TextBoxPORT" Margin="95,69,34,132" FontSize="20"/>
+                <TextBox IsReadOnly="True" x:Name="TextBoxIP"   Margin="95,16,34,180" FontSize="20"/>
+                <TextBox IsReadOnly="True" x:Name="TextBoxPORT" Margin="95,69,34,132" FontSize="20"/>
                 <TextBox x:Name="TextBoxNAME" Margin="95,120,34,78" FontSize="20"/>
                 <Button  Content="Zapisz"     Margin="145,186,135,0"   VerticalAlignment="Top" Height="36" Click="ButtonSave_Click"/>
             </Grid>

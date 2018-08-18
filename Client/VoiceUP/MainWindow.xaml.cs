@@ -233,7 +233,7 @@ namespace VoiceUP
 
         #endregion
 
-        #region Validation
+            #region Validation
 
         //regex do ip format (IP:port) - ip 4 x mas 255 i port zawierający co najmniej jedną liczbę
         private Match MatchIP(string ip)
