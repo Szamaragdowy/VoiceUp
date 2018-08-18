@@ -17,6 +17,7 @@ namespace VoiceUP.Network.UDP
             this.receiver = receiver;
             waveOut = new WaveOut();
             waveProvider = new BufferedWaveProvider(codec.RecordFormat);
+            waveProvider.DiscardOnBufferOverflow = true;
             waveOut.Init(waveProvider);
             waveOut.Play();
             receiver.OnReceived(OnDataReceived);
@@ -32,8 +33,6 @@ namespace VoiceUP.Network.UDP
         {
             receiver?.Dispose();
             waveOut?.Stop();
-           
         }
-
     }
 }
