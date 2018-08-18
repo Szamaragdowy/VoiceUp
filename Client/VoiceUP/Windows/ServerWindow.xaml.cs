@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using VoiceUP.Structures;
 using VoiceUP.TCP;
+using VoiceUP.Models;
 
 namespace VoiceUP.Windows
 {

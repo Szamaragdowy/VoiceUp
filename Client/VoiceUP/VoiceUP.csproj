@@ -149,8 +149,8 @@
     </Compile>
     <Compile Include="Structures\SoundManager.cs" />
     <Compile Include="Structures\MyServersJSON.cs" />
-    <Compile Include="Structures\ServerInfo.cs" />
-    <Compile Include="Structures\UserInfo.cs" />
+    <Compile Include="Models\ServerInfo.cs" />
+    <Compile Include="Models\UserInfo.cs" />
     <Compile Include="UDP\ConnectWithServerUDP.cs" />
     <Page Include="Windows\EditWindow.xaml">
       <SubType>Designer</SubType>

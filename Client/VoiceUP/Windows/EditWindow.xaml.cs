@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using VoiceUP.Structures;
+using VoiceUP.Models;
 
 namespace VoiceUP.Windows
 {

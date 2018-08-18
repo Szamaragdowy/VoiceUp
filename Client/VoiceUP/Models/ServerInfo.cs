@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using VoiceUP.Interfaces;
 
-namespace VoiceUP.Structures
+namespace VoiceUP.Models
 {
     public class ServerInfo : IServerInfo, INotifyPropertyChanged
     {

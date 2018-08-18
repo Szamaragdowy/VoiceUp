@@ -12,6 +12,7 @@ using System.Windows.Media;
 using VoiceUP.Structures;
 using VoiceUP.TCP;
 using VoiceUP.Windows;
+using VoiceUP.Models;
 
 namespace VoiceUP
 {

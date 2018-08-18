@@ -3,10 +3,10 @@ using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Windows.Data;
 using VoiceUP.Structures;
 using VoiceUP.UDP;
+using VoiceUP.Models;
 
 namespace VoiceUP.TCP
 {
