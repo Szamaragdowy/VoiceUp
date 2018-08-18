@@ -4,7 +4,7 @@ using NAudio.Codecs;
 using System.Diagnostics;
 using VoiceUP.Interfaces;
 
-namespace VoiceUP.Network.UDP
+namespace VoiceUP.Network.Codec
 {
     class G722ChatCodec : INetworkChatCodec
     {

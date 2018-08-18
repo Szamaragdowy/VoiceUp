@@ -52,6 +52,7 @@ namespace VoiceUP.Windows
             this._Tcpclient.setDeleagats(kicked, ServerBye);
             this._Tcpclient.startUDP(_soundManager.microphoneIndex);
             labelServerName.Content = ServerName;
+            this.Title = "VoiceUp (" + ServerName + ")";
             labelIpPort.Content = this._Tcpclient.GetIPAndPort();
         }
 

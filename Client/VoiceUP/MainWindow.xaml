@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         MouseDown="Window_MouseDown"
-        Title="VoiceUp" Height="570" Width="450" ResizeMode="NoResize" WindowStartupLocation="Manual">
+        Title="VoiceUp" Height="570" Width="450" ResizeMode="NoResize" WindowStartupLocation="Manual" Icon="Images/ikonka.ico" >
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

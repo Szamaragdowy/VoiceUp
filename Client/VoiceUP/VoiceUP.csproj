@@ -127,7 +127,7 @@
     </ApplicationDefinition>
     <Compile Include="Network\TCP\TCPManager.cs" />
     <Compile Include="Models\StateObject.cs" />
-    <Compile Include="Network\UDP\G722ChatCodec.cs" />
+    <Compile Include="Network\Codec\G722ChatCodec.cs" />
     <Compile Include="Interfaces\IAudioReceiver.cs" />
     <Compile Include="Interfaces\IAudioSender.cs" />
     <Compile Include="Interfaces\INetworkChatCodec.cs" />
@@ -211,6 +211,8 @@
   <ItemGroup>
     <Resource Include="MySerwers.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\ikonka.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

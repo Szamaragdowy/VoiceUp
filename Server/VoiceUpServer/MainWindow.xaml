@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:VoiceUpServer.Converters"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="VoiceUp Server" Height="450" Width="645.333" ResizeMode="NoResize">
+        Title="VoiceUp Server" Height="450" Width="645.333" ResizeMode="NoResize" Icon="Images/ikonka.ico">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
