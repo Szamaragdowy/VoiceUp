@@ -20,7 +20,7 @@ namespace VoiceUpServer
         public MainWindow()
         {   
             InitializeComponent(); 
-            TextboxServerName.Text = "testowy";
+            TextboxServerName.Text = "VoiceUp Server";
             TextboxMaxUsers.Text = "4";
             TextblockPort.Text = "5000";
             InterfaceList = new List<NetworkAdapter>();
@@ -74,8 +74,17 @@ namespace VoiceUpServer
                 }
                 if (String.IsNullOrEmpty(TextboxServerName.Text))
                 {
+
+
                     WarningServerName.Visibility = Visibility.Visible;
                     TextboxServerName.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("250"), Convert.ToByte("000"), Convert.ToByte("000")));
+                    isValid = false;
+                }
+                Regex regex = new Regex("^([2-9]|[1-2][0-9]|30)$");
+                if (!regex.IsMatch(TextboxMaxUsers.Text))
+                {
+                    WarningMaxUsers.Visibility = Visibility.Visible;
+                    WarningMaxUsers.Content = "Proszę wpisać liczbę od 2 do 30";
                     isValid = false;
                 }
 
@@ -172,7 +181,6 @@ namespace VoiceUpServer
             {
                 WarningMaxUsers.Visibility = Visibility.Visible;
                 WarningMaxUsers.Content = "Proszę wpisać liczbę od 2 do 30";
-                TextboxMaxUsers.Text = "";
             }
         }
 

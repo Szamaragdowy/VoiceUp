@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:VoiceUpServer.Converters"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="VoiceUp Serwer" Height="450" Width="645.333" ResizeMode="NoResize">
+        Title="VoiceUp Server" Height="450" Width="645.333" ResizeMode="NoResize">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -65,7 +65,7 @@
                                     Ilość użytkowników (max):
                                 </Label.Content>
                             </Label>
-                            <TextBox x:Name="TextboxMaxUsers" TextChanged="TextboxMaxUsers_TextChanged" FontSize="13"  PreviewTextInput="TextBox_PreviewTextInput" Margin="5" Width="50"  HorizontalContentAlignment="Center">
+                            <TextBox  x:Name="TextboxMaxUsers" MaxLength="2" TextChanged="TextboxMaxUsers_TextChanged" FontSize="13"  PreviewTextInput="TextBox_PreviewTextInput" Margin="5" Width="50"  HorizontalContentAlignment="Center">
                             </TextBox>
                         </StackPanel>
                         <StackPanel>
