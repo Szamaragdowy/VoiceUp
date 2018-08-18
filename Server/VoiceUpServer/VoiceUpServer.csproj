@@ -69,7 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UDP\UDPServer.cs" />
+    <Compile Include="Netowrk\UDP\UDPServer.cs" />
     <Compile Include="Converters\SoundStatusConverter .cs" />
     <Compile Include="Converters\MicrophoneStatusConverter.cs" />
     <Compile Include="Models\NetworkAdapter.cs" />

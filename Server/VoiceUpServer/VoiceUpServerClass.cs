@@ -7,8 +7,7 @@ using VoiceUpServer.Models;
 using System.Text;
 using System.Windows.Data;
 using System.Security.Cryptography;
-using VoiceUpServer.UDP;
-using System.Collections.Generic;
+using VoiceUpServer.Network.UDP;
 
 namespace VoiceUpServer
 {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VoiceUpServer.Models
 {
@@ -20,20 +16,17 @@ namespace VoiceUpServer.Models
 
         public IPEndPoint _ipendpoint;
 
-        public string Name { get; set; }
-
-       
         public User()
         {
 
         }
-
-        public User(Socket socket,int udp_port)
-        { 
+        public User(Socket socket, int udp_port)
+        {
             this.workSocket = socket;
             _ipendpoint = new IPEndPoint((((IPEndPoint)socket.RemoteEndPoint).Address), udp_port);
         }
-
+        #region properties
+        public string Name { get; set; }
         public bool Mute
         {
             get { return _IsMuted; }
@@ -43,7 +36,6 @@ namespace VoiceUpServer.Models
                 OnPropertyChange("Mute");
             }
         }
-
         public bool SoundOff
         {
             get { return _IsSoundOff; }
@@ -53,15 +45,16 @@ namespace VoiceUpServer.Models
                 OnPropertyChange("SoundOff");
             }
         }
-
+        #endregion
+        #region INotifyProperty
         public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChange(string propertyName)
         {
-            if(PropertyChanged != null)
+            if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        #endregion
     }
 }

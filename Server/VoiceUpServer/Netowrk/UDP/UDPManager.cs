@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using VoiceUpServer.Models;
 
-namespace VoiceUpServer.UDP
+namespace VoiceUpServer.Network.UDP
 {
     class UDPServer
     {
@@ -19,7 +15,6 @@ namespace VoiceUpServer.UDP
         private byte[] byteData = new byte[1024];
         private object _itemsLock;
         private int _port = 4242;
-
 
         public UDPServer(int port, ObservableCollection<User> list,object x)
         {
@@ -38,11 +33,9 @@ namespace VoiceUpServer.UDP
             this._ServerSendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this._ServerSendSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
-
             EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);
             this._ServerReceiveSocket.BeginReceiveFrom(this.byteData, 0, this.byteData.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, newClientEP);
             BindingOperations.EnableCollectionSynchronization(this.clientList, _itemsLock);
-
         }
 
         private void DoReceiveFrom(IAsyncResult iar)
@@ -89,7 +82,6 @@ namespace VoiceUpServer.UDP
                 
             }
         }
-
 
         public void sendToRest(IPAddress from,byte[] data)
         {

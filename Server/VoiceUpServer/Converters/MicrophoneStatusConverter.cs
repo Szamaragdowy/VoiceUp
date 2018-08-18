@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using VoiceUpServer.Converters;
 using MaterialDesignThemes.Wpf;
 using System.Windows.Media;
 
@@ -15,14 +9,12 @@ namespace VoiceUpServer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((value == null) || !(value is bool))
-                return null;
+            if ((value == null) || !(value is bool)) return null;
 
             bool MicrophoneStatus = (bool)value;
 
             if (MicrophoneStatus)
             {
- 
                 var x = new PackIcon { Kind = PackIconKind.MicrophoneOff };
                 x.Foreground = new SolidColorBrush(Color.FromRgb(System.Convert.ToByte("250"), System.Convert.ToByte("000"), System.Convert.ToByte("000")));
 
@@ -32,7 +24,6 @@ namespace VoiceUpServer.Converters
             {
                 return new PackIcon { Kind = PackIconKind.Microphone };
             }
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
