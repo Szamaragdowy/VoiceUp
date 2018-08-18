@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using VoiceUpServer.Models;
+using VoiceUpServer.Network;
 
 namespace VoiceUpServer
 {

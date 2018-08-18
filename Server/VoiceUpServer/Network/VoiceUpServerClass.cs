@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Security.Cryptography;
 using VoiceUpServer.Network.UDP;
 
-namespace VoiceUpServer
+namespace VoiceUpServer.Network
 {
     class VoiceUpServerClass
     {
