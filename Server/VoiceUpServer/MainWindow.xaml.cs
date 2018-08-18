@@ -14,54 +14,20 @@ namespace VoiceUpServer
 {
     public partial class MainWindow : Window
     {
-        VoiceUpServerClass server;
         Thread ServerTCPthread;
+        VoiceUpServerClass server;
         List<NetworkAdapter> InterfaceList;
-
+       
         public MainWindow()
         {   
-            InitializeComponent(); 
-            TextboxServerName.Text = "VoiceUp Server";
-            TextboxMaxUsers.Text = "4";
-            TextblockPort.Text = "5000";
-            InterfaceList = new List<NetworkAdapter>();
-            LoadAdapters();
-            NetworkAdaptersList.ItemsSource = InterfaceList;
-            NetworkAdaptersList.SelectedIndex = 0;
+            InitializeComponent();
+            SetDeafultOptions();
+            LoadInterfaceList();
         }
 
-        //wyłączanie komuś dzwięku (przycisk) 
-        private void ButtonHeadphones_Click(object sender, RoutedEventArgs e) 
+        //start server
+        private void StartVoiceUpServer(object sender, RoutedEventArgs e)
         {
-            var ButtonMicrophone = sender as Button;
-
-            var user = ButtonMicrophone.DataContext as User;
-
-            server.ChangeUserSoundStatus(user);
-        }
-
-        //wyciszenie mikrofonu (przycisk)
-        private void ButtonMicrophone_Click(object sender, RoutedEventArgs e) 
-        {
-            var ButtonMicrophone = sender as Button;
-
-            var user = ButtonMicrophone.DataContext as User;
-
-            server.ChangeUserMicrophoneStatus(user);
-        }
-
-        //wyrzucenie kogoś (przycisk)
-        private void ButtonKick_Click(object sender, RoutedEventArgs e) 
-        {
-            var ButtonMicrophone = sender as Button;
-            var user = ButtonMicrophone.DataContext as User;
-
-            server.KickUser(user);
-        }
-
-        //start serwera
-        private void StartServer_Click(object sender, RoutedEventArgs e)
-        { 
             if (StartButton.Content.ToString() == "Start")
             {
                 bool isValid = true;
@@ -123,7 +89,7 @@ namespace VoiceUpServer
                         }
                     }
 
-                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser, pass,udpport);
+                    this.server = new VoiceUpServerClass(serverName, ip, port, maxuser, pass, udpport);
                     ListActualUsersOnServer.ItemsSource = server.ActualListOfUsers;
 
 
@@ -131,7 +97,7 @@ namespace VoiceUpServer
                     ServerTCPthread.Start();
 
                     StartButton.Content = "Stop";
-                }          
+                }
             }
             else
             {
@@ -141,28 +107,73 @@ namespace VoiceUpServer
             }
         }
 
-        private void UnBlockOptions()
+        #region LoadingDataOnStartToGUI
+        private void SetDeafultOptions()
         {
-            OptionsGrid.IsEnabled = true;
-            TextboxServerName.IsEnabled = true;
+            TextboxServerName.Text = "VoiceUp Server";
+            TextboxMaxUsers.Text = "4";
+            TextblockPort.Text = "5000";
         }
 
-        private void blockOptions()
+        private void LoadInterfaceList()
         {
-            TextboxServerName.IsEnabled = false;
-            OptionsGrid.IsEnabled = false;
+            InterfaceList = new List<NetworkAdapter>();
+            LoadAdapters();
+            NetworkAdaptersList.ItemsSource = InterfaceList;
+            NetworkAdaptersList.SelectedIndex = 0;
         }
 
-        private void HideAllWarnings()
+        private void LoadAdapters()
         {
-            WarningPORT.Visibility = Visibility.Hidden;
-            WarningMaxUsers.Visibility = Visibility.Hidden;
-            WarningServerName.Visibility = Visibility.Hidden;
-            WarningIP.Visibility = Visibility.Hidden;
-            TextboxServerName.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("89"), Convert.ToByte("000"), Convert.ToByte("000")));
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.PrefixLength <= 32)
+                        {
+                            InterfaceList.Add(new NetworkAdapter(item.Description, ip.Address.ToString()));
+                        }
+                    }
+                }
+            }
         }
 
-        //poprawność wpisywania maksymalna liczba uzytkowników
+        #endregion
+
+        #region SpecificUserActions
+        //turn off sound
+        private void ButtonHeadphones_Click(object sender, RoutedEventArgs e)
+        {
+            var ButtonMicrophone = sender as Button;
+
+            var user = ButtonMicrophone.DataContext as User;
+
+            server.ChangeUserSoundStatus(user);
+        }
+
+        //mute
+        private void ButtonMicrophone_Click(object sender, RoutedEventArgs e)
+        {
+            var ButtonMicrophone = sender as Button;
+
+            var user = ButtonMicrophone.DataContext as User;
+
+            server.ChangeUserMicrophoneStatus(user);
+        }
+
+        //kick
+        private void ButtonKick_Click(object sender, RoutedEventArgs e)
+        {
+            var ButtonMicrophone = sender as Button;
+            var user = ButtonMicrophone.DataContext as User;
+
+            server.KickUser(user);
+        }
+        #endregion
+
+        #region Validation
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -193,29 +204,12 @@ namespace VoiceUpServer
             }
         }
 
-        private void LoadAdapters()
-        {
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (item.OperationalStatus == OperationalStatus.Up)
-                {
-                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                    {
-                        if (ip.PrefixLength <= 32)
-                        {
-                            InterfaceList.Add(new NetworkAdapter(item.Description, ip.Address.ToString()));
-                        }
-                    }
-                }
-            }
-        }
-
         private void TextblockPort_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TextblockPort.Text == "") return;
             int x = Int32.Parse(TextblockPort.Text);
 
-            if (x>=0 && x <65535)
+            if (x >= 0 && x < 65535)
             {
                 WarningPORT.Visibility = Visibility.Hidden;
             }
@@ -244,7 +238,9 @@ namespace VoiceUpServer
             }
             return isAvailable;
         }
+        #endregion
 
+        #region GUI
         private void Label_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             PasswordTextbox.Visibility = Visibility.Visible;
@@ -258,5 +254,26 @@ namespace VoiceUpServer
             PasswordPasswordBox.Visibility = Visibility.Visible;
         }
 
+        private void UnBlockOptions()
+        {
+            OptionsGrid.IsEnabled = true;
+            TextboxServerName.IsEnabled = true;
+        }
+
+        private void blockOptions()
+        {
+            TextboxServerName.IsEnabled = false;
+            OptionsGrid.IsEnabled = false;
+        }
+
+        private void HideAllWarnings()
+        {
+            WarningPORT.Visibility = Visibility.Hidden;
+            WarningMaxUsers.Visibility = Visibility.Hidden;
+            WarningServerName.Visibility = Visibility.Hidden;
+            WarningIP.Visibility = Visibility.Hidden;
+            TextboxServerName.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("89"), Convert.ToByte("000"), Convert.ToByte("000")));
+        }
+        #endregion
     }
 }

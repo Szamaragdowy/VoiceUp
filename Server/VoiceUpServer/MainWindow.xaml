@@ -129,7 +129,7 @@
                         <Label FontSize="20" VerticalContentAlignment="Center" Content="/"/>
                         <Label VerticalContentAlignment="Center" FontSize="20" Content="{Binding Text,ElementName=TextboxMaxUsers,UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
-                    <Button x:Name="StartButton" Margin="5,10,10,10" FontSize="25" Content="Start" HorizontalAlignment="CEnter"  Height="40" Width="130" Click="StartServer_Click"/>
+                    <Button x:Name="StartButton" Margin="5,10,10,10" FontSize="25" Content="Start" HorizontalAlignment="CEnter"  Height="40" Width="130" Click="StartVoiceUpServer"/>
                 </StackPanel>
             </materialDesign:Card>
         </Grid>
