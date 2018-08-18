@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VoiceUP.Models
+﻿namespace VoiceUP.Models
 {
+    //Model to storing information about single User from server
+    //It's simple but maybe later another properties will be added
     public class UserInfo
     {
         public string Name { get; set; }

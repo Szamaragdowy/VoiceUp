@@ -125,7 +125,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\IPAdresConverter.cs" />
     <Compile Include="TCP\myTCPClient.cs" />
     <Compile Include="TCP\StateObject.cs" />
     <Compile Include="UDP\G722ChatCodec.cs" />
