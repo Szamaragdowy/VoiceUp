@@ -4,15 +4,11 @@ using VoiceUP.Models;
 
 namespace VoiceUP.Windows
 {
-    /// <summary>
-    /// Interaction logic for EditWindow.xaml
-    /// </summary>
     public partial class EditWindow : Window
     {
         public String IP { get; set; }
         public String PORT { get; set; }
         public String NAME { get; set; }
-
         public EditWindow(ServerInfo element)
         {
             InitializeComponent();
@@ -24,19 +20,15 @@ namespace VoiceUP.Windows
             TextBoxPORT.Text = PORT;
             TextBoxNAME.Text = NAME;
         }
-
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
             IP = TextBoxIP.Text;
             PORT = TextBoxPORT.Text;
             NAME = TextBoxNAME.Text;
-
-
             this.Close();
         }
     }

@@ -62,7 +62,6 @@ namespace VoiceUP.Windows
             listbox.ItemsSource = this._Tcpclient.getList();
         }
 
-        //wyciszanie mikrofonu
         private void ButtonMic_Click(object sender, RoutedEventArgs e)
         {
             if (ButtonMic.Content == FindResource("Mic_On"))
@@ -77,7 +76,6 @@ namespace VoiceUP.Windows
             }
         }
 
-        //wyciszanie dźwięku
         private void ButtonSound_Click(object sender, RoutedEventArgs e)
         {
             if (ButtonSound.Content == FindResource("Sound_On"))
@@ -92,7 +90,6 @@ namespace VoiceUP.Windows
             }
         }
 
-        //przejscie do ustawień
         private void Buttonsetting_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow okno = new SettingsWindow(_soundManager);
@@ -102,7 +99,6 @@ namespace VoiceUP.Windows
             _Tcpclient.maybeMicrophoneChanged(_soundManager);
         }
 
-        //rozłączenie z serwerem
         private void ButtonDisconnect_Click(object sender, RoutedEventArgs e)
         {
             _Tcpclient.Discconect();

@@ -7,33 +7,24 @@ namespace VoiceUP.Windows
 {
     public partial class SettingsWindow : Window
     {
-        private SoundManager soundManager; //referencja do menadżera dzwięku
-
-        private int selectedDeviceInedx =-1; //zmiena z indexem wybranego mikrofonu
-
-        //konstruktorek
+        private SoundManager soundManager;
+        private int selectedDeviceInedx =-1; 
         public SettingsWindow(SoundManager sm)
         {
             InitializeComponent();
             this.soundManager = sm;
         }
-
-        //załadowanie listy dostępnych mikrofonów
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
             combo.ItemsSource = soundManager.ListOfMicrophones();
         }
-
-        //zmiana mikrofonu po wybraniu z listy
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combo = sender as ComboBox;
             selectedDeviceInedx = combo.SelectedIndex;
             soundManager.setMicrophoneIndex(selectedDeviceInedx);
         }
-
-        //włączenie testu dzwięku
         private void ButtonStartTest_Click(object sender, RoutedEventArgs e)
         {
             ClearLabelInfo();
@@ -48,8 +39,6 @@ namespace VoiceUP.Windows
             }
            
         }
-
-        //zatrzymanie testu dzwięku
         private void ButtonStopTest_Click(object sender, RoutedEventArgs e)
         {
             ClearLabelInfo();
@@ -63,15 +52,11 @@ namespace VoiceUP.Windows
                 SetLabelInfo("Występił błąd podczas zatrzymywania testu", new SolidColorBrush(Colors.Red));
             }
         }
-
-        //wyświtlanie komunikatów w ustawieniach
         private void SetLabelInfo(string msg, SolidColorBrush color)
         {
             LabelInfo.Content = msg;
             LabelInfo.Foreground = color;     
         }
-
-        //czyszczenie komunikatu w ustawieniach
         private void ClearLabelInfo()
         {
             LabelInfo.Content = "";

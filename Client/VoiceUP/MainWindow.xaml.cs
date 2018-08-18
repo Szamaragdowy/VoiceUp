@@ -18,13 +18,12 @@ namespace VoiceUP
 {
     public partial class MainWindow : Window
     {
-        //konstruktor
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        //przejsćie do edycji wybranego serwera z listy
+        //edit view for specific server from list
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
             ServerInfo ID = ((Button)sender).CommandParameter as ServerInfo;
@@ -55,7 +54,7 @@ namespace VoiceUP
 
         }
 
-        //usuwanie wybranego serwera z listy
+        //deleting server from list
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
             ServerInfo ID = ((Button)sender).CommandParameter as ServerInfo;
@@ -86,7 +85,7 @@ namespace VoiceUP
             }
         }
 
-        //próba połaczenia z serwerem.
+        //try to connect with server
         private void ButtonConnect_Click(object sender, RoutedEventArgs e)
         {
             bool valid = true;
@@ -190,14 +189,14 @@ namespace VoiceUP
 
         #region LoadingData
 
-        //ładowanie wczytanych serwerów do comboboxa
+        //loading data to combobox
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             var Combo = sender as ComboBox;
             Combo.ItemsSource = LoadMyServersFromJson();
         }
 
-        //wczytuje liste serwerów z plików json
+        //loading data from json file
         public ObservableCollection<ServerInfo> LoadMyServersFromJson()
         {
             var collection = JsonLoader.LoadJson<MyServersJSON>("MySerwers.txt");
@@ -209,7 +208,7 @@ namespace VoiceUP
             return new ObservableCollection<ServerInfo>();   
         }
 
-        //wyświetlenie odpowiedniego ip po zmianie wyboru w comboboxie
+        //displaying in combobox
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedComboItem = sender as ComboBox;
@@ -225,7 +224,7 @@ namespace VoiceUP
 
         #region WindowBehavior
 
-        //poruszanie oknem przytrzymując lewy przycisk myszy
+        //window Behavior on left click
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -234,15 +233,13 @@ namespace VoiceUP
 
         #endregion
 
-            #region Validation
+        #region Validation
 
-        //regex do ip format (IP:port) - ip 4 x mas 255 i port zawierający co najmniej jedną liczbę
         private Match MatchIP(string ip)
         {
             return Regex.Match(ip, @"^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9]):[0-9]+$");
         }
 
-        //po zmianie textu w loginie, zmiana na domyślny kolor
         private void TextBoxLogin_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (WarningLogin == null) return;
@@ -250,7 +247,6 @@ namespace VoiceUP
             TextBoxLogin.BorderBrush = new SolidColorBrush(Color.FromRgb(Convert.ToByte("89"), Convert.ToByte("000"), Convert.ToByte("000")));
         }
 
-        //po zmianie textu w wyborze serwera, zmiana na domyślny kolor
         private void ComboBoxServerList_TextInput(object sender, TextCompositionEventArgs e)
         {
             if (WarningSerwer == null) return;
