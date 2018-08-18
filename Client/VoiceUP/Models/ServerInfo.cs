@@ -1,31 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using VoiceUP.Interfaces;
 
 namespace VoiceUP.Models
 {
-    public class ServerInfo : IServerInfo, INotifyPropertyChanged
+    //model to storing info about voice servers
+    public class ServerInfo :  INotifyPropertyChanged
     {
-        public string IP { get; set; }
-
-        public string Port { get; set; }
-
-        public string Name { get; set; }
-
-        public ServerInfo(string ip,string port, string name)
+        public ServerInfo(string ip, string port, string name)
         {
             this.IP = ip;
             this.Port = port;
             this.Name = name;
         }
+
+        #region properties
+
+        public string IP { get; set; }
+
+        public string Port { get; set; }
+
+        //Name of server, received from server after properly connection 
+        //Can be also changed by user in EditWindow 
+        public string Name { get; set; }
+
+        #endregion
+
+        #region INotify
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -37,6 +38,9 @@ namespace VoiceUP.Models
             }
         }
 
+        #endregion
+
+        //using for display e.g. in combobox
         public override string ToString()
         {
             return IP + ":" + Port;

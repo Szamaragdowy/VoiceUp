@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using VoiceUP.Models;
 
-namespace VoiceUP.Structures
+namespace VoiceUP.Models
 {
     public class MyServersJSON
     {

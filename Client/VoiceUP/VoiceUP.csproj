@@ -140,7 +140,6 @@
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Structures\JsonLoader.cs" />
-    <Compile Include="Interfaces\IServerInfo.cs" />
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -148,7 +147,7 @@
       <DependentUpon>ServerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Structures\SoundManager.cs" />
-    <Compile Include="Structures\MyServersJSON.cs" />
+    <Compile Include="Models\MyServersJSON.cs" />
     <Compile Include="Models\ServerInfo.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="UDP\ConnectWithServerUDP.cs" />
