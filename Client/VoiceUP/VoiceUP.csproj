@@ -209,9 +209,6 @@
     <Resource Include="bin\Debug\MySerwers.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="MySerwers.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\ikonka.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
