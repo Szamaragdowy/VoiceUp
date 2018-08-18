@@ -1,5 +1,6 @@
 ﻿using System;
 using NAudio.Wave;
+using VoiceUP.Interfaces;
 
 namespace VoiceUP.UDP
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using NAudio.Wave;
-using System.Windows.Threading;
-using static System.Net.Mime.MediaTypeNames;
+using VoiceUP.Interfaces;
 
 namespace VoiceUP.UDP
 {

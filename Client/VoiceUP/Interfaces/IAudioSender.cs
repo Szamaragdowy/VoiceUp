@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoiceUP.UDP
+namespace VoiceUP.Interfaces
 {
     interface IAudioSender : IDisposable
     {

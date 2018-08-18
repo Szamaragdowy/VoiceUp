@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using VoiceUP.Interfaces;
 
 namespace VoiceUP.UDP
 {

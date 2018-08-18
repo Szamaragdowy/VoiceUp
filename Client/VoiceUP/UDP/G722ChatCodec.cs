@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using NAudio.Wave;
 using NAudio.Codecs;
 using System.Diagnostics;
+using VoiceUP.Interfaces;
 
 namespace VoiceUP.UDP
 {

@@ -128,9 +128,9 @@
     <Compile Include="TCP\myTCPClient.cs" />
     <Compile Include="TCP\StateObject.cs" />
     <Compile Include="UDP\G722ChatCodec.cs" />
-    <Compile Include="UDP\IAudioReceiver.cs" />
-    <Compile Include="UDP\IAudioSender.cs" />
-    <Compile Include="UDP\INetworkChatCodec.cs" />
+    <Compile Include="Interfaces\IAudioReceiver.cs" />
+    <Compile Include="Interfaces\IAudioSender.cs" />
+    <Compile Include="Interfaces\INetworkChatCodec.cs" />
     <Compile Include="UDP\NetworkAudioPlayer.cs" />
     <Compile Include="UDP\NetworkAudioSender.cs" />
     <Compile Include="UDP\UdpAudioReceiver.cs" />

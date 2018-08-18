@@ -1,7 +1,7 @@
 ﻿using System;
 using NAudio.Wave;
 
-namespace VoiceUP.UDP
+namespace VoiceUP.Interfaces
 {
     public interface INetworkChatCodec : IDisposable
     {
