@@ -210,6 +210,12 @@ namespace VoiceUP.Network.TCP
                             disconected = true;
                             delegatekick();
                             break;
+                        case "MUTED":
+                            _ConnectWithServerUDP.ServerMute();
+                            break;
+                        case "UNMUTED":
+                            _ConnectWithServerUDP.ServerUnMute();
+                            break;
                         case "CHECK":
                             sendMsg("CHECK_Y<VUP><EOF>");
                             break;

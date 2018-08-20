@@ -9,7 +9,7 @@ namespace VoiceUP.Network.UDP
         private readonly INetworkChatCodec codec;
         private readonly IAudioSender audioSender;
         private WaveIn waveIn;
-
+        private bool serverMute;
         public NetworkAudioSender(INetworkChatCodec codec, int inputDeviceNumber, IAudioSender audioSender)
         {
             this.codec = codec;
@@ -44,8 +44,18 @@ namespace VoiceUP.Network.UDP
             waveIn.WaveFormat = codec.RecordFormat;
             waveIn.DataAvailable += OnAudioCaptured;
             waveIn.StartRecording();
-            int a = 0;
         }
+        public void ServerMute()
+        {
+            serverMute = true;
+            Mute();
+        }
+        public void ServerUnMute()
+        {
+            serverMute = false;
+            unMute();
+        }
+
 
         void OnAudioCaptured(object sender, WaveInEventArgs e)
         {

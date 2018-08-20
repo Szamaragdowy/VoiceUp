@@ -33,6 +33,14 @@ namespace VoiceUP.Network.UDP
         {
             audioSender.unMute();
         }
+        public void ServerMute()
+        {
+            audioSender.ServerMute();
+        }
+        public void ServerUnMute()
+        {
+            audioSender.ServerUnMute();
+        }
         public void setNewMicrophone(int index)
         {
             audioSender.changeMicrophone(index);

@@ -201,10 +201,24 @@ namespace VoiceUpServer.Network
             if (!user.Mute)
             {
                 user.Mute = true;
+                if (user.workSocket.Connected)
+                {
+                    Sendata(user.workSocket, "MUTED<VUP><EOF>");
+                    kickMsgSended.WaitOne();
+                    kickMsgSended.Reset();
+                    user.workSocket.Close();
+                }
             }
             else
             {
                 user.Mute = false;
+                if (user.workSocket.Connected)
+                {
+                    Sendata(user.workSocket, "UNMUTED<VUP><EOF>");
+                    kickMsgSended.WaitOne();
+                    kickMsgSended.Reset();
+                    user.workSocket.Close();
+                }
             }
         }
 
