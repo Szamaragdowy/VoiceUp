@@ -5,7 +5,7 @@ namespace VoiceUP.Network.UDP
 {
     class UDPManager
     {
-        private NetworkAudioPlayer player;
+        private NetworkAudioPlayer audioplayer;
         private NetworkAudioSender audioSender;
 
         public UDPManager(IPEndPoint endPoint, int inputDeviceNumber)
@@ -14,10 +14,25 @@ namespace VoiceUP.Network.UDP
             var receiver = new UdpAudioReceiver(endPoint.Port);
             var sender = new UdpAudioSender(endPoint);
 
-            player = new NetworkAudioPlayer(codec, receiver);
+            audioplayer = new NetworkAudioPlayer(codec, receiver);
             audioSender = new NetworkAudioSender(codec, inputDeviceNumber, sender);
         }
-
+        public void SoundOff()
+        {
+            audioplayer.SoundOff();
+        }
+        public void unSoundOff()
+        {
+            audioplayer.unSoundOff();
+        }
+        public void Mute()
+        {
+            audioSender.Mute();
+        }
+        public void unMute()
+        {
+            audioSender.unMute();
+        }
         public void setNewMicrophone(int index)
         {
             audioSender.changeMicrophone(index);
@@ -25,7 +40,7 @@ namespace VoiceUP.Network.UDP
 
         public void Dispose()
         {
-            player.Dispose();
+            audioplayer.Dispose();
             audioSender?.Dispose();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VoiceUP.Windows;
 
 namespace VoiceUP.Structures
 {
@@ -35,7 +36,7 @@ namespace VoiceUP.Structures
 
             sourceStream = new NAudio.Wave.WaveIn();
             sourceStream.DeviceNumber = microphoneIndex;
-            sourceStream.WaveFormat = new NAudio.Wave.WaveFormat(22500, NAudio.Wave.WaveIn.GetCapabilities(microphoneIndex).Channels);
+            sourceStream.WaveFormat = new NAudio.Wave.WaveFormat(44000, NAudio.Wave.WaveIn.GetCapabilities(microphoneIndex).Channels);
             NAudio.Wave.WaveInProvider waveIn = new NAudio.Wave.WaveInProvider(sourceStream);
 
             waveOut = new NAudio.Wave.DirectSoundOut();

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using VoiceUP.Structures;
 using VoiceUP.Network.TCP;
+using VoiceUP.Network.UDP;
 using VoiceUP.Models;
 
 namespace VoiceUP.Windows
@@ -21,7 +22,7 @@ namespace VoiceUP.Windows
         #region microphone
         public void Mute()
         {
-            _isMuted = true;
+            _isMuted = true; 
         }
 
         public void UnMute()
@@ -67,12 +68,12 @@ namespace VoiceUP.Windows
             if (ButtonMic.Content == FindResource("Mic_On"))
             {
                 ButtonMic.Content = FindResource("Mic_Off");
-                Mute();     
+                _Tcpclient.Mute();
             }
             else
             {
                 ButtonMic.Content = FindResource("Mic_On");
-                UnMute();
+                _Tcpclient.unMute();
             }
         }
 
@@ -81,12 +82,12 @@ namespace VoiceUP.Windows
             if (ButtonSound.Content == FindResource("Sound_On"))
             {
                 ButtonSound.Content = FindResource("Sound_Off");
-                SoundOff();
+                _Tcpclient.SoundOff();
             }
             else
             {
                 ButtonSound.Content = FindResource("Sound_On");
-                SoundOn();
+                _Tcpclient.unSoundOff();
             }
         }
 

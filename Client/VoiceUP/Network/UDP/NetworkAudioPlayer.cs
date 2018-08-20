@@ -18,11 +18,18 @@ namespace VoiceUP.Network.UDP
             waveOut = new WaveOut();
             waveProvider = new BufferedWaveProvider(codec.RecordFormat);
             waveProvider.DiscardOnBufferOverflow = true;
-            waveOut.Init(waveProvider);
+            waveOut.Init(waveProvider);            
             waveOut.Play();
             receiver.OnReceived(OnDataReceived);
         }
-
+        public void SoundOff()
+        {
+            waveOut.Pause();
+        }
+        public void unSoundOff()
+        {
+            waveOut.Play();
+        }
         void OnDataReceived(byte[] compressed)
         {
             byte[] decoded = codec.Decode(compressed, 0, compressed.Length);

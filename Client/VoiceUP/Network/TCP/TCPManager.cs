@@ -29,6 +29,22 @@ namespace VoiceUP.Network.TCP
         int _PortToUDP;
         private int oldMicIndex;
 
+        public void Mute()
+        {
+            _ConnectWithServerUDP.Mute();
+        }
+        public void unMute()
+        {
+            _ConnectWithServerUDP.unMute();
+        }
+        public void SoundOff()
+        {
+            _ConnectWithServerUDP.SoundOff();
+        }
+        public void unSoundOff()
+        {
+            _ConnectWithServerUDP.unSoundOff();
+        }
 
         public TCPManager(string _ServerIPAddress, int _ServerPORT)
         {
