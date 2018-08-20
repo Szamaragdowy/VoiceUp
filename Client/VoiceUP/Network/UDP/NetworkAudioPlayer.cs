@@ -33,7 +33,10 @@ namespace VoiceUP.Network.UDP
         void OnDataReceived(byte[] compressed)
         {
             byte[] decoded = codec.Decode(compressed, 0, compressed.Length);
-            waveProvider.AddSamples(decoded, 0, decoded.Length);
+            if (waveOut.PlaybackState == PlaybackState.Playing)
+            {
+                waveProvider.AddSamples(decoded, 0, decoded.Length);
+            }
         }
 
         public void Dispose()

@@ -55,8 +55,11 @@ namespace VoiceUP.Network.UDP
 
         public void Dispose()
         {
-            waveIn.DataAvailable -= OnAudioCaptured;
-            waveIn.StopRecording();
+            if (waveIn != null)
+            {
+                waveIn.DataAvailable -= OnAudioCaptured;
+                waveIn.StopRecording();
+            }
             audioSender?.Dispose();
         }
     }
