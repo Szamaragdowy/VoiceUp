@@ -34,7 +34,7 @@ namespace VoiceUP.Network.UDP
         public void Mute()
         {
             waveIn.StopRecording();
-            Dispose();
+            waveIn.Dispose();
             waveIn = null;
         }
         public void unMute()

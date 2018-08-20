@@ -36,6 +36,7 @@ namespace VoiceUP.Network.Codec
             }
             var wb = new WaveBuffer(data);
             int encodedLength = length / 4;
+            if (encodedLength < (wb.ShortBuffer.Length / 4)) return new byte[0];
             var outputBuffer = new byte[encodedLength];
             int encoded = codec.Encode(encoderState, outputBuffer, wb.ShortBuffer, length / 2);
             Debug.Assert(encodedLength == encoded);
