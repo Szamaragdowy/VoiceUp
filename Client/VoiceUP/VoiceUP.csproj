@@ -149,7 +149,7 @@
     <Compile Include="Models\MyServersJSON.cs" />
     <Compile Include="Models\ServerInfo.cs" />
     <Compile Include="Models\UserInfo.cs" />
-    <Compile Include="Network\UDP\ConnectWithServerUDP.cs" />
+    <Compile Include="Network\UDP\UDPManager.cs" />
     <Page Include="Windows\EditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

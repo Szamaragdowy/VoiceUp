@@ -7,6 +7,7 @@ using System.Windows.Data;
 using VoiceUP.Structures;
 using VoiceUP.Network.UDP;
 using VoiceUP.Models;
+using System.Net;
 
 namespace VoiceUP.Network.TCP
 {
@@ -24,7 +25,7 @@ namespace VoiceUP.Network.TCP
         private ObservableCollection<UserInfo> _collection;
         Func<bool> delegatekick;
         Func<bool> delegatesya;
-        ConnectWithServerUDP _ConnectWithServerUDP;
+        UDPManager _ConnectWithServerUDP;
         int _PortToUDP;
         private int oldMicIndex;
 
@@ -63,7 +64,7 @@ namespace VoiceUP.Network.TCP
         public void startUDP(int index)
         {
             this.oldMicIndex = index;
-            this._ConnectWithServerUDP = new ConnectWithServerUDP(ip, _PortToUDP, index);
+            this._ConnectWithServerUDP = new UDPManager(new IPEndPoint(IPAddress.Parse(ip), _PortToUDP), index);
         }
 
 

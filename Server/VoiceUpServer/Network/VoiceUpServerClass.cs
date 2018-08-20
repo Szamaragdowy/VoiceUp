@@ -141,15 +141,18 @@ namespace VoiceUpServer.Network
         {
             try
             {
-                foreach (var user in _usersList)
+                lock (_itemsLock)
                 {
-                    if (user.workSocket.Connected)
+                    foreach (var user in _usersList)
                     {
-                        Sendata(user.workSocket, "CYA<VUP><EOF>");
-                        cyaMsgSended.WaitOne();
-                        cyaMsgSended.Reset();
-                        user.workSocket.Close();
-                    }  
+                        if (user.workSocket.Connected)
+                        {
+                            Sendata(user.workSocket, "CYA<VUP><EOF>");
+                            cyaMsgSended.WaitOne();
+                            cyaMsgSended.Reset();
+                            user.workSocket.Close();
+                        }
+                    }
                 }
                  _usersList.Clear();
                 if(_serverSocket.Connected) _serverSocket.Disconnect(true);
@@ -174,7 +177,10 @@ namespace VoiceUpServer.Network
                 kickMsgSended.Reset();
                 user.workSocket.Close();
             }
-            _usersList.Remove(user);
+            lock (_itemsLock)
+            {
+                _usersList.Remove(user);
+            }
             sendToAll(actuallist());
         }
 
@@ -184,7 +190,10 @@ namespace VoiceUpServer.Network
             {
                 user.workSocket.Close();
             }
-            _usersList.Remove(user);
+            lock (_itemsLock)
+            {
+                _usersList.Remove(user);
+            }
         }
    
         public void ChangeUserMicrophoneStatus(User user)
