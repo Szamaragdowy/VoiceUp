@@ -334,7 +334,7 @@ namespace VoiceUpServer.Network
                                                 }
                                             }
 
-                                            User user = new User(socket,_UDPPort);
+                                            User user = new User(socket,_UDPPort+1);
                                             user.Name = login;
                                             _usersList.Add(user);
                                             Sendata(socket, "LOGIN_ACK<VUP>"+ _UDPPort.ToString()+"<VUP><EOF>");
@@ -363,7 +363,6 @@ namespace VoiceUpServer.Network
                             if (_usersList[i].workSocket.RemoteEndPoint.ToString().Equals(socket.RemoteEndPoint.ToString()))
                             {
                                 _usersList.RemoveAt(i);
-                                Console.WriteLine("Số client đang kết nối: " + _usersList.Count.ToString());
                             }
                         }
                     }

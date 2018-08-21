@@ -11,7 +11,7 @@ namespace VoiceUP.Network.UDP
         public UDPManager(IPEndPoint endPoint, int inputDeviceNumber)
         {
             G722ChatCodec codec = new G722ChatCodec();
-            var receiver = new UdpAudioReceiver(endPoint.Port);
+            var receiver = new UdpAudioReceiver(endPoint.Port+1);
             var sender = new UdpAudioSender(endPoint);
 
             audioplayer = new NetworkAudioPlayer(codec, receiver);
