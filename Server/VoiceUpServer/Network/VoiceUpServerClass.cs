@@ -337,7 +337,7 @@ namespace VoiceUpServer.Network
                                             User user = new User(socket,_UDPPort+1);
                                             user.Name = login;
                                             _usersList.Add(user);
-                                            Sendata(socket, "LOGIN_ACK<VUP>"+ _UDPPort.ToString()+"<VUP><EOF>");
+                                            Sendata(socket, "LOGIN_ACK<VUP>"+ _UDPPort.ToString()+"<VUP>"+ user.Name +"<VUP><EOF>");
                                             sendToAll(actuallist());
                                         }
                                         else

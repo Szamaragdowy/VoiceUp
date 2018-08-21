@@ -28,6 +28,7 @@ namespace VoiceUP.Network.TCP
         UDPManager _ConnectWithServerUDP;
         int _PortToUDP;
         private int oldMicIndex;
+        string _MyNickAfterConnect;
 
         public void Mute()
         {
@@ -156,6 +157,7 @@ namespace VoiceUP.Network.TCP
                     case "LOGIN_ACK":
                         resultOfConnecting = "LOGIN_ACK/" + _serverName;
                         this._PortToUDP = Int32.Parse(loginResponse[1]);
+                        this._MyNickAfterConnect = loginResponse[2];
                         StateObject state = new StateObject();
                         _stream.BeginRead(state.buffer, 0, StateObject.BufferSize, new AsyncCallback(ReadCallback), state);
                         break;
@@ -224,7 +226,15 @@ namespace VoiceUP.Network.TCP
                                 _collection.Clear();
                                 for (int i = 1; i < data.Length - 1; i++)
                                 {
-                                    _collection.Add(new UserInfo(data[i]));
+                                    if(data[i] == _MyNickAfterConnect)
+                                    {
+                                        _collection.Add(new UserInfo(data[i],true));
+                                    }
+                                    else
+                                    {
+                                        _collection.Add(new UserInfo(data[i]));
+                                    }
+                                    
                                 }
                             }
                             break;

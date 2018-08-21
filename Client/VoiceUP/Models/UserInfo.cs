@@ -6,9 +6,12 @@
     {
         public string Name { get; set; }
 
-        public UserInfo(string name)
+        public bool isItMe { get; set; }
+
+        public UserInfo(string name, bool isItme=false)
         {
             Name = name;
+            isItMe = isItme;
         }
     }
 }
