@@ -96,6 +96,8 @@ namespace VoiceUP.Windows
         private void Buttonsetting_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow okno = new SettingsWindow(_soundManager,this._serverIpPort,this._serverName);
+            okno.Check();
+            okno.CheckSettings();
             okno.Left = this.Left;
             okno.Top = this.Top;
             okno.ShowDialog();

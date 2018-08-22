@@ -19,7 +19,7 @@
         <materialDesign:Card Margin="5.2,10,5.2,5" Height="300">
             <StackPanel>
                 <StackPanel Margin="0,0,-1.6,0" Width="424" >
-                    <Button VerticalAlignment="Bottom" Click="AddBookMark_Click" Content="Dodaj serwer do ulubionych" RenderTransformOrigin="0.507,0.488"/>
+                    <Button VerticalAlignment="Bottom" x:Name="ButtonFavorite" Click="AddBookMark_Click" Content="Dodaj serwer do ulubionych" RenderTransformOrigin="0.507,0.488"/>
                 </StackPanel>
                 <StackPanel Height="60" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Width="424">
                     <Label VerticalContentAlignment="Center" FontSize="20" Content="Dźwięk:" Height="60" VerticalAlignment="Top" Width="94"/>
@@ -48,8 +48,12 @@
                     <Button VerticalAlignment="Top" x:Name="ButtonStartTest" Margin="0,5,5,5" Click="ButtonStartTest_Click" Content="Start Test" HorizontalAlignment="Right"/>
                     <Button VerticalAlignment="Top" x:Name="ButtonStopTest" IsEnabled="False" Margin="5,5,5,5" Click="ButtonStopTest_Click" Content="Stop Test" RenderTransformOrigin="0.487,0.463" />
                 </StackPanel>
-                <StackPanel Margin="0,0,0,0" Width="424">
+                <StackPanel Height="40" Margin="0,0,0.4,0">
 
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10,0,10.4,0" HorizontalAlignment="Right" >
+                    <Button VerticalAlignment="Top" x:Name="ButtonSave" Margin="0,5,5,5" Click="SaveSettings" Content="Zapisz" HorizontalAlignment="Right"/>
+                    <Button VerticalAlignment="Top" x:Name="ButtonBack"  Margin="5,5,5,5" Click="Back" Content="Cofnij" RenderTransformOrigin="0.487,0.463" />
                 </StackPanel>
             </StackPanel>
 

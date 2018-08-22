@@ -39,7 +39,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Nick"/>
-                        <TextBox Name="TextBoxLogin" Margin="20,10,0,5" Text="Somsiad"   FontSize="20" TextChanged="TextBoxLogin_TextChanged" Width="250"/>
+                        <TextBox Name="TextBoxLogin" Margin="20,10,0,5" FontSize="20" TextChanged="TextBoxLogin_TextChanged" Width="250"/>
                     </StackPanel>
                     <Label HorizontalAlignment="center" Visibility="Hidden" Name="WarningLogin"  Content="Proszę wpisać login."  Foreground="Red" FontSize="13" Width="auto" />
                 </StackPanel>

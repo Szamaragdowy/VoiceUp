@@ -110,7 +110,7 @@ namespace VoiceUpServer
         #region LoadingDataOnStartToGUI
         private void SetDeafultOptions()
         {
-            TextboxServerName.Text = "VoiceUp Server";
+            TextboxServerName.Text = "VoiceUp";
             TextboxMaxUsers.Text = "4";
             TextblockPort.Text = "5000";
         }

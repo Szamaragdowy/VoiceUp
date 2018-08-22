@@ -7,9 +7,8 @@ namespace VoiceUP.Structures
     {
         NAudio.Wave.WaveIn sourceStream = null;
         NAudio.Wave.DirectSoundOut waveOut = null;
-        public int microphoneIndex = -1;
-        public int soundDeviceIndex = -1;
-
+        public int microphoneIndex;
+        public int soundDeviceIndex;
         public List<NAudio.Wave.WaveInCapabilities> ListOfMicrophones()
         {
             List<NAudio.Wave.WaveInCapabilities> sources = new List<NAudio.Wave.WaveInCapabilities>();

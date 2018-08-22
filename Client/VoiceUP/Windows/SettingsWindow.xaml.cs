@@ -13,37 +13,44 @@ namespace VoiceUP.Windows
     public partial class SettingsWindow : Window
     {
         private SoundManager soundManager;
-        private int selectedDeviceInedx = -1;
+        private int selectedMicrophoneIndex;
+        private int selectedSoundDeviceIndex;
         private string _serverIpPort;
         private string _serverName;
         public SettingsWindow(SoundManager sm, string serverIpPort, string serverName)
         {
             InitializeComponent();
+            ReadSettings();
             this.soundManager = sm;
             this._serverIpPort = serverIpPort;
             this._serverName = serverName;
+            CheckSettings();
         }
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
             combo.ItemsSource = soundManager.ListOfMicrophones();
+            combo.SelectedIndex = selectedMicrophoneIndex;
         }
         private void SoundDeviceBoxLoaded(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
             combo.ItemsSource = soundManager.ListOfSoundDevice();
+            combo.SelectedIndex = selectedSoundDeviceIndex;
         }
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combo = sender as ComboBox;
-            selectedDeviceInedx = combo.SelectedIndex;
-            soundManager.setMicrophoneIndex(selectedDeviceInedx);
+            selectedMicrophoneIndex = combo.SelectedIndex;
+            soundManager.setMicrophoneIndex(selectedMicrophoneIndex);
+            CheckSettings();
         }
         private void SoundDeviceBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combo = sender as ComboBox;
-            selectedDeviceInedx = combo.SelectedIndex;
-            soundManager.setSoundDeviceIndex(selectedDeviceInedx);
+            selectedSoundDeviceIndex = combo.SelectedIndex;
+            soundManager.setSoundDeviceIndex(selectedSoundDeviceIndex);
+            CheckSettings();
         }
         private void ButtonStartTest_Click(object sender, RoutedEventArgs e)
         {
@@ -83,10 +90,10 @@ namespace VoiceUP.Windows
             LabelInfo.Content = "";
             LabelInfo.Foreground = new SolidColorBrush(Colors.Black);
         }
-        private void AddBookMark_Click(object sender, RoutedEventArgs e)
+        //checking that serwer is on our MyServer list
+        public void Check()
         {
-            bool check = false;
-            string temp;
+            bool isInFavorities = true;
             string json = File.ReadAllText("MySerwers.txt");
             dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
             var IpPort = _serverIpPort.Split(':');
@@ -95,25 +102,75 @@ namespace VoiceUP.Windows
             {
                 var ip = (string)doc["IP"];
                 var port = (string)doc["PORT"];
-                if (IpPort[0] == ip||IpPort[1] == port)
+                if (IpPort[0] == ip || IpPort[1] == port)
                 {
-                    check = true;
+                    isInFavorities = false;
                     break;
                 }
             }
-            if (!check)
+            if (!isInFavorities) ButtonFavorite.IsEnabled = false;
+            else ButtonFavorite.IsEnabled = true;
+            
+        }
+        private void AddBookMark_Click(object sender, RoutedEventArgs e)
+        {
+            string temp;
+            string json = File.ReadAllText("MySerwers.txt");
+            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            var IpPort = _serverIpPort.Split(':');
+            var jObj = (JObject)JsonConvert.DeserializeObject(json);
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
+            temp = output.Substring(0, output.Length - 7);
+            string newSerwer = ",    \n    {\r\n      \"IP\": \"" + IpPort[0] + "\",\r\n      \"Port\": \"" + IpPort[1] + "\",\r\n      \"Name\": \"" + this._serverName + "\"\r\n    }\r\n  ]\r\n}";
+            temp += newSerwer;
+            File.WriteAllText("MySerwers.txt", temp);
+            MessageBox.Show("Dodano do ulubionych");
+            Check();
+        }
+        public void ReadSettings()
+        {
+            string json = File.ReadAllText("Settings.txt");
+            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            var jObj = (JObject)JsonConvert.DeserializeObject(json);
+            foreach (var doc in jsonObj["Settings"])
             {
-                string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
-                temp = output.Substring(0, output.Length - 7);
-                string newSerwer = ",    \n    {\r\n      \"IP\": \"" + IpPort[0]+ "\",\r\n      \"Port\": \"" + IpPort[1]+ "\",\r\n      \"Name\": \"" + this._serverName+ "\"\r\n    }\r\n  ]\r\n}";
-                temp += newSerwer;
-                File.WriteAllText("MySerwers.txt", temp);
-                MessageBox.Show("Dodano do Twoich serwerów");
+                selectedMicrophoneIndex = doc["MICROPHONE"];
+                selectedSoundDeviceIndex = doc["SOUND"];
             }
-            else
+        }
+        public void CheckSettings()
+        {
+            bool isInSettings = false;
+            string json = File.ReadAllText("Settings.txt");
+            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            var jObj = (JObject)JsonConvert.DeserializeObject(json);
+            foreach (var doc in jsonObj["Settings"])
             {
-                MessageBox.Show("Ten serwer już należy do Twoich serwerów");
+                var sound = (string)doc["SOUND"];
+                var micro = (string)doc["MICROPHONE"];
+                if (sound != selectedSoundDeviceIndex.ToString() || micro != selectedMicrophoneIndex.ToString())
+                {
+                    isInSettings = true;
+                    break;
+                }
             }
+            if (isInSettings) ButtonSave.IsEnabled = true;
+            else ButtonSave.IsEnabled = false;
+        }
+        private void SaveSettings(object sender, RoutedEventArgs e)
+        {
+            string json = File.ReadAllText("Settings.txt");
+            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            jsonObj["Settings"][0]["SOUND"] = selectedSoundDeviceIndex;
+            jsonObj["Settings"][0]["MICROPHONE"] = selectedMicrophoneIndex;
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
+            File.WriteAllText("Settings.txt", output);
+            MessageBox.Show("Zapisano zmiany");
+            CheckSettings();
+        }
+        private void Back(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

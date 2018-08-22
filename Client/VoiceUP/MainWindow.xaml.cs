@@ -18,9 +18,12 @@ namespace VoiceUP
 {
     public partial class MainWindow : Window
     {
+        private string _nickName = null;
         public MainWindow()
         {
             InitializeComponent();
+            _nickName = ReadLastNickname();
+            TextBoxLogin.Text = _nickName;
         }
 
         //edit view for specific server from list
@@ -88,12 +91,13 @@ namespace VoiceUP
         //try to connect with server
         private void ButtonConnect_Click(object sender, RoutedEventArgs e)
         {
+            
             bool valid = true;
 
             string login = TextBoxLogin.Text;
             string password = TextBoxPassword.Password;
             var selected = ComboBoxServerList.SelectedItem;
-
+            SaveLastNickname(login);
             string ip = "";
             int port = 0;
 
@@ -185,6 +189,26 @@ namespace VoiceUP
                         break;
                 }
             }
+        }
+        private string ReadLastNickname()
+        {
+            string name="";
+            string json = File.ReadAllText("Settings.txt");
+            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            var jObj = (JObject)JsonConvert.DeserializeObject(json);
+            foreach (var doc in jsonObj["Settings"])
+            {
+               name = (string)doc["NICKNAME"];
+            }
+            return name;
+        }
+        private void SaveLastNickname(string name)
+        {
+            string json = File.ReadAllText("Settings.txt");
+            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            jsonObj["Settings"][0]["NICKNAME"] = name;
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
+            File.WriteAllText("Settings.txt", output);
         }
 
         #region LoadingData
