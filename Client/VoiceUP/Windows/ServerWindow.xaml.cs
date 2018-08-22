@@ -124,6 +124,7 @@ namespace VoiceUP.Windows
                     MainWindow okno = new MainWindow();
                     okno.Left = this.Left;
                     okno.Top = this.Top;
+                    this.Close();
                     okno.ShowDialog();
                 });
                 return true;
