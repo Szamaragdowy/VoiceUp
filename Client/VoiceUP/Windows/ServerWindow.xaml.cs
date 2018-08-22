@@ -50,7 +50,7 @@ namespace VoiceUP.Windows
             this._isSoundOf = false;
             this._soundManager = new SoundManager();
             this._Tcpclient = client;
-            this._Tcpclient.setDeleagats(kicked, ServerBye);
+            this._Tcpclient.setDeleagats(kicked, ServerBye, ServerMuted, ServerUnMuted,ServerSoundOff,ServerUnSoundOff);
             this._Tcpclient.startUDP(_soundManager.microphoneIndex);
             labelServerName.Content = ServerName;
             this.Title = "VoiceUp (" + ServerName + ")";
@@ -120,7 +120,6 @@ namespace VoiceUP.Windows
                     MainWindow okno = new MainWindow();
                     okno.Left = this.Left;
                     okno.Top = this.Top;
-                    this.Close();
                     okno.ShowDialog();
                 });
                 return true;
@@ -131,7 +130,66 @@ namespace VoiceUP.Windows
                 return false;
             }
         }
-
+        public bool ServerMuted()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Zostało Ci zabrane prawo do mówienia.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+        public bool ServerUnMuted()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Zostało Ci przywrócone prawo do mówienia.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+        public bool ServerSoundOff()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Serwer zablokował Ci możliwość słuchania konwersacji", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+        public bool ServerUnSoundOff()
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    MessageBox.Show("Serwer przywrócił Ci możliwość słuchania konwersacji", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
         public bool ServerBye()
         {
             try

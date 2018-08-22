@@ -48,19 +48,24 @@ namespace VoiceUP.Network.UDP
         public void ServerMute()
         {
             serverMute = true;
-            Mute();
         }
         public void ServerUnMute()
         {
             serverMute = false;
-            unMute();
         }
 
 
         void OnAudioCaptured(object sender, WaveInEventArgs e)
         {
-            byte[] encoded = codec.Encode(e.Buffer, 0, e.BytesRecorded);
-            audioSender.Send(encoded);
+            if (serverMute)
+            {
+
+            }
+            else
+            {
+                byte[] encoded = codec.Encode(e.Buffer, 0, e.BytesRecorded);
+                audioSender.Send(encoded);
+            }
         }
 
         public void Dispose()

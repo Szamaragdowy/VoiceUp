@@ -204,9 +204,6 @@ namespace VoiceUpServer.Network
                 if (user.workSocket.Connected)
                 {
                     Sendata(user.workSocket, "MUTED<VUP><EOF>");
-                    kickMsgSended.WaitOne();
-                    kickMsgSended.Reset();
-                    user.workSocket.Close();
                 }
             }
             else
@@ -215,9 +212,6 @@ namespace VoiceUpServer.Network
                 if (user.workSocket.Connected)
                 {
                     Sendata(user.workSocket, "UNMUTED<VUP><EOF>");
-                    kickMsgSended.WaitOne();
-                    kickMsgSended.Reset();
-                    user.workSocket.Close();
                 }
             }
         }
@@ -227,10 +221,18 @@ namespace VoiceUpServer.Network
             if (!user.SoundOff)
             {
                 user.SoundOff = true;
+                if (user.workSocket.Connected)
+                {
+                    Sendata(user.workSocket, "SOUNDOFF<VUP><EOF>");
+                }
             }
             else
             {
                 user.SoundOff = false;
+                if (user.workSocket.Connected)
+                {
+                    Sendata(user.workSocket, "SOUNDON<VUP><EOF>");
+                }
             }
         }
 

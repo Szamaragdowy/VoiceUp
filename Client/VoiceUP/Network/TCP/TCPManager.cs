@@ -25,6 +25,10 @@ namespace VoiceUP.Network.TCP
         private ObservableCollection<UserInfo> _collection;
         Func<bool> delegatekick;
         Func<bool> delegatesya;
+        Func<bool> delegatemute;
+        Func<bool> delegateunmute;
+        Func<bool> delegatesoundon;
+        Func<bool> delegatesoundoff;
         UDPManager _ConnectWithServerUDP;
         int _PortToUDP;
         private int oldMicIndex;
@@ -86,10 +90,14 @@ namespace VoiceUP.Network.TCP
 
 
 
-        public void setDeleagats(Func<bool> kick, Func<bool> sya)
+        public void setDeleagats(Func<bool> kick, Func<bool> sya, Func<bool> mute,Func<bool> unmute, Func<bool> soundoff, Func<bool> soundon)
         {
             this.delegatekick = kick;
             this.delegatesya = sya;
+            this.delegatemute = mute;
+            this.delegateunmute = unmute;
+            this.delegatesoundon = soundon;
+            this.delegatesoundoff = soundoff;
         }
 
         public ObservableCollection<UserInfo> getList()
@@ -214,9 +222,17 @@ namespace VoiceUP.Network.TCP
                             break;
                         case "MUTED":
                             _ConnectWithServerUDP.ServerMute();
+                            delegatemute();
                             break;
                         case "UNMUTED":
                             _ConnectWithServerUDP.ServerUnMute();
+                            delegateunmute();
+                            break;
+                        case "SOUNDOFF":
+                            delegatesoundoff();
+                            break;
+                        case "SOUNDON":
+                            delegatesoundon();
                             break;
                         case "CHECK":
                             sendMsg("CHECK_Y<VUP><EOF>");
