@@ -17,6 +17,7 @@ namespace VoiceUP.Windows
         private bool _isSoundOf;
         private TCPManager _Tcpclient;
         private string _serverName;
+        private string _serverIpPort;
 
         #region helpers
         #region microphone
@@ -53,10 +54,11 @@ namespace VoiceUP.Windows
             this._Tcpclient.setDeleagats(kicked, ServerBye, ServerMuted, ServerUnMuted,ServerSoundOff,ServerUnSoundOff);
             this._Tcpclient.startUDP(_soundManager.microphoneIndex);
             labelServerName.Content = ServerName;
+            _serverName = ServerName;
             this.Title = "VoiceUp (" + ServerName + ")";
             labelIpPort.Content = this._Tcpclient.GetIPAndPort();
+            _serverIpPort = this._Tcpclient.GetIPAndPort();
         }
-
         private void ListBoxLoaded(object sender, RoutedEventArgs e)
         {
             var listbox = sender as ListBox;
@@ -93,7 +95,7 @@ namespace VoiceUP.Windows
 
         private void Buttonsetting_Click(object sender, RoutedEventArgs e)
         {
-            SettingsWindow okno = new SettingsWindow(_soundManager);
+            SettingsWindow okno = new SettingsWindow(_soundManager,this._serverIpPort,this._serverName);
             okno.Left = this.Left;
             okno.Top = this.Top;
             okno.ShowDialog();

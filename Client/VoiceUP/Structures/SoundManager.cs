@@ -8,7 +8,7 @@ namespace VoiceUP.Structures
         NAudio.Wave.WaveIn sourceStream = null;
         NAudio.Wave.DirectSoundOut waveOut = null;
         public int microphoneIndex = -1;
-
+        public int soundDeviceIndex = -1;
 
         public List<NAudio.Wave.WaveInCapabilities> ListOfMicrophones()
         {
@@ -21,12 +21,24 @@ namespace VoiceUP.Structures
             
             return sources;
         }
-    
+        public List<NAudio.Wave.WaveOutCapabilities> ListOfSoundDevice()
+        {
+            List<NAudio.Wave.WaveOutCapabilities> sources = new List<NAudio.Wave.WaveOutCapabilities>();
+            for(int i = 0; i< NAudio.Wave.WaveOut.DeviceCount;i++)
+            {
+                sources.Add(NAudio.Wave.WaveOut.GetCapabilities(i));
+            }
+            return sources;
+        }
         public void setMicrophoneIndex(int selectedDeviceNumber)
         {
             if (selectedDeviceNumber == -1) return;
             microphoneIndex = selectedDeviceNumber;
-
+        }
+        public void setSoundDeviceIndex(int selectedDeviceNumber)
+        {
+            if (selectedDeviceNumber == -1) return;
+            soundDeviceIndex = selectedDeviceNumber;
         }
 
         public bool StartREcording()

@@ -15,15 +15,15 @@
             <GradientStop Color="#FF1768AC" Offset="0.872"/>
         </LinearGradientBrush>
     </Window.Background>
-
     <StackPanel>
-        <materialDesign:Card Margin="5,10,5,5" Height="300">
+        <materialDesign:Card Margin="5.2,10,5.2,5" Height="300">
             <StackPanel>
-                <StackPanel Height="60" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Label VerticalContentAlignment="Center" FontSize="20">
-                        Mikrofon: 
-                    </Label>
-                    <ComboBox Loaded="ListBoxLoaded" Width="312" Margin="0,10" SelectionChanged="ComboBox_SelectionChanged">
+                <StackPanel Margin="0,0,-1.6,0" Width="424" >
+                    <Button VerticalAlignment="Bottom" Click="AddBookMark_Click" Content="Dodaj serwer do ulubionych" RenderTransformOrigin="0.507,0.488"/>
+                </StackPanel>
+                <StackPanel Height="60" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Width="424">
+                    <Label VerticalContentAlignment="Center" FontSize="20" Content="Dźwięk:" Height="60" VerticalAlignment="Top" Width="94"/>
+                    <ComboBox Loaded="SoundDeviceBoxLoaded" Width="306" Margin="0,16" SelectionChanged="SoundDeviceBox_SelectionChanged" VerticalAlignment="Stretch" RenderTransformOrigin="0.545,0.386">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow"  Text="{Binding ProductName}"  FontSize="12"/>
@@ -31,19 +31,28 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                    <Label HorizontalAlignment="Center" VerticalContentAlignment="Center" x:Name="LabelInfo"  FontSize="12">
+                <StackPanel Height="60" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Width="424">
+                    <Label VerticalContentAlignment="Center" FontSize="20" Content="Mikrofon:" Height="60" Width="94
+                           "/>
+                    <ComboBox Loaded="ListBoxLoaded" Width="306" Margin="0,16,0,0" SelectionChanged="ComboBox_SelectionChanged" VerticalAlignment="Top" Height="28" RenderTransformOrigin="-0.546,0.414">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow"  Text="{Binding ProductName}"  FontSize="12"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
 
-                    </Label>
-                    <Button VerticalAlignment="Top" x:Name="ButtonStartTest" Margin="0,5,5,5" Click="ButtonStartTest_Click">
-                        Start Test
-                    </Button>
-                    <Button VerticalAlignment="Top" x:Name="ButtonStopTest" IsEnabled="False" Margin="5,5,5,5" Click="ButtonStopTest_Click" >
-                        Stop Test
-                    </Button>
+                <StackPanel Orientation="Horizontal" Margin="10,0,10.4,0" >
+                    <Label HorizontalAlignment="Center" VerticalContentAlignment="Center" x:Name="LabelInfo"  FontSize="10" RenderTransformOrigin="0.5,0.5" Width="205"/>
+                    <Button VerticalAlignment="Top" x:Name="ButtonStartTest" Margin="0,5,5,5" Click="ButtonStartTest_Click" Content="Start Test" HorizontalAlignment="Right"/>
+                    <Button VerticalAlignment="Top" x:Name="ButtonStopTest" IsEnabled="False" Margin="5,5,5,5" Click="ButtonStopTest_Click" Content="Stop Test" RenderTransformOrigin="0.487,0.463" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,0" Width="424">
+
                 </StackPanel>
             </StackPanel>
-            
+
         </materialDesign:Card>
     </StackPanel>
 </Window>
