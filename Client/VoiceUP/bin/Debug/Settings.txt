@@ -1,0 +1,9 @@
+{
+  "Settings": [
+    {
+      "NICKNAME": "meh",
+      "SOUND": 0,
+      "MICROPHONE": 0
+    }
+  ]
+}
